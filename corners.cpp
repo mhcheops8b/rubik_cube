@@ -294,71 +294,69 @@ Corners& operator*(Corners &c1, const moves &f) {
 	switch (f) {
 		case U:
 			apply_U(c1);
-			return c1;
 			break;
 
 		case L:
 			apply_L(c1);
-			return c1;
 			break;
+
 		case F:
 			apply_F(c1);
-			return c1;
 			break;
+
 		case D:
 			apply_D(c1);
-			return c1;
 			break;
+
 		case R:
 			apply_R(c1);
-			return c1;
 			break;
+
 		case B:
 			apply_B(c1);
-			return c1;
 			break;
 
 		case iU:
 			apply_U(c1);
 			apply_U(c1);
 			apply_U(c1);
-			return c1;
 			break;
 
 		case iL:
 			apply_L(c1);
 			apply_L(c1);
 			apply_L(c1);
-			return c1;
 			break;
+
 		case iF:
 			apply_F(c1);
 			apply_F(c1);
 			apply_F(c1);
-			return c1;
 			break;
+
 		case iD:
 			apply_D(c1);
 			apply_D(c1);
 			apply_D(c1);
-			return c1;
 			break;
+
 		case iR:
 			apply_R(c1);
 			apply_R(c1);
 			apply_R(c1);
-			return c1;
 			break;
+
 		case iB:
 			apply_B(c1);
 			apply_B(c1);
 			apply_B(c1);
-			return c1;
 			break;
+
 		default:
 			std::cerr << "Unknown move\n";
-			return c1;
+			// no action applied
 			break;
 	}
+	return c1;
 }
 }

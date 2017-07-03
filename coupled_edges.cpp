@@ -551,4 +551,136 @@ void apply_MB(Coupled_edges &edge) {
 	edge.perm_b[3] = tmp;
 }
 
+Coupled_edges& operator*(Coupled_edges &ce, const moves &f) {
+	switch(f) {
+
+		case U:
+			apply_U(ce);
+			break;
+
+		case iU:
+			apply_U(ce);
+			apply_U(ce);
+			apply_U(ce);
+			break;
+
+		case L:
+			apply_L(ce);
+			break;
+
+		case iL:
+			apply_L(ce);
+			apply_L(ce);
+			apply_L(ce);
+			break;
+
+		case F:
+			apply_F(ce);
+			break;
+
+		case iF:
+			apply_F(ce);
+			apply_F(ce);
+			apply_F(ce);
+			break;
+
+		case R:
+			apply_R(ce);
+			break;
+
+		case iR:
+			apply_R(ce);
+			apply_R(ce);
+			apply_R(ce);
+			break;
+
+		case B:
+			apply_B(ce);
+			break;
+
+		case iB:
+			apply_B(ce);
+			apply_B(ce);
+			apply_B(ce);
+			break;
+
+		case D:
+			apply_D(ce);
+			break;
+
+		case iD:
+			apply_D(ce);
+			apply_D(ce);
+			apply_D(ce);
+			break;
+
+		case MU:
+			apply_MU(ce);
+			break;
+
+		case iMU:
+			apply_MU(ce);
+			apply_MU(ce);
+			apply_MU(ce);
+			break;
+
+		case ML:
+			apply_ML(ce);
+			break;
+
+		case iML:
+			apply_ML(ce);
+			apply_ML(ce);
+			apply_ML(ce);
+			break;
+
+		case MF:
+			apply_MF(ce);
+			break;
+
+		case iMF:
+			apply_MF(ce);
+			apply_MF(ce);
+			apply_MF(ce);
+			break;
+
+		case MR:
+			apply_MR(ce);
+			break;
+
+		case iMR:
+			apply_MR(ce);
+			apply_MR(ce);
+			apply_MR(ce);
+			break;
+
+		case MB:
+			apply_MB(ce);
+			break;
+
+		case iMB:
+			apply_MB(ce);
+			apply_MB(ce);
+			apply_MB(ce);
+			break;
+
+		case MD:
+			apply_MD(ce);
+			break;
+
+		case iMD:
+			apply_MD(ce);
+			apply_MD(ce);
+			apply_MD(ce);
+			break;
+
+		default:
+			std::cerr << "Unknown move.\n";
+			// no action applied
+			break;
+			
+	}
+	return ce;
+}
+
 }

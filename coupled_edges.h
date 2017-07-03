@@ -4,6 +4,7 @@
 
 #include <ostream>
 #include "fixed_edges.h"
+#include "rubik_moves.h"
 
 namespace rubik_cube {
 
@@ -16,7 +17,9 @@ public:
 	void disp_perm24();
 	// signum of the perm24
 	int perm24_signum();
-	void to_perm24(int (&arr)[24]);
+	void to_perm24(int (&perm)[24]);
+
+	friend Coupled_edges &operator*(Coupled_edges &c1, const moves &f);
 
 	friend void apply_L(Coupled_edges &edge); 
 	friend void apply_R(Coupled_edges &edge); 

@@ -5,11 +5,9 @@
 
 #include <iostream>
 #include <ostream>
-
+#include "rubik_moves.h"
 
 namespace rubik_cube {
-
-enum moves {U, L, F, R, B, D, iU, iL, iF, iR, iB, iD};
 
 class Corners {
 
