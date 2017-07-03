@@ -16,4 +16,7 @@ int main() {
 
 	test.cc5.disp();
 	test.ce5.disp_cube();
+
+//	Center_corners<4> cc4;
+//	cc4.disp();
 }
