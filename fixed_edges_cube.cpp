@@ -2,8 +2,10 @@
 #include <iomanip>
 #include "fixed_edges.h"
 
+using namespace rubik_cube;
+
 int main() {
-	fixed_edges new_cube;
+	Fixed_edges new_cube;
 
 	new_cube.disp();
 
