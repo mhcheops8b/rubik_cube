@@ -4,7 +4,7 @@
 #include "center_edges.h"
 
 struct cube {
-	center_corners_odd<5> cc5;
+	Center_corners<5> cc5;
 	center_edges_odd<5> ce5;
 };
 

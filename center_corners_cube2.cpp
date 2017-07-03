@@ -5,7 +5,7 @@
 
 int main() {
 
-	center_corners_odd<5> new_cube;
+	Center_corners<5> new_cube;
 
 	// just to instantiate all
 	apply_L(new_cube);
