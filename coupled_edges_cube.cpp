@@ -2,8 +2,10 @@
 #include <iomanip>
 #include "coupled_edges.h"
 
+using namespace rubik_cube;
+
 int main() {
-	coupled_edges new_cube;
+	Coupled_edges new_cube;
 
 	new_cube.disp();
 	std::cout << "\t---\n";

@@ -5,31 +5,45 @@
 #include <ostream>
 #include "fixed_edges.h"
 
-struct coupled_edges {
-	fixed_edges ea;
-	fixed_edges eb;
+namespace rubik_cube {
 
-	coupled_edges();
+class Coupled_edges {
+public:
+	Coupled_edges();
 
 	void disp(std::ostream &os = std::cout);
 	// combination of both 12 a-positions and 12 b-positions to one permutation
 	void disp_perm24();
 	// signum of the perm24
 	int perm24_signum();
+	void to_perm24(int (&arr)[24]);
+
+	friend void apply_L(Coupled_edges &edge); 
+	friend void apply_R(Coupled_edges &edge); 
+	friend void apply_U(Coupled_edges &edge); 
+	friend void apply_D(Coupled_edges &edge); 
+	friend void apply_F(Coupled_edges &edge); 
+	friend void apply_B(Coupled_edges &edge); 
+	friend void apply_ML(Coupled_edges &edge); 
+	friend void apply_MR(Coupled_edges &edge); 
+	friend void apply_MU(Coupled_edges &edge); 
+	friend void apply_MD(Coupled_edges &edge); 
+	friend void apply_MF(Coupled_edges &edge); 
+	friend void apply_MB(Coupled_edges &edge); 
+
+protected:
+	void init();
+
+private:
+
+	int perm_a[12];
+	int orient_a[12];
+
+	int perm_b[12];
+	int orient_b[12];
+
 };
 
-
-void apply_L(coupled_edges &edge); 
-void apply_R(coupled_edges &edge); 
-void apply_U(coupled_edges &edge); 
-void apply_D(coupled_edges &edge); 
-void apply_F(coupled_edges &edge); 
-void apply_B(coupled_edges &edge); 
-void apply_ML(coupled_edges &edge); 
-void apply_MR(coupled_edges &edge); 
-void apply_MU(coupled_edges &edge); 
-void apply_MD(coupled_edges &edge); 
-void apply_MF(coupled_edges &edge); 
-void apply_MB(coupled_edges &edge); 
+}
 
 #endif
