@@ -8,6 +8,7 @@ int main() {
 	Fixed_edges new_cube;
 
 	new_cube.disp();
+	new_cube.disp_cube();
 
 #if 0
 	std::cout << "--\n";
@@ -50,6 +51,7 @@ int main() {
 	apply_L(new_cube);
 
 	new_cube.disp();
+	new_cube.disp_cube();
 	
 
 #if 0

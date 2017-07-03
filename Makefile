@@ -15,7 +15,8 @@ OBJECTS = gen_cube_perm \
 	corners.o \
 	_cube222.o _cube333.o _cube444.o _cube555.o _cube666.o \
 	test_cube666_solve test_cube666_shuffle \
-	test_cube666_moves
+	test_cube666_moves \
+	edge_positions.o
 
 #all: gen_cube_perm cube444 cube555 cube666 corners_cube edges_cube coupled_edges_cube edges.o coupled_edges.o
 all:	$(OBJECTS)
@@ -37,6 +38,9 @@ _cube555.o: _cube555.cpp _cube555.h
 
 _cube666.o: _cube666.cpp _cube666.h
 	g++ -O3 -Wall --pedantic --ansi -c -o $@ $<
+
+edge_positions.o: edge_positions.cpp edge_positions.h
+	g++ -c -O3 -Wall --pedantic --ansi -c -o $@ $<
 
 corners.o: corners.cpp corners.h
 	g++ -c -O3 -Wall --pedantic --ansi -c -o $@ $<
@@ -62,17 +66,17 @@ test_cube666_moves: test_cube666_moves.cpp cubeNNN.h _cube666.o
 corners_cube: corners_cube.cpp corners.o
 	g++ -O3 -Wall --pedantic --ansi -o $@ $< corners.o
 
-fixed_edges_cube: fixed_edges_cube.cpp fixed_edges.o
-	g++ -O3 -Wall --pedantic --ansi -o $@ $< fixed_edges.o
+fixed_edges_cube: fixed_edges_cube.cpp fixed_edges.o edge_positions.o
+	g++ -O3 -Wall --pedantic --ansi -o $@ $< fixed_edges.o edge_positions.o
 
 fixed_edges.o: fixed_edges.h fixed_edges.cpp
 	g++ -c -O3 -Wall --pedantic --ansi -o $@ fixed_edges.cpp
 
-coupled_edges.o: coupled_edges.h coupled_edges.cpp fixed_edges.o
-	g++ -c -O3 -Wall --pedantic --ansi -o $@ coupled_edges.cpp
+coupled_edges.o: coupled_edges.h coupled_edges.cpp edge_positions.o
+	g++ -c -O3 -Wall --pedantic --ansi -o $@ coupled_edges.cpp 
 
-coupled_edges_cube: coupled_edges.o fixed_edges.o
-	g++ -O3 -Wall --pedantic --ansi -o $@ coupled_edges_cube.cpp coupled_edges.o fixed_edges.o 
+coupled_edges_cube: coupled_edges_cube.cpp coupled_edges.o edge_positions.o
+	g++ -O3 -Wall --pedantic --ansi -o $@ $< coupled_edges.o edge_positions.o
 
 center_edges: center_edges.cpp
 	g++ -O3 -Wall --pedantic --ansi -o $@ $<

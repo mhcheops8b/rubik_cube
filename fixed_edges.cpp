@@ -1,6 +1,7 @@
 #include <iostream>
 #include <iomanip>
 #include "fixed_edges.h"
+#include "edge_positions.h"
 
 namespace rubik_cube {
 
@@ -24,6 +25,132 @@ void Fixed_edges::disp(std::ostream &os) {
 		os << std::setw(3) << orient[i] << " ";
 	os << '\n';
 
+}
+
+
+void Fixed_edges::disp_cube(std::ostream &os) {
+	for (int i = 0; i < 4; i++)
+		os << ' ';
+	os << 'x';
+	os << edge_positions[orient[2]][perm[2]].at(0);
+	os << 'x';
+	os << '\n';
+
+	for (int i = 0; i < 4; i++)
+		os << ' ';
+	os << edge_positions[orient[3]][perm[3]].at(0);
+	os << 'U';
+	os << edge_positions[orient[1]][perm[1]].at(0);
+	os << '\n';
+
+	for (int i = 0; i < 4; i++)
+		os << ' ';
+	os << 'x';
+	os << edge_positions[orient[0]][perm[0]].at(0);
+	os << 'x';
+	os << '\n';
+
+	// L
+	os << 'x';
+	os << edge_positions[orient[3]][perm[3]].at(1);
+	os << 'x';
+
+	os << ' ';
+
+	// F
+	os << 'x';
+	os << edge_positions[orient[0]][perm[0]].at(1);
+	os << 'x';
+
+	os << ' ';
+
+	// R
+	os << 'x';
+	os << edge_positions[orient[1]][perm[1]].at(1);
+	os << 'x';
+
+	os << ' ';
+
+	// B
+	os << 'x';
+	os << edge_positions[orient[2]][perm[2]].at(1);
+	os << 'x';
+	os << '\n';
+
+	// L
+	os << edge_positions[orient[7]][perm[7]].at(0);
+	os << 'L';
+	os << edge_positions[orient[4]][perm[4]].at(0);
+
+	os << ' ';
+
+	// F
+	os << edge_positions[orient[4]][perm[4]].at(1);
+	os << 'F';
+	os << edge_positions[orient[5]][perm[5]].at(1);
+
+	os << ' ';
+
+	// R
+	os << edge_positions[orient[5]][perm[5]].at(0);
+	os << 'R';
+	os << edge_positions[orient[6]][perm[6]].at(0);
+
+	os << ' ';
+
+	// B
+	os << edge_positions[orient[6]][perm[6]].at(1);
+	os << 'B';
+	os << edge_positions[orient[7]][perm[7]].at(1);
+	os << '\n';
+
+	// L
+	os << 'x';
+	os << edge_positions[orient[11]][perm[11]].at(1);
+	os << 'x';
+
+	os << ' ';
+
+	// F
+	os << 'x';
+	os << edge_positions[orient[8]][perm[8]].at(1);
+	os << 'x';
+
+	os << ' ';
+
+	// R
+	os << 'x';
+	os << edge_positions[orient[9]][perm[9]].at(1);
+	os << 'x';
+
+	os << ' ';
+
+	// B
+	os << 'x';
+	os << edge_positions[orient[10]][perm[10]].at(1);
+	os << 'x';
+	os << '\n';
+
+	for (int i = 0; i < 4; i++)
+		os << ' ';
+	os << 'x';
+	os << edge_positions[orient[8]][perm[8]].at(0);
+	os << 'x';
+	os << '\n';
+
+	for (int i = 0; i < 4; i++)
+		os << ' ';
+	os << edge_positions[orient[11]][perm[11]].at(0);
+	os << 'U';
+	os << edge_positions[orient[9]][perm[9]].at(0);
+	os << '\n';
+
+	for (int i = 0; i < 4; i++)
+		os << ' ';
+	os << 'x';
+	os << edge_positions[orient[10]][perm[10]].at(0);
+	os << 'x';
+	os << '\n';
 }
 
 void apply_R(Fixed_edges &edge) {

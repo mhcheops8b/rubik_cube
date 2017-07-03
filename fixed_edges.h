@@ -14,6 +14,7 @@ public:
 	Fixed_edges();
 
 	void disp(std::ostream &os = std::cout);
+	void disp_cube(std::ostream &os = std::cout);
 
 	friend Fixed_edges& operator*(Fixed_edges &fe, const moves &f);
 

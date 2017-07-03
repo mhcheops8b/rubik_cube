@@ -8,6 +8,7 @@ int main() {
 	Coupled_edges new_cube;
 
 	new_cube.disp();
+	new_cube.disp_cube();
 	std::cout << "\t---\n";
 
 //	apply_F(new_cube);
@@ -102,6 +103,7 @@ int main() {
 	apply_MR(new_cube);
 	apply_MR(new_cube);
 	new_cube.disp();
+	new_cube.disp_cube();
 	std::cout << "\t---\n";
 	new_cube.disp_perm24();
 	std::cout << "\t---\n";

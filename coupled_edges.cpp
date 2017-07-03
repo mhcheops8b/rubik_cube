@@ -1,6 +1,7 @@
 #include <iostream>
 #include <iomanip>
 #include "coupled_edges.h"
+#include "edge_positions.h"
 
 namespace rubik_cube {
 
@@ -39,6 +40,306 @@ void Coupled_edges::disp(std::ostream &os) {
 		os << std::setw(3) << orient_b[i] << " ";
 	os << '\n';
 
+}
+
+void Coupled_edges::disp_cube(std::ostream &os) {
+//
+	for (int i = 0; i < 6; i++)
+		os << ' ';
+	os << '.';
+	os << edge_positions[orient_a[2]][perm_a[2]].at(0);
+	os << '.';
+	os << edge_positions[orient_b[2]][perm_b[2]].at(0);
+	os << '.';
+	os << '\n';
+
+	for (int i = 0; i < 6; i++)
+		os << ' ';
+	os << edge_positions[orient_b[3]][perm_b[3]].at(0);
+	os << "...";
+	os << edge_positions[orient_a[1]][perm_a[1]].at(0);
+	os << '\n';
+
+	for (int i = 0; i < 6; i++)
+		os << ' ';
+	os << "..U..";
+	os << '\n';
+
+	for (int i = 0; i < 6; i++)
+		os << ' ';
+	os << edge_positions[orient_a[3]][perm_a[3]].at(0);
+	os << "...";
+	os << edge_positions[orient_b[1]][perm_b[1]].at(0);
+	os << '\n';
+
+	for (int i = 0; i < 6; i++)
+		os << ' ';
+	os << '.';
+	os << edge_positions[orient_b[0]][perm_b[0]].at(0);
+	os << '.';
+	os << edge_positions[orient_a[0]][perm_a[0]].at(0);
+	os << '.';
+	os << '\n';
+
+//
+	os << '.';
+	os << edge_positions[orient_b[3]][perm_b[3]].at(1);
+	os << '.';
+	os << edge_positions[orient_a[3]][perm_a[3]].at(1);
+	os << '.';
+
+	os << ' ';
+
+	os << '.';
+	os << edge_positions[orient_b[0]][perm_b[0]].at(1);
+	os << '.';
+	os << edge_positions[orient_a[0]][perm_a[0]].at(1);
+	os << '.';
+
+	os << ' ';
+
+	os << '.';
+	os << edge_positions[orient_b[1]][perm_b[1]].at(1);
+	os << '.';
+	os << edge_positions[orient_a[1]][perm_a[1]].at(1);
+	os << '.';
+
+	os << ' ';
+
+	os << '.';
+	os << edge_positions[orient_b[2]][perm_b[2]].at(1);
+	os << '.';
+	os << edge_positions[orient_a[2]][perm_a[2]].at(1);
+	os << '.';
+	os << '\n';
+
+//
+
+	os << edge_positions[orient_b[7]][perm_b[7]].at(0);
+	os << "...";
+	os << edge_positions[orient_a[4]][perm_a[4]].at(0);
+
+	os << ' ';
+
+	os << edge_positions[orient_a[4]][perm_a[4]].at(1);
+	os << "...";
+	os << edge_positions[orient_b[5]][perm_b[5]].at(1);
+
+	os << ' ';
+
+	os << edge_positions[orient_b[5]][perm_b[5]].at(0);
+	os << "...";
+	os << edge_positions[orient_a[6]][perm_a[6]].at(0);
+
+	os << ' ';
+
+	os << edge_positions[orient_a[6]][perm_a[6]].at(1);
+	os << "...";
+	os << edge_positions[orient_b[7]][perm_b[7]].at(1);
+
+	os << '\n';
+//
+	os << "..L.. ..F.. ..R.. ..B..";
+	os << '\n';
+//
+
+	os << edge_positions[orient_a[7]][perm_a[7]].at(0);
+	os << "...";
+	os << edge_positions[orient_b[4]][perm_b[4]].at(0);
+
+	os << ' ';
+
+	os << edge_positions[orient_b[4]][perm_b[4]].at(1);
+	os << "...";
+	os << edge_positions[orient_a[5]][perm_a[5]].at(1);
+
+	os << ' ';
+
+	os << edge_positions[orient_a[5]][perm_a[5]].at(0);
+	os << "...";
+	os << edge_positions[orient_b[6]][perm_b[6]].at(0);
+
+	os << ' ';
+
+	os << edge_positions[orient_b[6]][perm_b[6]].at(1);
+	os << "...";
+	os << edge_positions[orient_a[7]][perm_a[7]].at(1);
+
+	os << '\n';
+
+//
+	os << '.';
+	os << edge_positions[orient_a[11]][perm_a[11]].at(1);
+	os << '.';
+	os << edge_positions[orient_b[11]][perm_b[11]].at(1);
+	os << '.';
+
+	os << ' ';
+
+	os << '.';
+	os << edge_positions[orient_a[8]][perm_a[8]].at(1);
+	os << '.';
+	os << edge_positions[orient_b[8]][perm_b[8]].at(1);
+	os << '.';
+
+	os << ' ';
+
+	os << '.';
+	os << edge_positions[orient_a[9]][perm_a[9]].at(1);
+	os << '.';
+	os << edge_positions[orient_b[9]][perm_b[9]].at(1);
+	os << '.';
+
+	os << ' ';
+
+	os << '.';
+	os << edge_positions[orient_a[10]][perm_a[10]].at(1);
+	os << '.';
+	os << edge_positions[orient_b[10]][perm_b[10]].at(1);
+	os << '.';
+	os << '\n';
+
+//
+	for (int i = 0; i < 6; i++)
+		os << ' ';
+	os << '.';
+	os << edge_positions[orient_a[8]][perm_a[8]].at(0);
+	os << '.';
+	os << edge_positions[orient_b[8]][perm_b[8]].at(0);
+	os << '.';
+	os << '\n';
+
+	for (int i = 0; i < 6; i++)
+		os << ' ';
+	os << edge_positions[orient_b[11]][perm_b[11]].at(0);
+	os << "...";
+	os << edge_positions[orient_a[9]][perm_a[9]].at(0);
+	os << '\n';
+
+	for (int i = 0; i < 6; i++)
+		os << ' ';
+	os << "..D..";
+	os << '\n';
+
+	for (int i = 0; i < 6; i++)
+		os << ' ';
+	os << edge_positions[orient_a[11]][perm_a[11]].at(0);
+	os << "...";
+	os << edge_positions[orient_b[9]][perm_b[9]].at(0);
+	os << '\n';
+
+	for (int i = 0; i < 6; i++)
+		os << ' ';
+	os << '.';
+	os << edge_positions[orient_b[10]][perm_b[10]].at(0);
+	os << '.';
+	os << edge_positions[orient_a[10]][perm_a[10]].at(0);
+	os << '.';
+	os << '\n';
+
+#if 0
+	// L
+	os << 'x';
+	os << edge_positions[orient[3]][perm[3]].at(1);
+	os << 'x';
+
+	os << ' ';
+
+	// F
+	os << 'x';
+	os << edge_positions[orient[0]][perm[0]].at(1);
+	os << 'x';
+
+	os << ' ';
+
+	// R
+	os << 'x';
+	os << edge_positions[orient[1]][perm[1]].at(1);
+	os << 'x';
+
+	os << ' ';
+
+	// B
+	os << 'x';
+	os << edge_positions[orient[2]][perm[2]].at(1);
+	os << 'x';
+	os << '\n';
+
+	// L
+	os << edge_positions[orient[7]][perm[7]].at(0);
+	os << 'L';
+	os << edge_positions[orient[4]][perm[4]].at(0);
+
+	os << ' ';
+
+	// F
+	os << edge_positions[orient[4]][perm[4]].at(1);
+	os << 'F';
+	os << edge_positions[orient[5]][perm[5]].at(1);
+
+	os << ' ';
+
+	// R
+	os << edge_positions[orient[5]][perm[5]].at(0);
+	os << 'R';
+	os << edge_positions[orient[6]][perm[6]].at(0);
+
+	os << ' ';
+
+	// B
+	os << edge_positions[orient[6]][perm[6]].at(1);
+	os << 'B';
+	os << edge_positions[orient[7]][perm[7]].at(1);
+	os << '\n';
+
+	// L
+	os << 'x';
+	os << edge_positions[orient[11]][perm[11]].at(1);
+	os << 'x';
+
+	os << ' ';
+
+	// F
+	os << 'x';
+	os << edge_positions[orient[8]][perm[8]].at(1);
+	os << 'x';
+
+	os << ' ';
+
+	// R
+	os << 'x';
+	os << edge_positions[orient[9]][perm[9]].at(1);
+	os << 'x';
+
+	os << ' ';
+
+	// B
+	os << 'x';
+	os << edge_positions[orient[10]][perm[10]].at(1);
+	os << 'x';
+	os << '\n';
+
+	for (int i = 0; i < 4; i++)
+		os << ' ';
+	os << 'x';
+	os << edge_positions[orient[8]][perm[8]].at(0);
+	os << 'x';
+	os << '\n';
+
+	for (int i = 0; i < 4; i++)
+		os << ' ';
+	os << edge_positions[orient[11]][perm[11]].at(0);
+	os << 'U';
+	os << edge_positions[orient[9]][perm[9]].at(0);
+	os << '\n';
+
+	for (int i = 0; i < 4; i++)
+		os << ' ';
+	os << 'x';
+	os << edge_positions[orient[10]][perm[10]].at(0);
+	os << 'x';
+	os << '\n';
+#endif
 }
 
 void Coupled_edges::to_perm24(int (&perm)[24]) {

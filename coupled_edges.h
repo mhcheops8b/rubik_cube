@@ -13,6 +13,7 @@ public:
 	Coupled_edges();
 
 	void disp(std::ostream &os = std::cout);
+	void disp_cube(std::ostream &os = std::cout);
 	// combination of both 12 a-positions and 12 b-positions to one permutation
 	void disp_perm24();
 	// signum of the perm24
