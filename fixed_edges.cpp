@@ -31,9 +31,9 @@ void Fixed_edges::disp(std::ostream &os) {
 void Fixed_edges::disp_cube(std::ostream &os) {
 	for (int i = 0; i < 4; i++)
 		os << ' ';
-	os << 'x';
+	os << '.';
 	os << edge_positions[orient[2]][perm[2]].at(0);
-	os << 'x';
+	os << '.';
 	os << '\n';
 
 	for (int i = 0; i < 4; i++)
@@ -45,36 +45,36 @@ void Fixed_edges::disp_cube(std::ostream &os) {
 
 	for (int i = 0; i < 4; i++)
 		os << ' ';
-	os << 'x';
+	os << '.';
 	os << edge_positions[orient[0]][perm[0]].at(0);
-	os << 'x';
+	os << '.';
 	os << '\n';
 
 	// L
-	os << 'x';
+	os << '.';
 	os << edge_positions[orient[3]][perm[3]].at(1);
-	os << 'x';
+	os << '.';
 
 	os << ' ';
 
 	// F
-	os << 'x';
+	os << '.';
 	os << edge_positions[orient[0]][perm[0]].at(1);
-	os << 'x';
+	os << '.';
 
 	os << ' ';
 
 	// R
-	os << 'x';
+	os << '.';
 	os << edge_positions[orient[1]][perm[1]].at(1);
-	os << 'x';
+	os << '.';
 
 	os << ' ';
 
 	// B
-	os << 'x';
+	os << '.';
 	os << edge_positions[orient[2]][perm[2]].at(1);
-	os << 'x';
+	os << '.';
 	os << '\n';
 
 	// L
@@ -105,37 +105,37 @@ void Fixed_edges::disp_cube(std::ostream &os) {
 	os << '\n';
 
 	// L
-	os << 'x';
+	os << '.';
 	os << edge_positions[orient[11]][perm[11]].at(1);
-	os << 'x';
+	os << '.';
 
 	os << ' ';
 
 	// F
-	os << 'x';
+	os << '.';
 	os << edge_positions[orient[8]][perm[8]].at(1);
-	os << 'x';
+	os << '.';
 
 	os << ' ';
 
 	// R
-	os << 'x';
+	os << '.';
 	os << edge_positions[orient[9]][perm[9]].at(1);
-	os << 'x';
+	os << '.';
 
 	os << ' ';
 
 	// B
-	os << 'x';
+	os << '.';
 	os << edge_positions[orient[10]][perm[10]].at(1);
-	os << 'x';
+	os << '.';
 	os << '\n';
 
 	for (int i = 0; i < 4; i++)
 		os << ' ';
-	os << 'x';
+	os << '.';
 	os << edge_positions[orient[8]][perm[8]].at(0);
-	os << 'x';
+	os << '.';
 	os << '\n';
 
 	for (int i = 0; i < 4; i++)
@@ -147,9 +147,9 @@ void Fixed_edges::disp_cube(std::ostream &os) {
 
 	for (int i = 0; i < 4; i++)
 		os << ' ';
-	os << 'x';
+	os << '.';
 	os << edge_positions[orient[10]][perm[10]].at(0);
-	os << 'x';
+	os << '.';
 	os << '\n';
 }
 
