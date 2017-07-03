@@ -1,4 +1,5 @@
-OBJECTS = gen_cube_perm \
+APPS = \
+	gen_cube_perm \
 	cube444 \
 	cube555 \
 	cube666 \
@@ -9,17 +10,18 @@ OBJECTS = gen_cube_perm \
 	center_corners_cube \
 	center_corners_cube2 \
 	center_edges_cube \
+	test_cube \
+	test_cube666_solve test_cube666_shuffle \
+	test_cube666_moves
+
+OBJECTS = \
 	fixed_edges.o	\
 	coupled_edges.o \
-	test_cube \
 	corners.o \
 	_cube222.o _cube333.o _cube444.o _cube555.o _cube666.o \
-	test_cube666_solve test_cube666_shuffle \
-	test_cube666_moves \
 	edge_positions.o
 
-#all: gen_cube_perm cube444 cube555 cube666 corners_cube edges_cube coupled_edges_cube edges.o coupled_edges.o
-all:	$(OBJECTS)
+all:	$(APPS) $(OBJECTS)
 
 gen_cube_perm: gen_cube_perm.cpp
 	g++ -O3 -Wall --pedantic -std=c++11 -o $@ $<
@@ -94,4 +96,4 @@ test_cube: test_cube.cpp center_corners.h center_edges.h
 	g++ --std=c++14 -O3 -Wall --pedantic -o $@ $<
 
 clean: 
-	@rm -fv $(OBJECTS)
+	@rm -fv $(APPS) $(OBJECTS)
