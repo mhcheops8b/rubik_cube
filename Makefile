@@ -13,7 +13,8 @@ APPS = \
 	center_edges_cube \
 	test_cube \
 	test_cube666_solve test_cube666_shuffle \
-	test_cube666_moves
+	test_cube666_moves \
+	test_center_edges_even
 
 OBJECTS = \
 	fixed_edges.o	\
@@ -96,6 +97,9 @@ center_corners_cube2: center_corners_cube2.cpp center_corners.h
 center_corners_cube3: center_corners_cube3.cpp center_corners.h 
 	g++ --std=c++14 -O3 -Wall --pedantic  -o $@ $<
 
+
+test_center_edges_even: test_center_edges_even.cpp center_edges.h
+	g++ --std=c++14 -O3 -Wall --pedantic  -o $@ $<
 
 test_cube: test_cube.cpp center_corners.h center_edges.h
 	g++ --std=c++14 -O3 -Wall --pedantic -o $@ $<

@@ -770,3 +770,842 @@ void center_edges_odd<N>::disp_cube(std::ostream &os) {
 	os << "D Face:\n";
 	disp_face(*this, center_edges_odd<N>::D, os);
 }
+//-------------------------------------------
+// Even cube
+//-------------------------------------------
+#include "faces.h"
+
+template <int N>
+constexpr int number_of_indices_even = 6 * (N - 2) * (N - 4);
+
+template <int N>
+constexpr int number_of_indices_per_face_even = (N - 2) * (N - 4);
+
+template <int N>
+constexpr int number_of_layers_even = (N - 2) / 2;
+
+template <int N>
+struct center_edges_even {
+	int perm[number_of_indices_even<N>];
+
+	center_edges_even();
+	void disp_cube(std::ostream &os = std::cout);
+
+	template<int U>
+	friend void apply_Face(const faces &f, center_edges_even<U> &ce);
+
+	template<int U>
+	friend void apply_L(center_edges_even<U> &ce);
+
+	template<int U>
+	friend void apply_R(center_edges_even<U> &ce);
+
+	template<int U>
+	friend void apply_F(center_edges_even<U> &ce);
+
+	template<int U>
+	friend void apply_B(center_edges_even<U> &ce);
+
+	template<int U>
+	friend void apply_U(center_edges_even<U> &ce);
+
+	template<int U>
+	friend void apply_D(center_edges_even<U> &ce);
+
+	template <int U, int K>
+	friend void apply_ML(center_edges_even<U> &ce);
+
+};
+
+template <int N>
+center_edges_even<N>::center_edges_even() {
+	static_assert(N % 2 == 0, "N must be even.");
+	static_assert(N >= 6, "There are no center edges for smaller cubes thant 6x6x6.");
+
+	for (int i = 0; i < number_of_indices_even<N>; i++)
+		perm[i] = i;
+}
+
+template <int N>
+inline int WF_even(int layer, int index) {
+	return 4 * (layer - 1) * (layer - 2)
+		+ 3 * 2 * (layer - 1) + index;
+}
+
+template <int N>
+inline int NF_even(int layer, int index) {
+	return 4 * (layer - 1) * (layer - 2)
+		+ index;
+}
+
+template <int N>
+inline int EF_even(int layer, int index) {
+	return 4 * (layer - 1) * (layer - 2)
+		+ 2 * (layer - 1) + index;
+}
+
+template <int N>
+inline int SF_even(int layer, int index) {
+	return 4 * (layer - 1) * (layer - 2)
+		+ 2 * 2 * (layer - 1) + index;
+}
+
+template <int N>
+inline int face_NF_even(const faces &f, int layer, int index) {
+	return f * number_of_indices_per_face_even<N> + NF_even<N>(layer, index);
+}
+
+template <int N>
+inline int face_EF_even(const faces &f, int layer, int index) {
+	return f * number_of_indices_per_face_even<N> + EF_even<N>(layer, index);
+}
+
+template <int N>
+inline int face_WF_even(const faces &f, int layer, int index) {
+	return f * number_of_indices_per_face_even<N> + WF_even<N>(layer, index);
+}
+
+template <int N>
+inline int face_SF_even(const faces &f, int layer, int index) {
+	return f * number_of_indices_per_face_even<N> + SF_even<N>(layer, index);
+}
+
+
+template<int N>
+void center_edges_even<N>::disp_cube(std::ostream &os) {
+// U Face
+
+	// 1st row
+
+	// skip
+	for (int i = 0; i <= N; i++)
+		os << ' ';
+	//
+	for (int i = 0; i < N; i++)
+		os << '.';
+	os << '\n';
+
+	// 2nd -... row
+	for (int k = number_of_layers_even<N>; k > 0; k--) {
+		// skip
+		for (int i = 0; i <= N; i++)
+			os << ' ';
+
+			os << '.';
+
+		for (int t = number_of_layers_even<N>; t > k; t--) {
+
+			os << face_labels[ perm [face_WF_even<N>(U, t, t + k - 2)] / number_of_indices_per_face_even<N> ];
+
+		}
+			os << '.';
+
+		// padding middle
+		for (int t = 0; t < 2 * (k - 1); t++)
+			os << face_labels[ perm [face_NF_even<N>(U, k, t)] / number_of_indices_per_face_even<N> ];
+
+			os << '.';
+
+		for (int t = k + 1; t <= number_of_layers_even<N>; t++) {
+
+			os << face_labels[ perm [face_EF_even<N>(U, t, t - k - 1)] / number_of_indices_per_face_even<N> ];
+
+		}
+
+		os << '.';
+		os << '\n';
+	} 
+
+	// row + 1 - last - 1
+	for (int k = 1; k <= number_of_layers_even<N>; k++) {
+		// skip
+		for (int i = 0; i <= N; i++)
+			os << ' ';
+
+			os << '.';
+
+		for (int t = number_of_layers_even<N>; t > k; t--) {
+
+			os << face_labels[ perm [face_WF_even<N>(U, t, t - k - 1)] / number_of_indices_per_face_even<N> ];
+
+		}
+			os << '.';
+
+		// middle
+		for (int t = 2 * (k - 1) - 1; t >= 0; t--)
+			os << face_labels[ perm [face_SF_even<N>(U, k, t)] / number_of_indices_per_face_even<N> ];
+
+			os << '.';
+
+		for (int t = k + 1; t <= number_of_layers_even<N>; t++) {
+
+			os << face_labels[ perm [face_EF_even<N>(U, t, t + k - 2)] / number_of_indices_per_face_even<N> ];
+
+		}
+
+		os << '.';
+		os << '\n';
+
+	} 
+	// last row
+
+	// skip
+	for (int i = 0; i <= N; i++)
+		os << ' ';
+	//
+	for (int i = 0; i < N; i++)
+		os << '.';
+	os << '\n';
+
+//LFRB face
+	// 1st row
+
+	//
+	for (int k = 0; k < 3; k++) {
+		for (int i = 0; i < N; i++)
+			os << '.';
+		os << ' ';
+	}
+
+	for (int i = 0; i < N; i++)
+		os << '.';
+	os << '\n';
+
+	// 2nd -... row
+	for (int k = number_of_layers_even<N>; k > 0; k--) {
+
+		os << '.';
+
+		for (int t = number_of_layers_even<N>; t > k; t--) {
+
+			os << face_labels[ perm [face_WF_even<N>(L, t, t + k - 2)] / number_of_indices_per_face_even<N> ];
+
+		}
+			os << '.';
+
+		// middle
+		for (int t = 0; t < 2 * (k - 1); t++)
+			os << face_labels[ perm [face_NF_even<N>(L, k, t)] / number_of_indices_per_face_even<N> ];
+
+			os << '.';
+
+		for (int t = k + 1; t <= number_of_layers_even<N>; t++) {
+
+			os << face_labels[ perm [face_EF_even<N>(L, t, t - k - 1)] / number_of_indices_per_face_even<N> ];
+
+		}
+
+		os << '.';
+
+		os << ' ';
+
+		os << '.';
+
+		for (int t = number_of_layers_even<N>; t > k; t--) {
+
+			os << face_labels[ perm [face_WF_even<N>(F, t, t + k - 2)] / number_of_indices_per_face_even<N> ];
+
+		}
+			os << '.';
+
+		// middle
+		for (int t = 0; t < 2 * (k - 1); t++)
+			os << face_labels[ perm [face_NF_even<N>(F, k, t)] / number_of_indices_per_face_even<N> ];
+
+			os << '.';
+
+		for (int t = k + 1; t <= number_of_layers_even<N>; t++) {
+
+			os << face_labels[ perm [face_EF_even<N>(F, t, t - k - 1)] / number_of_indices_per_face_even<N> ];
+
+		}
+
+		os << '.';
+
+		os << ' ';
+
+		os << '.';
+
+		for (int t = number_of_layers_even<N>; t > k; t--) {
+
+			os << face_labels[ perm [face_WF_even<N>(R, t, t + k - 2)] / number_of_indices_per_face_even<N> ];
+
+		}
+			os << '.';
+
+		// middle
+		for (int t = 0; t < 2 * (k - 1); t++)
+			os << face_labels[ perm [face_NF_even<N>(R, k, t)] / number_of_indices_per_face_even<N> ];
+
+			os << '.';
+
+		for (int t = k + 1; t <= number_of_layers_even<N>; t++) {
+
+			os << face_labels[ perm [face_EF_even<N>(R, t, t - k - 1)] / number_of_indices_per_face_even<N> ];
+
+		}
+
+		os << '.';
+
+		os << ' ';
+
+		os << '.';
+
+		for (int t = number_of_layers_even<N>; t > k; t--) {
+
+			os << face_labels[ perm [face_WF_even<N>(B, t, t + k - 2)] / number_of_indices_per_face_even<N> ];
+
+		}
+			os << '.';
+
+		// middle
+		for (int t = 0; t < 2 * (k - 1); t++)
+			os << face_labels[ perm [face_NF_even<N>(B, k, t)] / number_of_indices_per_face_even<N> ];
+
+			os << '.';
+
+		for (int t = k + 1; t <= number_of_layers_even<N>; t++) {
+
+			os << face_labels[ perm [face_EF_even<N>(B, t, t - k - 1)] / number_of_indices_per_face_even<N> ];
+
+		}
+
+		os << '.';
+		os << '\n';
+	} 
+
+	// row + 1 - last - 1
+	for (int k = 1; k <= number_of_layers_even<N>; k++) {
+
+		os << '.';
+
+		for (int t = number_of_layers_even<N>; t > k; t--) {
+
+			os << face_labels[ perm [face_WF_even<N>(L, t, t - k - 1)] / number_of_indices_per_face_even<N> ];
+
+		}
+			os << '.';
+
+		// middle
+		for (int t = 2 * (k - 1) - 1; t >= 0; t--)
+			os << face_labels[ perm [face_SF_even<N>(L, k, t)] / number_of_indices_per_face_even<N> ];
+
+			os << '.';
+
+		for (int t = k + 1; t <= number_of_layers_even<N>; t++) {
+
+			os << face_labels[ perm [face_EF_even<N>(L, t, t + k - 2)] / number_of_indices_per_face_even<N> ];
+
+		}
+
+		os << '.';
+
+		os << ' ';
+
+		os << '.';
+
+		for (int t = number_of_layers_even<N>; t > k; t--) {
+
+			os << face_labels[ perm [face_WF_even<N>(F, t, t - k - 1)] / number_of_indices_per_face_even<N> ];
+
+		}
+			os << '.';
+
+		// middle
+		for (int t = 2 * (k - 1) - 1; t >= 0; t--)
+			os << face_labels[ perm [face_SF_even<N>(F, k, t)] / number_of_indices_per_face_even<N> ];
+
+			os << '.';
+
+		for (int t = k + 1; t <= number_of_layers_even<N>; t++) {
+
+			os << face_labels[ perm [face_EF_even<N>(F, t, t + k - 2)] / number_of_indices_per_face_even<N> ];
+
+		}
+
+		os << '.';
+
+		os << ' ';
+
+		os << '.';
+
+		for (int t = number_of_layers_even<N>; t > k; t--) {
+
+			os << face_labels[ perm [face_WF_even<N>(R, t, t - k - 1)] / number_of_indices_per_face_even<N> ];
+
+		}
+			os << '.';
+
+		// middle
+		for (int t = 2 * (k - 1) - 1; t >= 0; t--)
+			os << face_labels[ perm [face_SF_even<N>(R, k, t)] / number_of_indices_per_face_even<N> ];
+
+			os << '.';
+
+		for (int t = k + 1; t <= number_of_layers_even<N>; t++) {
+
+			os << face_labels[ perm [face_EF_even<N>(R, t, t + k - 2)] / number_of_indices_per_face_even<N> ];
+
+		}
+
+		os << '.';
+
+		os << ' ';
+
+		os << '.';
+
+		for (int t = number_of_layers_even<N>; t > k; t--) {
+
+			os << face_labels[ perm [face_WF_even<N>(B, t, t - k - 1)] / number_of_indices_per_face_even<N> ];
+
+		}
+			os << '.';
+
+		// middle
+		for (int t = 2 * (k - 1) - 1; t >= 0; t--)
+			os << face_labels[ perm [face_SF_even<N>(B, k, t)] / number_of_indices_per_face_even<N> ];
+
+			os << '.';
+
+		for (int t = k + 1; t <= number_of_layers_even<N>; t++) {
+
+			os << face_labels[ perm [face_EF_even<N>(B, t, t + k - 2)] / number_of_indices_per_face_even<N> ];
+
+		}
+
+		os << '.';
+		os << '\n';
+
+	} 
+	// last row
+
+	// skip
+	for (int i = 0; i <= N; i++)
+		os << ' ';
+	//
+	for (int i = 0; i < N; i++)
+		os << '.';
+	os << '\n';
+
+//D face
+	// 1st row
+
+	// skip
+	for (int i = 0; i <= N; i++)
+		os << ' ';
+	//
+	for (int i = 0; i < N; i++)
+		os << '.';
+	os << '\n';
+
+	// 2nd -... row
+	for (int k = number_of_layers_even<N>; k > 0; k--) {
+		// skip
+		for (int i = 0; i <= N; i++)
+			os << ' ';
+
+			os << '.';
+
+		for (int t = number_of_layers_even<N>; t > k; t--) {
+
+			os << face_labels[ perm [face_WF_even<N>(D, t, t + k - 2)] / number_of_indices_per_face_even<N> ];
+
+		}
+			os << '.';
+
+		// middle
+		for (int t = 0; t < 2 * (k - 1); t++)
+			os << face_labels[ perm [face_NF_even<N>(D, k, t)] / number_of_indices_per_face_even<N> ];
+
+			os << '.';
+
+		for (int t = k + 1; t <= number_of_layers_even<N>; t++) {
+
+			os << face_labels[ perm [face_EF_even<N>(D, t, t - k - 1)] / number_of_indices_per_face_even<N> ];
+
+		}
+
+		os << '.';
+		os << '\n';
+	} 
+
+	// row + 1 - last - 1
+	for (int k = 1; k <= number_of_layers_even<N>; k++) {
+		// skip
+		for (int i = 0; i <= N; i++)
+			os << ' ';
+
+			os << '.';
+
+		for (int t = number_of_layers_even<N>; t > k; t--) {
+
+			os << face_labels[ perm [face_WF_even<N>(D, t, t - k - 1)] / number_of_indices_per_face_even<N> ];
+
+		}
+			os << '.';
+
+		// middle
+		for (int t = 2 * (k - 1) - 1; t >= 0; t--)
+			os << face_labels[ perm [face_SF_even<N>(D, k, t)] / number_of_indices_per_face_even<N> ];
+
+			os << '.';
+
+		for (int t = k + 1; t <= number_of_layers_even<N>; t++) {
+
+			os << face_labels[ perm [face_EF_even<N>(D, t, t + k - 2)] / number_of_indices_per_face_even<N> ];
+
+		}
+
+		os << '.';
+		os << '\n';
+
+	} 
+	// last row
+
+	// skip
+	for (int i = 0; i <= N; i++)
+		os << ' ';
+	//
+	for (int i = 0; i < N; i++)
+		os << '.';
+	os << '\n';
+}
+
+template <int N>
+void apply_Face(const faces &f, center_edges_even<N> &ce) {
+	for (int k = 2; k <= number_of_layers_even<N>; k++) {
+		for (int t = 0; t < 2 * k; t++) {
+//			 NF  ->  EF  ->  SF  ->  WF
+//			k, t -> k, t -> k, t -> k, t
+			int tmp = ce.perm[ face_NF_even<N>(f, k, t) ];
+
+			ce.perm[ face_NF_even<N>(f, k, t) ] = ce.perm[ face_WF_even<N>(f, k, t) ];
+			ce.perm[ face_WF_even<N>(f, k, t) ] = ce.perm[ face_SF_even<N>(f, k, t) ];
+			ce.perm[ face_SF_even<N>(f, k, t) ] = ce.perm[ face_EF_even<N>(f, k, t) ];
+			ce.perm[ face_EF_even<N>(f, k, t) ] = tmp;
+
+		}
+	}
+
+}
+
+template <int N>
+void apply_L(center_edges_even<N> &ce) {
+	apply_Face(L, ce);
+}
+
+template <int N>
+void apply_R(center_edges_even<N> &ce) {
+	apply_Face(R, ce);
+}
+
+template <int N>
+void apply_F(center_edges_even<N> &ce) {
+	apply_Face(F, ce);
+}
+
+template <int N>
+void apply_B(center_edges_even<N> &ce) {
+	apply_Face(B, ce);
+}
+
+template <int N>
+void apply_U(center_edges_even<N> &ce) {
+	apply_Face(U, ce);
+}
+
+template <int N>
+void apply_D(center_edges_even<N> &ce) {
+	apply_Face(D, ce);
+}
+
+template <int N, int K>
+void apply_ML(center_edges_even<N> &ce) {
+	static_assert(K >= 1, "K must be positive.");
+	static_assert(K <= number_of_layers_even<N>, "K must less than number of layers.");
+
+	for (int k = number_of_layers_even<N>; k > K; k--) {
+
+		int tmp = ce.perm[ face_NF_even<N>(U, k, k - K - 1) ];
+
+		ce.perm[ face_NF_even<N>(U, k, k - K - 1) ] = 
+			ce.perm[ face_SF_even<N>(B, k, k - K - 1) ];
+
+		ce.perm[ face_SF_even<N>(B, k, k - K - 1) ] = 
+			ce.perm[ face_NF_even<N>(D, k, k - K - 1) ];
+
+		ce.perm[ face_NF_even<N>(D, k, k - K - 1) ] =
+			ce.perm[ face_NF_even<N>(F, k, k - K - 1) ]; 
+
+		ce.perm[ face_NF_even<N>(F, k, k - K - 1) ] = tmp; 
+	}
+	for (int k = 2 * K - 3; k>=0; k--) {
+		// U-WF(K, k) -> F-WF(K, k) -> D-WF(K, k) -> B-EF(K, k)
+	
+		int tmp = ce.perm[ face_WF_even<N>(U, K, k) ];
+
+		ce.perm[ face_WF_even<N>(U, K, k) ] = ce.perm[ face_EF_even<N>(B, K, k) ];
+		ce.perm[ face_EF_even<N>(B, K, k) ] = ce.perm[ face_WF_even<N>(D, K, k) ];
+		ce.perm[ face_WF_even<N>(D, K, k) ] = ce.perm[ face_WF_even<N>(F, K, k) ];
+		ce.perm[ face_WF_even<N>(F, K, k) ] = tmp;
+	}
+
+	for (int k = number_of_layers_even<N>; k > K; k--) {
+
+		int tmp = ce.perm[ face_SF_even<N>(U, k, k + K - 2) ];
+
+		ce.perm[ face_SF_even<N>(U, k, k + K - 2) ] = 
+			ce.perm[ face_NF_even<N>(B, k, k + K - 2) ];
+
+		ce.perm[ face_NF_even<N>(B, k, k + K - 2) ] = 
+			ce.perm[ face_SF_even<N>(D, k, k + K - 2) ];
+
+		ce.perm[ face_SF_even<N>(D, k, k + K - 2) ] =
+			ce.perm[ face_SF_even<N>(F, k, k + K - 2) ]; 
+
+		ce.perm[ face_SF_even<N>(F, k, k + K - 2) ] = tmp; 
+	}
+
+}
+
+template <int N, int K>
+void apply_MR(center_edges_even<N> &ce) {
+	static_assert(K >= 1, "K must be positive.");
+	static_assert(K <= number_of_layers_even<N>, "K must less than number of layers.");
+
+	for (int k = number_of_layers_even<N>; k > K; k--) {
+
+		int tmp = ce.perm[ face_NF_even<N>(U, k, k + K - 2) ];
+
+		ce.perm[ face_NF_even<N>(U, k, k + K - 2) ] = 
+			ce.perm[ face_NF_even<N>(F, k, k + K - 2) ];
+
+		ce.perm[ face_NF_even<N>(F, k, k + K - 2) ] = 
+			ce.perm[ face_NF_even<N>(D, k, k + K - 2) ];
+
+		ce.perm[ face_NF_even<N>(D, k, k + K - 2) ] =
+			ce.perm[ face_SF_even<N>(B, k, k + K - 2) ]; 
+
+		ce.perm[ face_SF_even<N>(B, k, k + K - 2) ] = tmp; 
+	}
+	for (int k = 2 * K - 3; k>=0; k--) {
+		// U-WF(K, k) -> F-WF(K, k) -> D-WF(K, k) -> B-EF(K, k)
+	
+		int tmp = ce.perm[ face_EF_even<N>(U, K, k) ];
+
+		ce.perm[ face_EF_even<N>(U, K, k) ] = ce.perm[ face_EF_even<N>(F, K, k) ];
+		ce.perm[ face_EF_even<N>(F, K, k) ] = ce.perm[ face_EF_even<N>(D, K, k) ];
+		ce.perm[ face_EF_even<N>(D, K, k) ] = ce.perm[ face_WF_even<N>(B, K, k) ];
+		ce.perm[ face_WF_even<N>(B, K, k) ] = tmp;
+	}
+
+	for (int k = number_of_layers_even<N>; k > K; k--) {
+
+		int tmp = ce.perm[ face_SF_even<N>(U, k, k - K - 1) ];
+
+		ce.perm[ face_SF_even<N>(U, k, k - K - 1) ] = 
+			ce.perm[ face_SF_even<N>(F, k, k - K - 1) ];
+
+		ce.perm[ face_SF_even<N>(F, k, k - K - 1) ] = 
+			ce.perm[ face_SF_even<N>(D, k, k - K - 1) ];
+
+		ce.perm[ face_SF_even<N>(D, k, k - K - 1) ] =
+			ce.perm[ face_NF_even<N>(B, k, k - K - 1) ]; 
+
+		ce.perm[ face_NF_even<N>(B, k, k - K - 1) ] = tmp; 
+	}
+
+}
+
+template <int N, int K>
+void apply_MF(center_edges_even<N> &ce) {
+	static_assert(K >= 1, "K must be positive.");
+	static_assert(K <= number_of_layers_even<N>, "K must less than number of layers.");
+
+	for (int k = number_of_layers_even<N>; k > K; k--) {
+
+		int tmp = ce.perm[ face_NF_even<N>(R, k, k - K - 1) ];
+
+		ce.perm[ face_NF_even<N>(R, k, k - K - 1) ] = 
+			ce.perm[ face_WF_even<N>(U, k, k - K - 1) ];
+
+		ce.perm[ face_WF_even<N>(U, k, k - K - 1) ] = 
+			ce.perm[ face_SF_even<N>(L, k, k - K - 1) ];
+
+		ce.perm[ face_SF_even<N>(L, k, k - K - 1) ] =
+			ce.perm[ face_EF_even<N>(D, k, k - K - 1) ]; 
+
+		ce.perm[ face_EF_even<N>(D, k, k - K - 1) ] = tmp; 
+	}
+
+	for (int k = 2 * K - 3; k>=0; k--) {
+		int tmp = ce.perm[ face_WF_even<N>(R, K, k) ];
+
+		ce.perm[ face_WF_even<N>(R, K, k) ] = ce.perm[ face_SF_even<N>(U, K, k) ];
+		ce.perm[ face_SF_even<N>(U, K, k) ] = ce.perm[ face_EF_even<N>(L, K, k) ];
+		ce.perm[ face_EF_even<N>(L, K, k) ] = ce.perm[ face_NF_even<N>(D, K, k) ];
+		ce.perm[ face_NF_even<N>(D, K, k) ] = tmp;
+	}
+
+	for (int k = number_of_layers_even<N>; k > K; k--) {
+
+		int tmp = ce.perm[ face_SF_even<N>(R, k, k + K - 2) ];
+
+		ce.perm[ face_SF_even<N>(R, k, k + K - 2) ] = 
+			ce.perm[ face_EF_even<N>(U, k, k + K - 2) ];
+
+		ce.perm[ face_EF_even<N>(U, k, k + K - 2) ] = 
+			ce.perm[ face_NF_even<N>(L, k, k + K - 2) ];
+
+		ce.perm[ face_NF_even<N>(L, k, k + K - 2) ] =
+			ce.perm[ face_WF_even<N>(D, k, k + K - 2) ]; 
+
+		ce.perm[ face_WF_even<N>(D, k, k + K - 2) ] = tmp; 
+	}
+
+}
+
+template <int N, int K>
+void apply_MB(center_edges_even<N> &ce) {
+	static_assert(K >= 1, "K must be positive.");
+	static_assert(K <= number_of_layers_even<N>, "K must less than number of layers.");
+
+	for (int k = number_of_layers_even<N>; k > K; k--) {
+
+		int tmp = ce.perm[ face_NF_even<N>(R, k, k + K - 2) ];
+
+		ce.perm[ face_NF_even<N>(R, k, k + K - 2) ] = 
+			ce.perm[ face_EF_even<N>(D, k, k + K - 2) ];
+
+		ce.perm[ face_EF_even<N>(D, k, k + K - 2) ] = 
+			ce.perm[ face_SF_even<N>(L, k, k + K - 2) ];
+
+		ce.perm[ face_SF_even<N>(L, k, k + K - 2) ] =
+			ce.perm[ face_WF_even<N>(U, k, k + K - 2) ]; 
+
+		ce.perm[ face_WF_even<N>(U, k, k + K - 2) ] = tmp; 
+	}
+
+	for (int k = 2 * K - 3; k>=0; k--) {
+		int tmp = ce.perm[ face_EF_even<N>(R, K, k) ];
+
+		ce.perm[ face_EF_even<N>(R, K, k) ] = ce.perm[ face_SF_even<N>(D, K, k) ];
+		ce.perm[ face_SF_even<N>(D, K, k) ] = ce.perm[ face_WF_even<N>(L, K, k) ];
+		ce.perm[ face_WF_even<N>(L, K, k) ] = ce.perm[ face_NF_even<N>(U, K, k) ];
+		ce.perm[ face_NF_even<N>(U, K, k) ] = tmp;
+	}
+
+	for (int k = number_of_layers_even<N>; k > K; k--) {
+
+		int tmp = ce.perm[ face_SF_even<N>(R, k, k - K - 1) ];
+
+		ce.perm[ face_SF_even<N>(R, k, k - K - 1) ] = 
+			ce.perm[ face_WF_even<N>(D, k, k - K - 1) ];
+
+		ce.perm[ face_WF_even<N>(D, k, k - K - 1) ] = 
+			ce.perm[ face_NF_even<N>(L, k, k - K - 1) ];
+
+		ce.perm[ face_NF_even<N>(L, k, k - K - 1) ] =
+			ce.perm[ face_EF_even<N>(U, k, k - K - 1) ]; 
+
+		ce.perm[ face_EF_even<N>(U, k, k - K - 1) ] = tmp; 
+	}
+
+}
+
+template <int N, int K>
+void apply_MU(center_edges_even<N> &ce) {
+	static_assert(K >= 1, "K must be positive.");
+	static_assert(K <= number_of_layers_even<N>, "K must less than number of layers.");
+
+	for (int k = number_of_layers_even<N>; k > K; k--) {
+
+		int tmp = ce.perm[ face_WF_even<N>(F, k, k + K - 2) ];
+
+		ce.perm[ face_WF_even<N>(F, k, k + K - 2) ] = 
+			ce.perm[ face_WF_even<N>(R, k, k + K - 2) ];
+
+		ce.perm[ face_WF_even<N>(R, k, k + K - 2) ] = 
+			ce.perm[ face_EF_even<N>(B, k, k - K - 1) ];
+
+		ce.perm[ face_EF_even<N>(B, k, k - K - 1) ] =
+			ce.perm[ face_WF_even<N>(L, k, k + K - 2) ]; 
+
+		ce.perm[ face_WF_even<N>(L, k, k + K - 2) ] = tmp; 
+	}
+
+
+	for (int k = 2 * K - 3; k>=0; k--) {
+		int tmp = ce.perm[ face_NF_even<N>(F, K, k) ];
+
+		ce.perm[ face_NF_even<N>(F, K, k) ] = ce.perm[ face_NF_even<N>(R, K, k) ];
+		ce.perm[ face_NF_even<N>(R, K, k) ] = ce.perm[ face_NF_even<N>(B, K, 2 * K - 3 - k) ];
+		ce.perm[ face_NF_even<N>(B, K, 2 * K - 3 - k) ] = ce.perm[ face_NF_even<N>(L, K, k) ];
+		ce.perm[ face_NF_even<N>(L, K, k) ] = tmp;
+	}
+
+
+	for (int k = number_of_layers_even<N>; k > K; k--) {
+
+		int tmp = ce.perm[ face_EF_even<N>(F, k, k - K - 1) ];
+
+		ce.perm[ face_EF_even<N>(F, k, k - K - 1) ] = 
+			ce.perm[ face_EF_even<N>(R, k, k - K - 1) ];
+
+		ce.perm[ face_EF_even<N>(R, k, k - K - 1) ] = 
+			ce.perm[ face_WF_even<N>(B, k, k + K - 2) ];
+
+		ce.perm[ face_WF_even<N>(B, k, k + K - 2) ] =
+			ce.perm[ face_EF_even<N>(L, k, k - K - 1) ]; 
+
+		ce.perm[ face_EF_even<N>(L, k, k - K - 1) ] = tmp; 
+	}
+
+}
+
+template <int N, int K>
+void apply_MD(center_edges_even<N> &ce) {
+	static_assert(K >= 1, "K must be positive.");
+	static_assert(K <= number_of_layers_even<N>, "K must less than number of layers.");
+
+	for (int k = number_of_layers_even<N>; k > K; k--) {
+
+		int tmp = ce.perm[ face_WF_even<N>(F, k, k - K - 1) ];
+
+		ce.perm[ face_WF_even<N>(F, k, k - K - 1) ] = 
+			ce.perm[ face_WF_even<N>(L, k, k - K - 1) ];
+
+		ce.perm[ face_WF_even<N>(L, k, k - K - 1) ] = 
+			ce.perm[ face_EF_even<N>(B, k, k + K - 2) ];
+
+		ce.perm[ face_EF_even<N>(B, k, k + K - 2) ] =
+			ce.perm[ face_WF_even<N>(R, k, k - K - 1) ]; 
+
+		ce.perm[ face_WF_even<N>(R, k, k - K - 1) ] = tmp; 
+	}
+
+	for (int k = 2 * K - 3; k>=0; k--) {
+		int tmp = ce.perm[ face_SF_even<N>(F, K, k) ];
+
+		ce.perm[ face_SF_even<N>(F, K, k) ] = ce.perm[ face_SF_even<N>(L, K, k) ];
+		ce.perm[ face_SF_even<N>(L, K, k) ] = ce.perm[ face_SF_even<N>(B, K, 2 * K - 3 - k) ];
+		ce.perm[ face_SF_even<N>(B, K, 2 * K - 3 - k) ] = ce.perm[ face_SF_even<N>(R, K, k) ];
+		ce.perm[ face_SF_even<N>(R, K, k) ] = tmp;
+	}
+
+	for (int k = number_of_layers_even<N>; k > K; k--) {
+
+		int tmp = ce.perm[ face_EF_even<N>(F, k, k + K - 2) ];
+
+		ce.perm[ face_EF_even<N>(F, k, k + K - 2) ] = 
+			ce.perm[ face_EF_even<N>(L, k, k + K - 2) ];
+
+		ce.perm[ face_EF_even<N>(L, k, k + K - 2) ] = 
+			ce.perm[ face_WF_even<N>(B, k, k - K - 1) ];
+
+		ce.perm[ face_WF_even<N>(B, k, k - K - 1) ] =
+			ce.perm[ face_EF_even<N>(R, k, k + K - 2) ]; 
+
+		ce.perm[ face_EF_even<N>(R, k, k + K - 2) ] = tmp; 
+	}
+}
