@@ -784,7 +784,7 @@ constexpr int number_of_indices_per_face_even = (N - 2) * (N - 4);
 template <int N>
 constexpr int number_of_layers_even = (N - 2) / 2;
 
-template <int N>
+template <int N, bool isEven>
 struct center_edges_even {
 	int perm[number_of_indices_even<N>];
 
@@ -792,33 +792,48 @@ struct center_edges_even {
 	void disp_cube(std::ostream &os = std::cout);
 
 	template<int U>
-	friend void apply_Face(const faces &f, center_edges_even<U> &ce);
+	friend void apply_Face(const faces &f, center_edges_even<U, isEven> &ce);
 
 	template<int U>
-	friend void apply_L(center_edges_even<U> &ce);
+	friend void apply_L(center_edges_even<U, isEven> &ce);
 
 	template<int U>
-	friend void apply_R(center_edges_even<U> &ce);
+	friend void apply_R(center_edges_even<U, isEven> &ce);
 
 	template<int U>
-	friend void apply_F(center_edges_even<U> &ce);
+	friend void apply_F(center_edges_even<U, isEven> &ce);
 
 	template<int U>
-	friend void apply_B(center_edges_even<U> &ce);
+	friend void apply_B(center_edges_even<U, isEven> &ce);
 
 	template<int U>
-	friend void apply_U(center_edges_even<U> &ce);
+	friend void apply_U(center_edges_even<U, isEven> &ce);
 
 	template<int U>
-	friend void apply_D(center_edges_even<U> &ce);
+	friend void apply_D(center_edges_even<U, isEven> &ce);
 
 	template <int U, int K>
-	friend void apply_ML(center_edges_even<U> &ce);
+	friend void apply_ML(center_edges_even<U, isEven> &ce);
+
+	template <int U, int K>
+	friend void apply_MR(center_edges_even<U, isEven> &ce);
+
+	template <int U, int K>
+	friend void apply_MF(center_edges_even<U, isEven> &ce);
+
+	template <int U, int K>
+	friend void apply_MB(center_edges_even<U, isEven> &ce);
+
+	template <int U, int K>
+	friend void apply_MU(center_edges_even<U, isEven> &ce);
+
+	template <int U, int K>
+	friend void apply_MD(center_edges_even<U, isEven> &ce);
 
 };
 
-template <int N>
-center_edges_even<N>::center_edges_even() {
+template <int N, bool isEven>
+center_edges_even<N, isEven>::center_edges_even() {
 	static_assert(N % 2 == 0, "N must be even.");
 	static_assert(N >= 6, "There are no center edges for smaller cubes thant 6x6x6.");
 
@@ -871,8 +886,8 @@ inline int face_SF_even(const faces &f, int layer, int index) {
 }
 
 
-template<int N>
-void center_edges_even<N>::disp_cube(std::ostream &os) {
+template<int N, bool isEven>
+void center_edges_even<N, isEven>::disp_cube(std::ostream &os) {
 // U Face
 
 	// 1st row
@@ -1272,7 +1287,7 @@ void center_edges_even<N>::disp_cube(std::ostream &os) {
 }
 
 template <int N>
-void apply_Face(const faces &f, center_edges_even<N> &ce) {
+void apply_Face(const faces &f, center_edges_even<N, true> &ce) {
 	for (int k = 2; k <= number_of_layers_even<N>; k++) {
 		for (int t = 0; t < 2 * k; t++) {
 //			 NF  ->  EF  ->  SF  ->  WF
@@ -1290,37 +1305,37 @@ void apply_Face(const faces &f, center_edges_even<N> &ce) {
 }
 
 template <int N>
-void apply_L(center_edges_even<N> &ce) {
+void apply_L(center_edges_even<N, true> &ce) {
 	apply_Face(L, ce);
 }
 
 template <int N>
-void apply_R(center_edges_even<N> &ce) {
+void apply_R(center_edges_even<N, true> &ce) {
 	apply_Face(R, ce);
 }
 
 template <int N>
-void apply_F(center_edges_even<N> &ce) {
+void apply_F(center_edges_even<N, true> &ce) {
 	apply_Face(F, ce);
 }
 
 template <int N>
-void apply_B(center_edges_even<N> &ce) {
+void apply_B(center_edges_even<N, true> &ce) {
 	apply_Face(B, ce);
 }
 
 template <int N>
-void apply_U(center_edges_even<N> &ce) {
+void apply_U(center_edges_even<N, true> &ce) {
 	apply_Face(U, ce);
 }
 
 template <int N>
-void apply_D(center_edges_even<N> &ce) {
+void apply_D(center_edges_even<N, true> &ce) {
 	apply_Face(D, ce);
 }
 
 template <int N, int K>
-void apply_ML(center_edges_even<N> &ce) {
+void apply_ML(center_edges_even<N, true> &ce) {
 	static_assert(K >= 1, "K must be positive.");
 	static_assert(K <= number_of_layers_even<N>, "K must less than number of layers.");
 
@@ -1369,7 +1384,7 @@ void apply_ML(center_edges_even<N> &ce) {
 }
 
 template <int N, int K>
-void apply_MR(center_edges_even<N> &ce) {
+void apply_MR(center_edges_even<N, true> &ce) {
 	static_assert(K >= 1, "K must be positive.");
 	static_assert(K <= number_of_layers_even<N>, "K must less than number of layers.");
 
@@ -1418,7 +1433,7 @@ void apply_MR(center_edges_even<N> &ce) {
 }
 
 template <int N, int K>
-void apply_MF(center_edges_even<N> &ce) {
+void apply_MF(center_edges_even<N, true> &ce) {
 	static_assert(K >= 1, "K must be positive.");
 	static_assert(K <= number_of_layers_even<N>, "K must less than number of layers.");
 
@@ -1466,7 +1481,7 @@ void apply_MF(center_edges_even<N> &ce) {
 }
 
 template <int N, int K>
-void apply_MB(center_edges_even<N> &ce) {
+void apply_MB(center_edges_even<N, true> &ce) {
 	static_assert(K >= 1, "K must be positive.");
 	static_assert(K <= number_of_layers_even<N>, "K must less than number of layers.");
 
@@ -1514,7 +1529,7 @@ void apply_MB(center_edges_even<N> &ce) {
 }
 
 template <int N, int K>
-void apply_MU(center_edges_even<N> &ce) {
+void apply_MU(center_edges_even<N, true> &ce) {
 	static_assert(K >= 1, "K must be positive.");
 	static_assert(K <= number_of_layers_even<N>, "K must less than number of layers.");
 
@@ -1564,7 +1579,7 @@ void apply_MU(center_edges_even<N> &ce) {
 }
 
 template <int N, int K>
-void apply_MD(center_edges_even<N> &ce) {
+void apply_MD(center_edges_even<N, true> &ce) {
 	static_assert(K >= 1, "K must be positive.");
 	static_assert(K <= number_of_layers_even<N>, "K must less than number of layers.");
 
@@ -1609,3 +1624,6 @@ void apply_MD(center_edges_even<N> &ce) {
 		ce.perm[ face_EF_even<N>(R, k, k + K - 2) ] = tmp; 
 	}
 }
+
+template <int N>
+using center_edges=center_edges_even<N, true>;
