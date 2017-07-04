@@ -18,13 +18,13 @@ int main() {
 	}
 	return 0;
 #endif
-	center_edges<6> ce;
+	center_edges_even<6, true> ce;
 	ce.disp_cube();
 
 	apply_ML<6,1>(ce);
 	ce.disp_cube();
 
-	center_edges<8> ce2;
+	center_edges_even<8, true> ce2;
 	ce2.disp_cube();
 
 	std::cout << "---\n";
@@ -32,9 +32,12 @@ int main() {
 	ce2.disp_cube();
 	std::cout << "---\n";
 
-	center_edges<8> ce3;
+	center_edges_even<8, true> ce3;
 
 	std::cout << "---\n";
 	apply_MD<8,1>(ce3);
 	ce3.disp_cube();
+
+	_Center_edges<5, false> ce_odd;
+//	Center_edges<6> ce_even;
 }

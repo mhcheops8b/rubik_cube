@@ -46,6 +46,112 @@ ML k:
 #include <ostream>
 #include "faces.h"
 
+//--------------------------
+template <int N, bool isEven>
+constexpr int number_of_indices2;
+
+// even
+template <int N>
+constexpr int number_of_indices2<N, true> = 6 * (N - 2) * (N - 4);
+
+// odd
+template <int N>
+constexpr int number_of_indices2<N, false> = 6 * (N - 3) * (N - 3);
+//--------------------------
+
+template <int N, bool isEven> struct _Impl;
+
+template <int N, bool isEven>
+class _Center_edges {
+
+public:
+	_Center_edges();
+	void disp_cube(std::ostream &os = std::cout);
+
+	template<int U>
+	friend void apply_Face(const faces &f, _Center_edges<U, isEven> &ce);
+
+	template<int U>
+	friend void apply_L(_Center_edges<U, isEven> &ce);
+
+	template<int U>
+	friend void apply_R(_Center_edges<U, isEven> &ce);
+
+	template<int U>
+	friend void apply_F(_Center_edges<U, isEven> &ce);
+
+	template<int U>
+	friend void apply_B(_Center_edges<U, isEven> &ce);
+
+	template<int U>
+	friend void apply_U(_Center_edges<U, isEven> &ce);
+
+	template<int U>
+	friend void apply_D(_Center_edges<U, isEven> &ce);
+
+	template <int U, int K>
+	friend void apply_ML(_Center_edges<U, isEven> &ce);
+
+	template <int U, int K>
+	friend void apply_MR(_Center_edges<U, isEven> &ce);
+
+	template <int U, int K>
+	friend void apply_MF(_Center_edges<U, isEven> &ce);
+
+	template <int U, int K>
+	friend void apply_MB(_Center_edges<U, isEven> &ce);
+
+	template <int U, int K>
+	friend void apply_MU(_Center_edges<U, isEven> &ce);
+
+	template <int U, int K>
+	friend void apply_MD(_Center_edges<U, isEven> &ce);
+
+private:
+	template <int U>
+	friend void _Impl<U,isEven>::_center_edges_impl(_Center_edges<U, isEven> *ce);
+
+	int perm[number_of_indices2<N, isEven>];
+
+};
+
+template <int N>
+using Center_edges = _Center_edges<N, N % 2 == 0>;
+
+template <int N, bool isEven> struct _Impl;
+
+template <int N, bool isEven>
+_Center_edges<N, isEven>::_Center_edges() {
+	_Impl<N, isEven>::_center_edges_impl(this);
+}
+
+
+template<int N>
+struct _Impl<N, false> {
+	void _center_edges_impl(_Center_edges<N, false> *ce) {
+		static_assert(N % 2 == 1, "N must be even.");
+		static_assert(N >= 5, "There are no center edges for smaller cubes thant 5x5x5.");
+
+		for (int i = 0; i < number_of_indices2<N, false>; i++)
+			ce->perm[i] = i;
+	}
+};
+
+template<int N>
+struct _Impl<N, true> {
+	void _center_edges_impl(_Center_edges<N, true> *ce) {
+
+		static_assert(N % 2 == 0, "N must be even.");
+		static_assert(N >= 6, "There are no center edges for smaller cubes thant 6x6x6.");
+
+		for (int i = 0; i < number_of_indices2<N, true>; i++)
+			ce->perm[i] = i;
+	}
+};
+
+
+
+
 template <int N>
 constexpr int number_of_layers = (N - 3) / 2;
 
@@ -777,6 +883,7 @@ void center_edges_odd<N>::disp_cube(std::ostream &os) {
 
 template <int N>
 constexpr int number_of_indices_even = 6 * (N - 2) * (N - 4);
+
 
 template <int N>
 constexpr int number_of_indices_per_face_even = (N - 2) * (N - 4);
@@ -1625,5 +1732,5 @@ void apply_MD(center_edges_even<N, true> &ce) {
 	}
 }
 
-template <int N>
-using center_edges=center_edges_even<N, true>;
+//template <int N>
+//using center_edges=center_edges_even<N, true>;
