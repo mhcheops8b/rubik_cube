@@ -1,7 +1,7 @@
 // CE_FIX.cpp : Defines the entry point for the console application.
 //
 
-#include "stdafx.h"
+//#include "stdafx.h"
 
 #include <iostream>
 #include "center_edges.h"
@@ -43,12 +43,43 @@ int main() {
 	apply_MD<8, 1>(ce3);
 	ce3.disp_cube();
 
-	Center_edges<5> ce_odd;
-	Center_edges<6> ce_even;
+#if 0
+///
+	Center_edges<7> ce_odd;
+
+	ce_odd.disp_cube();
+	std::cout << "----\n";
+	apply_MF<7,2>(ce_odd);
+
+//	apply_L(ce_odd);
+//	apply_F(ce_odd);
+	ce_odd.disp_cube();
+#endif
+
+
+	std::cout << "----\n";
+	Center_edges<8> ce_even;
+	ce_even.disp_cube();
+	std::cout << "----\n";
+//	apply_ML<6,1>(ce_even);
+	apply_MF<8,3>(ce_even);
+	ce_even.disp_cube();
+	//std::cout << "----\n";
+	
 	//apply_Face(L, ce_odd);
-	apply_Face(ce_even, L);
-	apply_Face(ce_even, R);
+//	apply_Face(ce_even, L);
+//	apply_Face(ce_even, R);
+//	apply_L(ce_even);
+//	apply_R(ce_even);
+//	apply_F(ce_even);
+//	apply_B(ce_even);
+//	apply_U(ce_even);
+//	apply_D(ce_even);
+//
+//	apply_ML<5,1>(ce_odd);
+
 
 }
+
 
 
