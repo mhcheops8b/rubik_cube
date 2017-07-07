@@ -4,6 +4,7 @@
 //#include "stdafx.h"
 
 #include <iostream>
+#include "center_edges_old.h"
 #include "center_edges.h"
 
 int main() {
@@ -78,6 +79,7 @@ int main() {
 //
 //	apply_ML<5,1>(ce_odd);
 
+	ce_even.disp_perm();
 
 }
 

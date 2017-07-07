@@ -1,7 +1,7 @@
 #include <iostream>
 #include <iomanip>
 #include "center_corners.h"
-#include "center_edges.h"
+#include "center_edges_old.h"
 
 struct cube {
 	Center_corners<5> cc5;
