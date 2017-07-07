@@ -59,7 +59,7 @@ int main() {
 
 
 	std::cout << "----\n";
-	Center_edges<8> ce_even;
+	rubik_cube::Center_edges<8> ce_even;
 	ce_even.disp_cube();
 	std::cout << "----\n";
 //	apply_ML<6,1>(ce_even);
@@ -80,6 +80,46 @@ int main() {
 //	apply_ML<5,1>(ce_odd);
 
 	ce_even.disp_perm();
+	//all possible moves
+	rubik_cube::Center_edges<10> ce10;
+	apply_L(ce10);
+	apply_R(ce10);
+	apply_F(ce10);
+	apply_B(ce10);
+	apply_U(ce10);
+	apply_D(ce10);
+
+	apply_ML<10,1>(ce10);
+	apply_ML<10,2>(ce10);
+	apply_ML<10,3>(ce10);
+	apply_ML<10,4>(ce10);
+
+	apply_MR<10,1>(ce10);
+	apply_MR<10,2>(ce10);
+	apply_MR<10,3>(ce10);
+	apply_MR<10,4>(ce10);
+
+	apply_MF<10,1>(ce10);
+	apply_MF<10,2>(ce10);
+	apply_MF<10,3>(ce10);
+	apply_MF<10,4>(ce10);
+
+	apply_MB<10,1>(ce10);
+	apply_MB<10,2>(ce10);
+	apply_MB<10,3>(ce10);
+	apply_MB<10,4>(ce10);
+
+	apply_MU<10,1>(ce10);
+	apply_MU<10,2>(ce10);
+	apply_MU<10,3>(ce10);
+	apply_MU<10,4>(ce10);
+
+	apply_MD<10,1>(ce10);
+	apply_MD<10,2>(ce10);
+	apply_MD<10,3>(ce10);
+	apply_MD<10,4>(ce10);
+	
+	ce10.disp_cube();
 
 }
 
