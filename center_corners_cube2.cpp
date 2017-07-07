@@ -3,6 +3,8 @@
 #include <ostream>
 #include "center_corners.h"
 
+using namespace rubik_cube;
+
 int main() {
 
 	Center_corners<5> new_cube;
@@ -21,11 +23,11 @@ int main() {
 	apply_MB<5,0>(new_cube);
 	apply_MD<5,0>(new_cube);
 
-	new_cube.disp();
+	new_cube.disp_perm();
 	std::cout << "---\n";
 
 	new_cube.init();
-	new_cube.disp();
+	new_cube.disp_perm();
 	std::cout << "---\n";
 
 	// MR2 R2 B2 U2 ML U2 MR' U2 MR U2 F2 MR F2 ML' B2 R2 MR2
@@ -62,7 +64,7 @@ int main() {
 	apply_R(new_cube);
 	apply_MR<5,0>(new_cube);
 	apply_MR<5,0>(new_cube);
-	new_cube.disp();
+	new_cube.disp_perm();
 	std::cout << "\t---\n";
 	std::cout << "Sgn: " << signum(new_cube) << '\n';
 	std::cout << "\t---\n";

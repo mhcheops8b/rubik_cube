@@ -1,84 +1,116 @@
 #pragma once
 #include "faces.h"
 
-//			  U,L,F, R, B, D
-//static int face_idxs[] = {0,4,8,12,16,20};
-//enum faces {U = 0, L = 4, F = 8, R = 12, B = 16, D = 20};
-enum corners {NW = 0, NE = 1, SE = 2, SW = 3};
-inline constexpr int get_index(faces f, corners c) { return 4 * f + c; }
-const char labels[] = {'U', 'L', 'F', 'R', 'B', 'D'};
 
-// N >= 5
-// number of ks = (N-3)/2
-template <int N>
-constexpr int number_of_layers=(N % 2 == 1 ? (N-3)/2: (N-2)/2);
+namespace rubik_cube {
 
 template <int N, bool isOdd>
-struct disp_cube_Impl;
+struct _Center_corners_Impl;
 
-template <int N, int K>
-struct apply_M_Impl;
+template <int N, int K, bool isOdd>
+struct _Center_corners_Impl_K;
 
+template <int N, bool isOdd>
+class _Center_corners;
 
 template <int N>
-class Center_corners {
+using Center_corners = _Center_corners<N, N % 2 == 1>;
+
+template <int N, bool isOdd>
+class _Center_corners {
 
 public:
-	Center_corners();
+	_Center_corners();
 	void init();
-	void disp(std::ostream &os = std::cout);
+	void disp_perm(std::ostream &os = std::cout);
 	void disp_cube(std::ostream &os = std::cout);
 
 
-	template <int U>
-	friend void apply_face(Center_corners<U> &cc, const enum faces &face); 
+	template <int U, bool odd>
+	friend void apply_Face(_Center_corners<U, odd> &cc, const enum faces &face); 
 
-	template <int U>
-	friend void apply_L(Center_corners<U> &cc); 
+	template <int U, bool odd>
+	friend void apply_L(_Center_corners<U, odd> &cc); 
 
-	template <int U>
-	friend void apply_R(Center_corners<U> &cc); 
+	template <int U, bool odd>
+	friend void apply_R(_Center_corners<U, odd> &cc); 
 
-	template <int U>
-	friend void apply_U(Center_corners<U> &cc); 
+	template <int U, bool odd>
+	friend void apply_U(_Center_corners<U, odd> &cc); 
 
-	template <int U>
-	friend void apply_D(Center_corners<U> &cc); 
+	template <int U, bool odd>
+	friend void apply_D(_Center_corners<U, odd> &cc); 
 
-	template <int U>
-	friend void apply_F(Center_corners<U> &cc);
+	template <int U, bool odd>
+	friend void apply_F(_Center_corners<U, odd> &cc);
 
-	template <int U>
-	friend void apply_B(Center_corners<U> &cc); 
+	template <int U, bool odd>
+	friend void apply_B(_Center_corners<U, odd> &cc); 
 
-	template <int U, int K>
-	friend void apply_ML(Center_corners<U> &cc); 
+	template <int U, int K, bool odd>
+	friend void apply_ML(_Center_corners<U, odd> &cc); 
 
-	template <int U, int K>
-	friend void apply_MR(Center_corners<U> &cc); 
+	template <int U, int K, bool odd>
+	friend void apply_MR(_Center_corners<U, odd> &cc); 
 
-	template <int U, int K>
-	friend void apply_MU(Center_corners<U> &cc); 
+	template <int U, int K, bool odd>
+	friend void apply_MU(_Center_corners<U, odd> &cc); 
 
-	template <int U, int K>
-	friend void apply_MD(Center_corners<U> &cc); 
+	template <int U, int K, bool odd>
+	friend void apply_MD(_Center_corners<U, odd> &cc); 
 
-	template <int U, int K>
-	friend void apply_MF(Center_corners<U> &cc);
+	template <int U, int K, bool odd>
+	friend void apply_MF(_Center_corners<U, odd> &cc);
 
-	template <int U, int K>
-	friend void apply_MB(Center_corners<U> &cc); 
+	template <int U, int K, bool odd>
+	friend void apply_MB(_Center_corners<U, odd> &cc); 
 
-	template <int U>
-	friend int signum(Center_corners<U> &cc);
+	template <int U, bool odd>
+	friend int signum(_Center_corners<U, odd> &cc);
 
+	static const int number_of_layers;
+
+	enum corners {NW = 0, NE = 1, SE = 2, SW = 3};
+	static constexpr inline int get_index(const faces &f, const _Center_corners<N, isOdd>::corners &c) { return 4 * f + c; }
 	
 private:
+	template <int U, bool odd>
+	friend void _Center_corners_Impl<U, odd>::init(_Center_corners<U, odd> &cc); 
+
+	template <int U, bool odd>
+	friend void _Center_corners_Impl<U, odd>::apply_Face(_Center_corners<U, odd> &cc, const enum faces &face); 
+
+	template <int U, bool odd>
+	friend void _Center_corners_Impl<U, odd>::disp_perm(_Center_corners<U, odd> &cc, std::ostream &os); 
+
+	template <int U, bool odd>
+	friend void _Center_corners_Impl<U, odd>::disp_cube(_Center_corners<U, odd> &cc, std::ostream &os); 
+
+	template <int U, int K, bool odd>
+	friend void _Center_corners_Impl_K<U, K, odd>::apply_ML(_Center_corners<U, odd> &cc); 
+
+	template <int U, int K, bool odd>
+	friend void _Center_corners_Impl_K<U, K, odd>::apply_MR(_Center_corners<U, odd> &cc); 
+
+	template <int U, int K, bool odd>
+	friend void _Center_corners_Impl_K<U, K, odd>::apply_MF(_Center_corners<U, odd> &cc); 
+
+	template <int U, int K, bool odd>
+	friend void _Center_corners_Impl_K<U, K, odd>::apply_MB(_Center_corners<U, odd> &cc); 
+
+	template <int U, int K, bool odd>
+	friend void _Center_corners_Impl_K<U, K, odd>::apply_MU(_Center_corners<U, odd> &cc); 
+
+	template <int U, int K, bool odd>
+	friend void _Center_corners_Impl_K<U, K, odd>::apply_MD(_Center_corners<U, odd> &cc); 
+
+	template <int U, bool odd>
+	friend int _Center_corners_Impl<U, odd>::signum(_Center_corners<U, odd> &cc); 
+
+	#if 0
 	template <int U, bool isOdd>
 	friend void disp_cube_Impl<U, isOdd>::disp_cube_(Center_corners<U> &cc, std::ostream &os);
 
-	template <int U, int K>
-	friend void apply_M_Impl<U, K>::apply_ML(Center_corners<U> &cc); 
 
 	template <int U, int K>
 	friend void apply_M_Impl<U, K>::apply_MR(Center_corners<U> &cc); 
@@ -94,6 +126,7 @@ private:
 
 	template <int U, int K>
 	friend void apply_M_Impl<U, K>::apply_MB(Center_corners<U> &cc); 
+	#endif
 
 	// U: 1-4, L: 5-8, F: 9-12, R: 13-16, B: 17-20, D: 21-24
 	// (idx - 1)
@@ -102,63 +135,166 @@ private:
 	// NW: 1, NE: 2, SE: 3, SW: 4
 	// layer>=1
 	// For layer == 0 (odd cube) it is center
-	int perm[N % 2 ? number_of_layers<N> + 1 : number_of_layers<N>][24];
+	int perm[isOdd ? _Center_corners_Impl<N, isOdd>::number_of_layers + 1 : _Center_corners_Impl<N, isOdd>::number_of_layers][24];
 
 };
 
 
-template <int N>
-void Center_corners<N>::init() {
-	if (N % 2) {
-		for (int i = 0; i < 6; i++)
-			perm[0][4 * i] = 4 * i;
+template <int N, bool isOdd>
+const int _Center_corners<N, isOdd>::number_of_layers = _Center_corners_Impl<N, isOdd>::number_of_layers;
 
-		for (int k = 1; k <= number_of_layers<N>; k++)
-			for (int i = 0; i < 24; i++)
-				perm[k][i] = i;
-	}
-	else {
-		for (int k = 0; k < number_of_layers<N>; k++)
-			for (int i = 0; i < 24; i++)
-				perm[k][i] = i;
-	}
+template <int N, bool isOdd>
+void _Center_corners<N, isOdd>::init() {
+	_Center_corners_Impl<N, isOdd>::init(*this);
 }
 
-template <int N>
-Center_corners<N>::Center_corners() {
+template <int N, bool isOdd>
+_Center_corners<N, isOdd>::_Center_corners() {
 	init();
-	/*for (int k = 0; k < number_of_layers<N>; k++)
-	for (int i = 0; i < 24; i++)
-		perm[k][i] = i;*/
 }
-
-
-template <int N>
-void Center_corners<N>::disp(std::ostream &os) {
-	static char labels[] = {'U', 'L', 'F', 'B', 'R', 'D'};
-	for (int k = 0; k < number_of_layers<N>; k++) {
-		std::cout << "Layer " << k + 1 << ":\n";
-		for (int i = 0; i < 6;i++) {
-			std::cout << '\t' << labels[i] << ": ";
-			for (int j = 0; j < 4; j++) {
-				std::cout << std::setw(3) << perm[k][4*i+j];	
-			}
-			std::cout << '\n';
-		}
-	}
-}
-
 
 
 template <int N, bool isOdd>
-void disp_cube_(Center_corners<N> &cc, std::ostream &os) {
-	disp_cube_Impl<N, isOdd>::disp_cube_(cc, os);
+void _Center_corners<N, isOdd>::disp_perm(std::ostream &os) {
+	_Center_corners_Impl<N, isOdd>::disp_perm(*this, os);//_Center_corners<N, isOdd> &cc, std::ostream &os)
 }
 
-// Odd cube display
-template <int N>
-struct disp_cube_Impl<N, true> {
-	static void disp_cube_(Center_corners<N> &cc, std::ostream &os) {
+template <int N, bool isOdd>
+void _Center_corners<N, isOdd>::disp_cube(std::ostream &os) {
+	_Center_corners_Impl<N, isOdd>::disp_cube(*this, os);
+}
+
+template <int N, bool isOdd>
+void apply_Face(_Center_corners<N, isOdd> &cc, const enum faces &face) {
+	_Center_corners_Impl<N,isOdd>::apply_Face(cc, face);
+}
+
+template <int N, bool isOdd>
+void apply_L(_Center_corners<N, isOdd> &cc) {
+	apply_Face<N, isOdd>(cc, L);
+}
+
+template <int N, bool isOdd>
+void apply_R(_Center_corners<N, isOdd> &cc) {
+	apply_Face<N, isOdd>(cc, R);
+}
+
+template <int N, bool isOdd>
+void apply_U(_Center_corners<N, isOdd> &cc) {
+	apply_Face<N, isOdd>(cc, U);
+}
+
+template <int N, bool isOdd>
+void apply_D(_Center_corners<N, isOdd> &cc) {
+	apply_Face<N, isOdd>(cc, D);
+}
+
+template <int N, bool isOdd>
+void apply_F(_Center_corners<N, isOdd> &cc) {
+	apply_Face<N, isOdd>(cc, F);
+}
+
+template <int N, bool isOdd>
+void apply_B(_Center_corners<N, isOdd> &cc) {
+	apply_Face<N, isOdd>(cc, B);
+}
+
+template <int N, int K, bool isOdd>
+void apply_ML(_Center_corners<N, isOdd> &cc) {
+	_Center_corners_Impl_K<N, K, isOdd>::apply_ML(cc);
+}
+
+template <int N, int K, bool isOdd>
+void apply_MR(_Center_corners<N, isOdd> &cc) {
+	_Center_corners_Impl_K<N, K, isOdd>::apply_MR(cc);
+}
+
+template <int N, int K, bool isOdd>
+void apply_MF(_Center_corners<N, isOdd> &cc) {
+	_Center_corners_Impl_K<N, K, isOdd>::apply_MF(cc);
+}
+
+template <int N, int K, bool isOdd>
+void apply_MB(_Center_corners<N, isOdd> &cc) {
+	_Center_corners_Impl_K<N, K, isOdd>::apply_MB(cc);
+}
+
+template <int N, int K, bool isOdd>
+void apply_MU(_Center_corners<N, isOdd> &cc) {
+	_Center_corners_Impl_K<N, K, isOdd>::apply_MU(cc);
+}
+
+template <int N, int K, bool isOdd>
+void apply_MD(_Center_corners<N, isOdd> &cc) {
+	_Center_corners_Impl_K<N, K, isOdd>::apply_MD(cc);
+}
+
+template <int N, bool isOdd>
+int signum(_Center_corners<N, isOdd> &cc) {
+	return _Center_corners_Impl<N, isOdd>::signum(cc);
+}
+
+
+template<int N>
+struct _Center_corners_Impl<N, true> {
+	static const int number_of_layers = (N - 3) / 2;
+
+	static void init(_Center_corners<N, true> &cc) {
+		for (int i = 0; i < 6; i++)
+			cc.perm[0][4 * i] = 4 * i;
+
+		for (int k = 1; k <= _Center_corners<N, true>::number_of_layers; k++)
+			for (int i = 0; i < 24; i++)
+				cc.perm[k][i] = i;
+	}
+
+	static void apply_Face(_Center_corners<N, true> &cc, const enum faces &face) {
+		for (int k = 1; k <= _Center_corners<N, true>::number_of_layers; k++) {
+
+			int tmp = cc.perm[k][4 * face];
+
+			cc.perm[k][4 * face] = cc.perm[k][4 * face + 3];
+			cc.perm[k][4 * face + 3] = cc.perm[k][4 * face + 2];
+			cc.perm[k][4 * face + 2] = cc.perm[k][4 * face + 1];
+			cc.perm[k][4 * face + 1] = tmp;	
+		}
+	}
+
+	static int signum(_Center_corners<N, true> &cc) {
+		int signum = 1;
+		for (int k = 1; k <= _Center_corners<N, true>::number_of_layers; k++) {
+			for (int i = 0; i < 24; i++)
+			for (int j = i + 1; j < 24; j++)
+				if (cc.perm[k][i] > cc.perm[k][j])
+					signum*=-1;
+		}
+
+		return signum;
+	}
+
+	static void disp_perm(_Center_corners<N, true> &cc, std::ostream &os) {
+		os << "Layer 0 (center): \n"; 
+		for (int i = 0; i < 6;i++) {
+			std::cout << '\t' << face_labels[i] << ": ";
+			for (int j = 0; j < 4; j++) {
+				std::cout << std::setw(3) << cc.perm[0][j];	
+			}
+			std::cout << '\n';
+		}
+
+		for (int k = 1; k <= _Center_corners<N, true>::number_of_layers; k++) {
+			std::cout << "Layer " << k << ":\n";
+			for (int i = 0; i < 6;i++) {
+				std::cout << '\t' << face_labels[i] << ": ";
+				for (int j = 0; j < 4; j++) {
+					std::cout << std::setw(3) << cc.perm[k][4*i+j];	
+				}
+				std::cout << '\n';
+			}
+		}
+	}
+
+	static void disp_cube(_Center_corners<N, true> &cc, std::ostream &os) {
 	//
 		for (int i = 0; i <= N; i++)
 			os << ' ';
@@ -167,7 +303,7 @@ struct disp_cube_Impl<N, true> {
 			os << '.';
 		os << '\n';
 
-		for (int k = number_of_layers<N>; k >=0; k--) {
+		for (int k = _Center_corners<N, true>::number_of_layers; k >=0; k--) {
 	//
 			for (int i = 0; i <= N; i++)
 				os << ' ';
@@ -175,19 +311,19 @@ struct disp_cube_Impl<N, true> {
 			for (int t = (N - 1)/2 - k ; t>0; t--)
 				os << '.';
 			if (k == 0)
-				os << labels[ (cc.perm[k][4 * U]) / 4];
+				os << face_labels[ (cc.perm[k][4 * U]) / 4];
 			else {
-				os << labels[ (cc.perm[k][get_index(U, NW)]) / 4 ];
+				os << face_labels[ (cc.perm[k][cc.get_index(U, _Center_corners<N,true>::NW)]) / 4 ];
 				for (int s = 0; s < 2* k - 1; s++)
 					os << '.';
-				os << labels[ (cc.perm[k][get_index(U, NE)]) / 4 ];
+				os << face_labels[ (cc.perm[k][cc.get_index(U, _Center_corners<N,true>::NE)]) / 4 ];
 			}     
 			for (int t = (N - 1)/2 - k ; t>0; t--)
 				os << '.';
 			os << '\n';
 		}
 
-		for (int k = 1; k <= number_of_layers<N>; k++) {
+		for (int k = 1; k <= _Center_corners<N, true>::number_of_layers; k++) {
 	//
 			for (int i = 0; i <= N; i++)
 				os << ' ';
@@ -195,10 +331,10 @@ struct disp_cube_Impl<N, true> {
 			for (int t = (N - 1)/2 - k ; t>0; t--)
 				os << '.';
 
-			os << labels[ (cc.perm[k][get_index(U, SW)]) / 4 ];
+			os << face_labels[ (cc.perm[k][cc.get_index(U, _Center_corners<N,true>::SW)]) / 4 ];
 			for (int s = 0; s < 2* k - 1; s++)
 				os << '.';
-			os << labels[ (cc.perm[k][get_index(U, SE)]) / 4 ];
+			os << face_labels[ (cc.perm[k][cc.get_index(U, _Center_corners<N,true>::SE)]) / 4 ];
 		
 			for (int t = (N - 1)/2 - k ; t > 0; t--)
 				os << '.';
@@ -221,18 +357,18 @@ struct disp_cube_Impl<N, true> {
 		os << '\n';
 
 	//
-		for (int k = number_of_layers<N>; k >= 0; k--) {
+		for (int k = _Center_corners<N, true>::number_of_layers; k >= 0; k--) {
 	//
 			for (int t = (N - 1)/2 - k ; t>0; t--)
 				os << '.';
 			if (k == 0)
-				os << labels[ cc.perm[k][4 * L] / 4 ];
+				os << face_labels[ cc.perm[k][4 * L] / 4 ];
 			else {
-				os << labels[ (cc.perm[k][get_index(L, NW)]) / 4 ];
+				os << face_labels[ (cc.perm[k][cc.get_index(L, _Center_corners<N,true>::NW)]) / 4 ];
 					;
 				for (int s = 0; s < 2* k - 1; s++)
 					os << '.';
-				os << labels[ (cc.perm[k][get_index(L, NE)]) / 4 ];
+				os << face_labels[ (cc.perm[k][cc.get_index(L, _Center_corners<N,true>::NE)]) / 4 ];
 			}     
 			for (int t = (N - 1)/2 - k ; t>0; t--)
 				os << '.';
@@ -242,12 +378,12 @@ struct disp_cube_Impl<N, true> {
 			for (int t = (N - 1)/2 - k ; t > 0; t--)
 				os << '.';
 			if (k == 0)
-				os << labels[ cc.perm[k][4 * F] / 4 ];
+				os << face_labels[ cc.perm[k][4 * F] / 4 ];
 			else {
-				os << labels[ (cc.perm[k][get_index(F, NW)]) / 4 ];
+				os << face_labels[ (cc.perm[k][cc.get_index(F, _Center_corners<N,true>::NW)]) / 4 ];
 				for (int s = 0; s < 2* k - 1; s++)
 					os << '.';
-				os << labels[ (cc.perm[k][get_index(F, NE)]) / 4 ];
+				os << face_labels[ (cc.perm[k][cc.get_index(F, _Center_corners<N,true>::NE)]) / 4 ];
 			}     
 			for (int t = (N - 1)/2 - k; t > 0; t--)
 				os << '.';
@@ -257,12 +393,12 @@ struct disp_cube_Impl<N, true> {
 			for (int t = (N - 1)/2 - k; t > 0; t--)
 				os << '.';
 			if (k == 0)
-				os << labels[ cc.perm[k][4 * R] / 4 ];
+				os << face_labels[ cc.perm[k][4 * R] / 4 ];
 			else {
-				os << labels[ (cc.perm[k][get_index(R, NW)]) / 4 ];
+				os << face_labels[ (cc.perm[k][cc.get_index(R, _Center_corners<N,true>::NW)]) / 4 ];
 				for (int s = 0; s < 2* k - 1; s++)
 					os << '.';
-				os << labels[ (cc.perm[k][get_index(R, NE)]) / 4 ];
+				os << face_labels[ (cc.perm[k][cc.get_index(R, _Center_corners<N,true>::NE)]) / 4 ];
 			}     
 			for (int t = (N - 1)/2 - k ; t>0; t--)
 				os << '.';
@@ -272,12 +408,12 @@ struct disp_cube_Impl<N, true> {
 			for (int t = (N - 1)/2 - k; t > 0; t--)
 				os << '.';
 			if (k == 0)
-				os << labels[ cc.perm[k][4 * B] / 4 ];
+				os << face_labels[ cc.perm[k][4 * B] / 4 ];
 			else {
-				os << labels[ (cc.perm[k][get_index(B, NW)]) / 4 ];
+				os << face_labels[ (cc.perm[k][cc.get_index(B, _Center_corners<N,true>::NW)]) / 4 ];
 				for (int s = 0; s < 2* k - 1; s++)
 					os << '.';
-				os << labels[ (cc.perm[k][get_index(B, NE)]) / 4 ];
+				os << face_labels[ (cc.perm[k][cc.get_index(B, _Center_corners<N,true>::NE)]) / 4 ];
 			}     
 			for (int t = (N - 1)/2 - k; t > 0; t--)
 				os << '.';
@@ -285,15 +421,15 @@ struct disp_cube_Impl<N, true> {
 			os << '\n';
 		}
 
-		for (int k = 1; k <= number_of_layers<N>; k++) {
+		for (int k = 1; k <= _Center_corners<N, true>::number_of_layers; k++) {
 	//
 			for (int t = (N - 1)/2 - k ; t > 0; t--)
 				os << '.';
 
-			os << labels[ (cc.perm[k][get_index(L, SW)]) / 4 ];
+			os << face_labels[ (cc.perm[k][cc.get_index(L, _Center_corners<N,true>::SW)]) / 4 ];
 			for (int s = 0; s < 2* k - 1; s++)
 				os << '.';
-			os << labels[ (cc.perm[k][get_index(L, SE)]) / 4 ];
+			os << face_labels[ (cc.perm[k][cc.get_index(L, _Center_corners<N,true>::SE)]) / 4 ];
 		
 			for (int t = (N - 1)/2 - k ; t>0; t--)
 				os << '.';
@@ -303,10 +439,10 @@ struct disp_cube_Impl<N, true> {
 			for (int t = (N - 1)/2 - k; t > 0; t--)
 				os << '.';
 
-			os << labels[ (cc.perm[k][get_index(F, SW)]) / 4 ];
+			os << face_labels[ (cc.perm[k][cc.get_index(F, _Center_corners<N,true>::SW)]) / 4 ];
 			for (int s = 0; s < 2* k - 1; s++)
 				os << '.';
-			os << labels[ (cc.perm[k][get_index(F, SE)]) / 4 ];
+			os << face_labels[ (cc.perm[k][cc.get_index(F, _Center_corners<N,true>::SE)]) / 4 ];
 		
 			for (int t = (N - 1)/2 - k ; t>0; t--)
 				os << '.';
@@ -316,10 +452,10 @@ struct disp_cube_Impl<N, true> {
 			for (int t = (N - 1)/2 - k; t > 0; t--)
 				os << '.';
 
-			os << labels[ (cc.perm[k][get_index(R, SW)]) / 4 ];
+			os << face_labels[ (cc.perm[k][cc.get_index(R, _Center_corners<N,true>::SW)]) / 4 ];
 			for (int s = 0; s < 2* k - 1; s++)
 				os << '.';
-			os << labels[ (cc.perm[k][get_index(R, SE)]) / 4 ];
+			os << face_labels[ (cc.perm[k][cc.get_index(R, _Center_corners<N,true>::SE)]) / 4 ];
 		
 			for (int t = (N - 1)/2 - k; t > 0; t--)
 				os << '.';
@@ -329,10 +465,10 @@ struct disp_cube_Impl<N, true> {
 			for (int t = (N - 1)/2 - k; t > 0; t--)
 				os << '.';
 
-			os << labels[ (cc.perm[k][get_index(B, SW)]) / 4 ];
+			os << face_labels[ (cc.perm[k][cc.get_index(B, _Center_corners<N,true>::SW)]) / 4 ];
 			for (int s = 0; s < 2* k - 1; s++)
 				os << '.';
-			os << labels[ (cc.perm[k][get_index(B, SE)]) / 4 ];
+			os << face_labels[ (cc.perm[k][cc.get_index(B, _Center_corners<N,true>::SE)]) / 4 ];
 		
 			for (int t = (N - 1)/2 - k; t > 0; t--)
 				os << '.';
@@ -359,7 +495,7 @@ struct disp_cube_Impl<N, true> {
 			os << '.';
 		os << '\n';
 
-		for (int k = number_of_layers<N>; k >= 0; k--) {
+		for (int k = _Center_corners<N, true>::number_of_layers; k >= 0; k--) {
 	//
 			for (int i = 0; i <= N; i++)
 				os << ' ';
@@ -367,19 +503,19 @@ struct disp_cube_Impl<N, true> {
 			for (int t = (N - 1)/2 - k ; t>0; t--)
 				os << '.';
 			if (k == 0)
-				os << labels[ cc.perm[k][4 * D] / 4 ];
+				os << face_labels[ cc.perm[k][4 * D] / 4 ];
 			else {
-				os << labels[ (cc.perm[k][get_index(D, NW)]) / 4 ];
+				os << face_labels[ (cc.perm[k][cc.get_index(D, _Center_corners<N,true>::NW)]) / 4 ];
 				for (int s = 0; s < 2* k - 1; s++)
 					os << '.';
-				os << labels[ (cc.perm[k][get_index(D, NE)]) / 4 ];
+				os << face_labels[ (cc.perm[k][cc.get_index(D, _Center_corners<N,true>::NE)]) / 4 ];
 			}     
 			for (int t = (N - 1)/2 - k ; t > 0; t--)
 				os << '.';
 			os << '\n';
 		}
 
-		for (int k = 1; k <= number_of_layers<N>; k++) {
+		for (int k = 1; k <= _Center_corners<N, true>::number_of_layers; k++) {
 	//
 			for (int i = 0; i <= N; i++)
 				os << ' ';
@@ -387,10 +523,10 @@ struct disp_cube_Impl<N, true> {
 			for (int t = (N - 1)/2 - k; t > 0; t--)
 				os << '.';
 
-			os << labels[ (cc.perm[k][get_index(D, SW)]) / 4 ];
+			os << face_labels[ (cc.perm[k][cc.get_index(D, _Center_corners<N,true>::SW)]) / 4 ];
 			for (int s = 0; s < 2* k - 1; s++)
 				os << '.';
-			os << labels[ (cc.perm[k][get_index(D, SE)]) / 4 ];
+			os << face_labels[ (cc.perm[k][cc.get_index(D, _Center_corners<N,true>::SE)]) / 4 ];
 		
 			for (int t = (N - 1)/2 - k; t > 0; t--)
 				os << '.';
@@ -404,12 +540,55 @@ struct disp_cube_Impl<N, true> {
 			os << '.';
 		os << '\n';
 	}
-}; 
+};
 
-// Even cube display
-template <int N>
-struct disp_cube_Impl<N, false> {
-	static void disp_cube_(Center_corners<N> &cc, std::ostream &os) {
+template<int N>
+struct _Center_corners_Impl<N, false> {
+	static const int number_of_layers = (N - 2) / 2;
+
+	static void init(_Center_corners<N, false> &cc) {
+		for (int k = 0; k < _Center_corners<N, false>::number_of_layers; k++)
+			for (int i = 0; i < 24; i++)
+				cc.perm[k][i] = i;
+	}
+
+	static void apply_Face(_Center_corners<N, false> &cc, const enum faces &face) {
+		for (int k = 0; k < _Center_corners<N, false>::number_of_layers; k++) {
+			int tmp = cc.perm[k][4 * face];
+
+			cc.perm[k][4 * face] = cc.perm[k][4 * face + 3];
+			cc.perm[k][4 * face + 3] = cc.perm[k][4 * face + 2];
+			cc.perm[k][4 * face + 2] = cc.perm[k][4 * face + 1];
+			cc.perm[k][4 * face + 1] = tmp;	
+		}
+	}
+
+	static int signum(_Center_corners<N, true> &cc) {
+		int signum = 1;
+		for (int k = 0; k < _Center_corners<N, false>::number_of_layers; k++) {
+			for (int i = 0; i < 24; i++)
+			for (int j = i + 1; j < 24; j++)
+				if (cc.perm[k][i] > cc.perm[k][j])
+					signum*=-1;
+		}
+
+		return signum;
+	}
+
+	static void disp_perm(_Center_corners<N, true> &cc, std::ostream &os) {
+		for (int k = 0; k < _Center_corners<N, true>::number_of_layers; k++) {
+			std::cout << "Layer " << k + 1 << ":\n";
+			for (int i = 0; i < 6;i++) {
+				std::cout << '\t' << face_labels[i] << ": ";
+				for (int j = 0; j < 4; j++) {
+					std::cout << std::setw(3) << cc.perm[k][4*i+j];	
+				}
+				std::cout << '\n';
+			}
+		}
+	}
+
+	static void disp_cube(_Center_corners<N, false> &cc, std::ostream &os) {
 	//
 		for (int i = 0; i <= N; i++)
 			os << ' ';
@@ -418,7 +597,7 @@ struct disp_cube_Impl<N, false> {
 			os << '.';
 		os << '\n';
 
-		for (int k = number_of_layers<N>; k > 0; k--) {
+		for (int k = _Center_corners<N, false>::number_of_layers; k > 0; k--) {
 	//
 			for (int i = 0; i <= N; i++)
 				os << ' ';
@@ -426,17 +605,17 @@ struct disp_cube_Impl<N, false> {
 			for (int t = N / 2 - k ; t > 0; t--)
 				os << '.';
 
-			os << labels[ (cc.perm[k - 1][NW]) / 4 ];
+			os << face_labels[ (cc.perm[k - 1][_Center_corners<N,false>::NW]) / 4 ];
 			for (int s = 0; s < 2* k - 2; s++)
 				os << '.';
-			os << labels[ (cc.perm[k - 1][NE]) / 4 ];
+			os << face_labels[ (cc.perm[k - 1][_Center_corners<N,false>::NE]) / 4 ];
 			
 			for (int t = N / 2 - k; t > 0; t--)
 				os << '.';
 			//os << '.';
 			os << '\n';
 		}
-		for (int k = 1; k <= number_of_layers<N>; k++) {
+		for (int k = 1; k <= _Center_corners<N, false>::number_of_layers; k++) {
 	//
 			for (int i = 0; i <= N; i++)
 				os << ' ';
@@ -444,10 +623,10 @@ struct disp_cube_Impl<N, false> {
 			for (int t = N / 2 - k ; t > 0; t--)
 				os << '.';
 
-			os << labels[ (cc.perm[k - 1][SW]) / 4 ];
+			os << face_labels[ (cc.perm[k - 1][_Center_corners<N,false>::SW]) / 4 ];
 			for (int s = 0; s < 2* k - 2; s++)
 				os << '.';
-			os << labels[ (cc.perm[k - 1][SE]) / 4 ];
+			os << face_labels[ (cc.perm[k - 1][_Center_corners<N,false>::SE]) / 4 ];
 			
 			for (int t = N / 2 - k; t > 0; t--)
 				os << '.';
@@ -474,15 +653,15 @@ struct disp_cube_Impl<N, false> {
 				os << '.';
 		os << '\n';
 
-		for (int k = number_of_layers<N>; k > 0; k--) {
+		for (int k = _Center_corners<N, false>::number_of_layers; k > 0; k--) {
 	//
 			for (int t = N / 2 - k ; t > 0; t--)
 				os << '.';
 
-			os << labels[ (cc.perm[k - 1][get_index(L, NW)]) / 4 ];
+			os << face_labels[ (cc.perm[k - 1][cc.get_index(L, _Center_corners<N,false>::NW)]) / 4 ];
 			for (int s = 0; s < 2* k - 2; s++)
 				os << '.';
-			os << labels[ (cc.perm[k - 1][get_index(L, NE)]) / 4 ];
+			os << face_labels[ (cc.perm[k - 1][cc.get_index(L, _Center_corners<N,false>::NE)]) / 4 ];
 			
 			for (int t = N / 2 - k; t > 0; t--)
 				os << '.';
@@ -492,10 +671,10 @@ struct disp_cube_Impl<N, false> {
 			for (int t = N / 2 - k ; t > 0; t--)
 				os << '.';
 
-			os << labels[ (cc.perm[k - 1][get_index(F, NW)]) / 4 ];
+			os << face_labels[ (cc.perm[k - 1][cc.get_index(F, _Center_corners<N,false>::NW)]) / 4 ];
 			for (int s = 0; s < 2* k - 2; s++)
 				os << '.';
-			os << labels[ (cc.perm[k - 1][get_index(F, NE)]) / 4 ];
+			os << face_labels[ (cc.perm[k - 1][cc.get_index(F, _Center_corners<N,false>::NE)]) / 4 ];
 			
 			for (int t = N / 2 - k; t > 0; t--)
 				os << '.';
@@ -505,10 +684,10 @@ struct disp_cube_Impl<N, false> {
 			for (int t = N / 2 - k ; t > 0; t--)
 				os << '.';
 
-			os << labels[ (cc.perm[k - 1][get_index(R, NW)]) / 4 ];
+			os << face_labels[ (cc.perm[k - 1][cc.get_index(R, _Center_corners<N,false>::NW)]) / 4 ];
 			for (int s = 0; s < 2* k - 2; s++)
 				os << '.';
-			os << labels[ (cc.perm[k - 1][get_index(R, NE)]) / 4 ];
+			os << face_labels[ (cc.perm[k - 1][cc.get_index(R, _Center_corners<N,false>::NE)]) / 4 ];
 			
 			for (int t = N / 2 - k; t > 0; t--)
 				os << '.';
@@ -518,10 +697,10 @@ struct disp_cube_Impl<N, false> {
 			for (int t = N / 2 - k ; t > 0; t--)
 				os << '.';
 
-			os << labels[ (cc.perm[k - 1][get_index(B, NW)]) / 4 ];
+			os << face_labels[ (cc.perm[k - 1][cc.get_index(B, _Center_corners<N,false>::NW)]) / 4 ];
 			for (int s = 0; s < 2* k - 2; s++)
 				os << '.';
-			os << labels[ (cc.perm[k - 1][get_index(B, NE)]) / 4 ];
+			os << face_labels[ (cc.perm[k - 1][cc.get_index(B, _Center_corners<N,false>::NE)]) / 4 ];
 			
 			for (int t = N / 2 - k; t > 0; t--)
 				os << '.';
@@ -529,15 +708,15 @@ struct disp_cube_Impl<N, false> {
 			os << ' ';
 			os << '\n';
 		}
-		for (int k = 1; k <= number_of_layers<N>; k++) {
+		for (int k = 1; k <= _Center_corners<N, false>::number_of_layers; k++) {
 	//
 			for (int t = N / 2 - k ; t > 0; t--)
 				os << '.';
 
-			os << labels[ (cc.perm[k - 1][get_index(L, SW)]) / 4 ];
+			os << face_labels[ (cc.perm[k - 1][cc.get_index(L, _Center_corners<N,false>::SW)]) / 4 ];
 			for (int s = 0; s < 2* k - 2; s++)
 				os << '.';
-			os << labels[ (cc.perm[k - 1][get_index(L, SE)]) / 4 ];
+			os << face_labels[ (cc.perm[k - 1][cc.get_index(L, _Center_corners<N,false>::SE)]) / 4 ];
 			
 			for (int t = N / 2 - k; t > 0; t--)
 				os << '.';
@@ -547,10 +726,10 @@ struct disp_cube_Impl<N, false> {
 			for (int t = N / 2 - k ; t > 0; t--)
 				os << '.';
 
-			os << labels[ (cc.perm[k - 1][get_index(F, SW)]) / 4 ];
+			os << face_labels[ (cc.perm[k - 1][cc.get_index(F, _Center_corners<N,false>::SW)]) / 4 ];
 			for (int s = 0; s < 2* k - 2; s++)
 				os << '.';
-			os << labels[ (cc.perm[k - 1][get_index(F, SE)]) / 4 ];
+			os << face_labels[ (cc.perm[k - 1][cc.get_index(F, _Center_corners<N,false>::SE)]) / 4 ];
 			
 			for (int t = N / 2 - k; t > 0; t--)
 				os << '.';
@@ -560,10 +739,10 @@ struct disp_cube_Impl<N, false> {
 			for (int t = N / 2 - k ; t > 0; t--)
 				os << '.';
 
-			os << labels[ (cc.perm[k - 1][get_index(R, SW)]) / 4 ];
+			os << face_labels[ (cc.perm[k - 1][cc.get_index(R, _Center_corners<N,false>::SW)]) / 4 ];
 			for (int s = 0; s < 2* k - 2; s++)
 				os << '.';
-			os << labels[ (cc.perm[k - 1][get_index(R, SE)]) / 4 ];
+			os << face_labels[ (cc.perm[k - 1][cc.get_index(R, _Center_corners<N,false>::SE)]) / 4 ];
 			
 			for (int t = N / 2 - k; t > 0; t--)
 				os << '.';
@@ -573,10 +752,10 @@ struct disp_cube_Impl<N, false> {
 			for (int t = N / 2 - k ; t > 0; t--)
 				os << '.';
 
-			os << labels[ (cc.perm[k - 1][get_index(B, SW)]) / 4 ];
+			os << face_labels[ (cc.perm[k - 1][cc.get_index(B, _Center_corners<N,false>::SW)]) / 4 ];
 			for (int s = 0; s < 2* k - 2; s++)
 				os << '.';
-			os << labels[ (cc.perm[k - 1][get_index(B, SE)]) / 4 ];
+			os << face_labels[ (cc.perm[k - 1][cc.get_index(B, _Center_corners<N,false>::SE)]) / 4 ];
 			
 			for (int t = N / 2 - k; t > 0; t--)
 				os << '.';
@@ -603,7 +782,7 @@ struct disp_cube_Impl<N, false> {
 			os << '.';
 		os << '\n';
 
-		for (int k = number_of_layers<N>; k > 0; k--) {
+		for (int k = _Center_corners<N, false>::number_of_layers; k > 0; k--) {
 	//
 			for (int i = 0; i <= N; i++)
 				os << ' ';
@@ -611,17 +790,17 @@ struct disp_cube_Impl<N, false> {
 			for (int t = N / 2 - k ; t > 0; t--)
 				os << '.';
 
-			os << labels[ (cc.perm[k - 1][get_index(D, NW)]) / 4 ];
+			os << face_labels[ (cc.perm[k - 1][cc.get_index(D, _Center_corners<N,false>::NW)]) / 4 ];
 			for (int s = 0; s < 2* k - 2; s++)
 				os << '.';
-			os << labels[ (cc.perm[k - 1][get_index(D, NE)]) / 4 ];
+			os << face_labels[ (cc.perm[k - 1][cc.get_index(D, _Center_corners<N,false>::NE)]) / 4 ];
 			
 			for (int t = N / 2 - k; t > 0; t--)
 				os << '.';
 			//os << '.';
 			os << '\n';
 		}
-		for (int k = 1; k <= number_of_layers<N>; k++) {
+		for (int k = 1; k <= _Center_corners<N, false>::number_of_layers; k++) {
 	//
 			for (int i = 0; i <= N; i++)
 				os << ' ';
@@ -629,10 +808,10 @@ struct disp_cube_Impl<N, false> {
 			for (int t = N / 2 - k ; t > 0; t--)
 				os << '.';
 
-			os << labels[ (cc.perm[k - 1][get_index(D, SW)]) / 4 ];
+			os << face_labels[ (cc.perm[k - 1][cc.get_index(D, _Center_corners<N,false>::SW)]) / 4 ];
 			for (int s = 0; s < 2* k - 2; s++)
 				os << '.';
-			os << labels[ (cc.perm[k - 1][get_index(D, SE)]) / 4 ];
+			os << face_labels[ (cc.perm[k - 1][cc.get_index(D, _Center_corners<N,false>::SE)]) / 4 ];
 			
 			for (int t = N / 2 - k; t > 0; t--)
 				os << '.';
@@ -650,60 +829,11 @@ struct disp_cube_Impl<N, false> {
 
 
 	}
-}; 
+};
 
-template <int N>
-void Center_corners<N>::disp_cube(std::ostream &os) {
-	disp_cube_<N, N % 2 == 1>(*this, os);
-}
-
-template <int N>
-void apply_face(Center_corners<N> &cc, const enum faces &face) {
-
-	for (int k = 1; k <= number_of_layers<N>; k++) {
-
-		int tmp = cc.perm[k][4 * face];
-
-		cc.perm[k][4 * face] = cc.perm[k][4 * face + 3];
-		cc.perm[k][4 * face + 3] = cc.perm[k][4 * face + 2];
-		cc.perm[k][4 * face + 2] = cc.perm[k][4 * face + 1];
-		cc.perm[k][4 * face + 1] = tmp;	
-	}
-}
-
-template <int N>
-void apply_L(Center_corners<N> &cc) {
-	apply_face<N>(cc, L);
-}
-
-template <int N>
-void apply_R(Center_corners<N> &cc) {
-	apply_face<N>(cc, R);
-}
-
-template <int N>
-void apply_U(Center_corners<N> &cc) {
-	apply_face<N>(cc, U);
-}
-
-template <int N>
-void apply_D(Center_corners<N> &cc) {
-	apply_face<N>(cc, D);
-}
-
-template <int N>
-void apply_F(Center_corners<N> &cc) {
-	apply_face<N>(cc, F);
-}
-
-template <int N>
-void apply_B(Center_corners<N> &cc) {
-	apply_face<N>(cc, B);
-}
-
-template <int N>
-struct apply_M_Impl<N, 0> {
-	static void apply_ML(Center_corners<N> &cc) {
+template<int N>
+struct _Center_corners_Impl_K<N, 0, true> {
+	static void apply_ML(_Center_corners<N, true> &cc) {
 		static_assert(N % 2 == 1, "N must be odd in order to use K = 0.");
 			// centers
 			// (U F D B)
@@ -716,7 +846,7 @@ struct apply_M_Impl<N, 0> {
 
 	}
 
-	static void apply_MR(Center_corners<N> &cc) {
+	static void apply_MR(_Center_corners<N, true> &cc) {
 		static_assert(N % 2, "N must be odd in order to use K = 0.");
 		// centers
 		// (U B D F)
@@ -728,7 +858,7 @@ struct apply_M_Impl<N, 0> {
 		cc.perm[0][4 * B] = tmp;
 	}
 
-	static void apply_MU(Center_corners<N> &cc) {
+	static void apply_MU(_Center_corners<N, true> &cc) {
 		static_assert(N % 2, "N must be odd in order to use K = 0.");
 		// centers
 		// (F L B R)
@@ -740,7 +870,7 @@ struct apply_M_Impl<N, 0> {
 		cc.perm[0][4 * L] = tmp;
 	}
 
-	static void apply_MD(Center_corners<N> &cc) {
+	static void apply_MD(_Center_corners<N, true> &cc) {
 		static_assert(N % 2, "N must be odd in order to use K = 0.");
 		// centers
 		// (F R B L)
@@ -752,7 +882,7 @@ struct apply_M_Impl<N, 0> {
 		cc.perm[0][4 * R] = tmp;
 	}
 
-	static void apply_MF(Center_corners<N> &cc) {
+	static void apply_MF(_Center_corners<N, true> &cc) {
 		static_assert(N % 2, "N must be odd in order to use K = 0.");
 		// centers
 		// (U R D L)
@@ -764,7 +894,7 @@ struct apply_M_Impl<N, 0> {
 		cc.perm[0][4 * R] = tmp;
 	}
 
-	static void apply_MB(Center_corners<N> &cc) {
+	static void apply_MB(_Center_corners<N, true> &cc) {
 		static_assert(N % 2, "N must be odd in order to use K = 0.");
 		// centers
 		// (U L D R)
@@ -777,163 +907,243 @@ struct apply_M_Impl<N, 0> {
 	}
 };
 
-template <int N, int K>
-struct apply_M_Impl {
-	static void apply_ML(Center_corners<N> &cc) {
-		static_assert(K <= number_of_layers<N>, "K must be less than or equal to number_of_layers<N>");
-		static_assert(K > 0, "K must be greater than 0");
-
-		constexpr int IDX = (N % 2 ? K : K - 1);
-
-		int tmp = cc.perm[IDX][get_index(U, NW)];
-		cc.perm[IDX][get_index(U, NW)] = cc.perm[IDX][get_index(B, SE)];
-		cc.perm[IDX][get_index(B, SE)] = cc.perm[IDX][get_index(D, NW)];
-		cc.perm[IDX][get_index(D, NW)] = cc.perm[IDX][get_index(F, NW)];
-		cc.perm[IDX][get_index(F, NW)] = tmp;
-
-		tmp = cc.perm[IDX][get_index(U, SW)];
-		cc.perm[IDX][get_index(U, SW)] = cc.perm[IDX][get_index(B, NE)];
-		cc.perm[IDX][get_index(B, NE)] = cc.perm[IDX][get_index(D, SW)];
-		cc.perm[IDX][get_index(D, SW)] = cc.perm[IDX][get_index(F, SW)];
-		cc.perm[IDX][get_index(F, SW) ] = tmp;
+template <int N>
+struct _Center_corners_Impl_K<N, 0, false> {
+	static void apply_ML(_Center_corners<N, false> &cc) {
+		static_assert(N % 2 == 1, "N must be odd in order to use K = 0.");
 	}
 
-	static void apply_MR(Center_corners<N> &cc) {
-		static_assert(K <= number_of_layers<N>, "K must be less than or equal to number_of_layers<N>");
-		static_assert(K > 0, "K must be greater than 0");
-
-		constexpr int IDX = (N % 2 ? K : K - 1);
-
-		int tmp = cc.perm[IDX][get_index(U, NE)];
-		cc.perm[IDX][get_index(U, NE)] = cc.perm[IDX][get_index(F, NE)];
-		cc.perm[IDX][get_index(F, NE)] = cc.perm[IDX][get_index(D, NE)];
-		cc.perm[IDX][get_index(D, NE)] = cc.perm[IDX][get_index(B, SW)];
-		cc.perm[IDX][get_index(B, SW)] = tmp;
-
-		tmp = cc.perm[IDX][get_index(U, SE)];
-		cc.perm[IDX][get_index(U, SE)] = cc.perm[IDX][get_index(F, SE)];
-		cc.perm[IDX][get_index(F, SE)] = cc.perm[IDX][get_index(D, SE)];
-		cc.perm[IDX][get_index(D, SE)] = cc.perm[IDX][get_index(B, NW)];
-		cc.perm[IDX][get_index(B, NW) ] = tmp;
+	static void apply_MR(_Center_corners<N, false> &cc) {
+		static_assert(N % 2, "N must be odd in order to use K = 0.");
 	}
 
-	static void apply_MU(Center_corners<N> &cc) {
-		static_assert(K <= number_of_layers<N>, "K must be less than or equal to number_of_layers<N>");
-		static_assert(K > 0, "K must be greater than 0");
-
-		constexpr int IDX = (N % 2 ? K : K - 1);
-
-		int tmp = cc.perm[IDX][get_index(F, NW)];
-		cc.perm[IDX][get_index(F, NW)] = cc.perm[IDX][get_index(R, NW)];
-		cc.perm[IDX][get_index(R, NW)] = cc.perm[IDX][get_index(B, NW)];
-		cc.perm[IDX][get_index(B, NW)] = cc.perm[IDX][get_index(L, NW)];
-		cc.perm[IDX][get_index(L, NW)] = tmp;
-
-		tmp = cc.perm[IDX][get_index(F, NE)];
-		cc.perm[IDX][get_index(F, NE)] = cc.perm[IDX][get_index(R, NE)];
-		cc.perm[IDX][get_index(R, NE)] = cc.perm[IDX][get_index(B, NE)];
-		cc.perm[IDX][get_index(B, NE)] = cc.perm[IDX][get_index(L, NE)];
-		cc.perm[IDX][get_index(L, NE)] = tmp;
+	static void apply_MU(_Center_corners<N, false> &cc) {
+		static_assert(N % 2, "N must be odd in order to use K = 0.");
 	}
 
-	static void apply_MD(Center_corners<N> &cc) {
-		static_assert(K <= number_of_layers<N>, "K must be less than or equal to number_of_layers<N>");
-		static_assert(K > 0, "K must be greater than 0");
-
-		constexpr int IDX = (N % 2 ? K : K - 1);
-
-		int tmp = cc.perm[IDX][get_index(F, SW)];
-		cc.perm[IDX][get_index(F, SW)] = cc.perm[IDX][get_index(L, SW)];
-		cc.perm[IDX][get_index(L, SW)] = cc.perm[IDX][get_index(B, SW)];
-		cc.perm[IDX][get_index(B, SW)] = cc.perm[IDX][get_index(R, SW)];
-		cc.perm[IDX][get_index(R, SW)] = tmp;
-
-		tmp = cc.perm[IDX][get_index(F, SE)];
-		cc.perm[IDX][get_index(F, SE)] = cc.perm[IDX][get_index(L, SE)];
-		cc.perm[IDX][get_index(L, SE)] = cc.perm[IDX][get_index(B, SE)];
-		cc.perm[IDX][get_index(B, SE)] = cc.perm[IDX][get_index(R, SE)];
-		cc.perm[IDX][get_index(R, SE)] = tmp;
+	static void apply_MD(_Center_corners<N, false> &cc) {
+		static_assert(N % 2, "N must be odd in order to use K = 0.");
 	}
 
-	static void apply_MF(Center_corners<N> &cc) {
-		static_assert(K <= number_of_layers<N>, "K must be less than or equal to number_of_layers<N>");
-		static_assert(K > 0, "K must be greater than 0");
-
-		constexpr int IDX = (N % 2 ? K : K - 1);
-
-		int tmp = cc.perm[IDX][get_index(U, SW)];
-		cc.perm[IDX][get_index(U, SW)] = cc.perm[IDX][get_index(L, SE)];
-		cc.perm[IDX][get_index(L, SE)] = cc.perm[IDX][get_index(D, NE)];
-		cc.perm[IDX][get_index(D, NE)] = cc.perm[IDX][get_index(R, NW)];
-		cc.perm[IDX][get_index(R, NW)] = tmp;
-
-		tmp = cc.perm[IDX][get_index(U, SE)];
-		cc.perm[IDX][get_index(U, SE)] = cc.perm[IDX][get_index(L, NE)];
-		cc.perm[IDX][get_index(L, NE)] = cc.perm[IDX][get_index(D, NW)];
-		cc.perm[IDX][get_index(D, NW)] = cc.perm[IDX][get_index(R, SW)];
-		cc.perm[IDX][get_index(R, SW)] = tmp;
+	static void apply_MF(_Center_corners<N, false> &cc) {
+		static_assert(N % 2, "N must be odd in order to use K = 0.");
 	}
 
-	static void apply_MB(Center_corners<N> &cc) {
-		static_assert(K <= number_of_layers<N>, "K must be less than or equal to number_of_layers<N>");
-		static_assert(K > 0, "K must be greater than 0");
-
-		constexpr int IDX = (N % 2 ? K : K - 1);
-
-		int tmp = cc.perm[IDX][get_index(U, NW)];
-		cc.perm[IDX][get_index(U, NW)] = cc.perm[IDX][get_index(R, NE)];
-		cc.perm[IDX][get_index(R, NE)] = cc.perm[IDX][get_index(D, SE)];
-		cc.perm[IDX][get_index(D, SE)] = cc.perm[IDX][get_index(L, SW)];
-		cc.perm[IDX][get_index(L, SW)] = tmp;
-
-		tmp = cc.perm[IDX][get_index(U, NE)];
-		cc.perm[IDX][get_index(U, NE)] = cc.perm[IDX][get_index(R, SE)];
-		cc.perm[IDX][get_index(R, SE)] = cc.perm[IDX][get_index(D, SW)];
-		cc.perm[IDX][get_index(D, SW)] = cc.perm[IDX][get_index(L, NW)];
-		cc.perm[IDX][get_index(L, NW)] = tmp;
+	static void apply_MB(_Center_corners<N, false> &cc) {
+		static_assert(N % 2, "N must be odd in order to use K = 0.");
 	}
 };
 
-template <int N, int K>
-void apply_ML(Center_corners<N> &cc) {
-	apply_M_Impl<N,K>::apply_ML(cc);
-}
+template<int N, int K>
+struct _Center_corners_Impl_K<N, K, true> {
+	static void apply_ML(_Center_corners<N, true> &cc) {
+		static_assert(K <= _Center_corners<N, true>::number_of_layers, "K must be less than or equal to _Center_corners<N, true>::number_of_layers");
+		static_assert(K > 0, "K must be greater than 0");
 
-template <int N, int K>
-void apply_MR(Center_corners<N> &cc) {
-	apply_M_Impl<N,K>::apply_MR(cc);
-}
+		int tmp = cc.perm[K][cc.get_index(U, _Center_corners<N, true>::NW)];
+		cc.perm[K][cc.get_index(U, _Center_corners<N, true>::NW)] = cc.perm[K][cc.get_index(B, _Center_corners<N, true>::SE)];
+		cc.perm[K][cc.get_index(B, _Center_corners<N, true>::SE)] = cc.perm[K][cc.get_index(D, _Center_corners<N, true>::NW)];
+		cc.perm[K][cc.get_index(D, _Center_corners<N, true>::NW)] = cc.perm[K][cc.get_index(F, _Center_corners<N, true>::NW)];
+		cc.perm[K][cc.get_index(F, _Center_corners<N, true>::NW)] = tmp;
 
-template <int N, int K>
-void apply_MU(Center_corners<N> &cc) {
-	apply_M_Impl<N,K>::apply_MU(cc);
-}
-
-template <int N, int K>
-void apply_MD(Center_corners<N> &cc) {
-	apply_M_Impl<N,K>::apply_MU(cc);
-}
-
-template <int N, int K>
-void apply_MF(Center_corners<N> &cc) {
-	apply_M_Impl<N,K>::apply_MF(cc);
-}
-
-template <int N, int K>
-void apply_MB(Center_corners<N> &cc) {
-	apply_M_Impl<N,K>::apply_MB(cc);
-}
-
-template <int N>
-int signum(Center_corners<N> &cc) {
-	int signum = 1;
-	for (int k = 0; k < number_of_layers<N>; k++) {
-		for (int i = 0; i < 24; i++)
-		for (int j = i + 1; j < 24; j++)
-			if (cc.perm[k][i] > cc.perm[k][j])
-				signum*=-1;
+		tmp = cc.perm[K][cc.get_index(U, _Center_corners<N, true>::SW)];
+		cc.perm[K][cc.get_index(U, _Center_corners<N, true>::SW)] = cc.perm[K][cc.get_index(B, _Center_corners<N, true>::NE)];
+		cc.perm[K][cc.get_index(B, _Center_corners<N, true>::NE)] = cc.perm[K][cc.get_index(D, _Center_corners<N, true>::SW)];
+		cc.perm[K][cc.get_index(D, _Center_corners<N, true>::SW)] = cc.perm[K][cc.get_index(F, _Center_corners<N, true>::SW)];
+		cc.perm[K][cc.get_index(F, _Center_corners<N, true>::SW) ] = tmp;
 	}
 
-	return signum;
-}
+	static void apply_MR(_Center_corners<N, true> &cc) {
+		static_assert(K <= _Center_corners<N, true>::number_of_layers, "K must be less than or equal to _Center_corners<N, true>::number_of_layers");
+		static_assert(K > 0, "K must be greater than 0");
 
+		int tmp = cc.perm[K][get_index(U, _Center_corners<N, true>::NE)];
+		cc.perm[K][get_index(U, _Center_corners<N, true>::NE)] = cc.perm[K][get_index(F, _Center_corners<N, true>::NE)];
+		cc.perm[K][get_index(F, _Center_corners<N, true>::NE)] = cc.perm[K][get_index(D, _Center_corners<N, true>::NE)];
+		cc.perm[K][get_index(D, _Center_corners<N, true>::NE)] = cc.perm[K][get_index(B, _Center_corners<N, true>::SW)];
+		cc.perm[K][get_index(B, _Center_corners<N, true>::SW)] = tmp;
+
+		tmp = cc.perm[K][get_index(U, _Center_corners<N, true>::SE)];
+		cc.perm[K][get_index(U, _Center_corners<N, true>::SE)] = cc.perm[K][get_index(F, _Center_corners<N, true>::SE)];
+		cc.perm[K][get_index(F, _Center_corners<N, true>::SE)] = cc.perm[K][get_index(D, _Center_corners<N, true>::SE)];
+		cc.perm[K][get_index(D, _Center_corners<N, true>::SE)] = cc.perm[K][get_index(B, _Center_corners<N, true>::NW)];
+		cc.perm[K][get_index(B, _Center_corners<N, true>::NW) ] = tmp;
+	}
+
+	static void apply_MU(_Center_corners<N, true> &cc) {
+		static_assert(K <= _Center_corners<N, true>::number_of_layers, "K must be less than or equal to _Center_corners<N, true>::number_of_layers");
+		static_assert(K > 0, "K must be greater than 0");
+
+		int tmp = cc.perm[K][get_index(F, _Center_corners<N, true>::NW)];
+		cc.perm[K][get_index(F, _Center_corners<N, true>::NW)] = cc.perm[K][get_index(R, _Center_corners<N, true>::NW)];
+		cc.perm[K][get_index(R, _Center_corners<N, true>::NW)] = cc.perm[K][get_index(B, _Center_corners<N, true>::NW)];
+		cc.perm[K][get_index(B, _Center_corners<N, true>::NW)] = cc.perm[K][get_index(L, _Center_corners<N, true>::NW)];
+		cc.perm[K][get_index(L, _Center_corners<N, true>::NW)] = tmp;
+
+		tmp = cc.perm[K][get_index(F, _Center_corners<N, true>::NE)];
+		cc.perm[K][get_index(F, _Center_corners<N, true>::NE)] = cc.perm[K][get_index(R, _Center_corners<N, true>::NE)];
+		cc.perm[K][get_index(R, _Center_corners<N, true>::NE)] = cc.perm[K][get_index(B, _Center_corners<N, true>::NE)];
+		cc.perm[K][get_index(B, _Center_corners<N, true>::NE)] = cc.perm[K][get_index(L, _Center_corners<N, true>::NE)];
+		cc.perm[K][get_index(L, _Center_corners<N, true>::NE)] = tmp;
+	}
+
+	static void apply_MD(_Center_corners<N, true> &cc) {
+		static_assert(K <= _Center_corners<N, true>::number_of_layers, "K must be less than or equal to _Center_corners<N, true>::number_of_layers");
+		static_assert(K > 0, "K must be greater than 0");
+
+		int tmp = cc.perm[K][get_index(F, _Center_corners<N, true>::SW)];
+		cc.perm[K][get_index(F, _Center_corners<N, true>::SW)] = cc.perm[K][get_index(L, _Center_corners<N, true>::SW)];
+		cc.perm[K][get_index(L, _Center_corners<N, true>::SW)] = cc.perm[K][get_index(B, _Center_corners<N, true>::SW)];
+		cc.perm[K][get_index(B, _Center_corners<N, true>::SW)] = cc.perm[K][get_index(R, _Center_corners<N, true>::SW)];
+		cc.perm[K][get_index(R, _Center_corners<N, true>::SW)] = tmp;
+
+		tmp = cc.perm[K][get_index(F, _Center_corners<N, true>::SE)];
+		cc.perm[K][get_index(F, _Center_corners<N, true>::SE)] = cc.perm[K][get_index(L, _Center_corners<N, true>::SE)];
+		cc.perm[K][get_index(L, _Center_corners<N, true>::SE)] = cc.perm[K][get_index(B, _Center_corners<N, true>::SE)];
+		cc.perm[K][get_index(B, _Center_corners<N, true>::SE)] = cc.perm[K][get_index(R, _Center_corners<N, true>::SE)];
+		cc.perm[K][get_index(R, _Center_corners<N, true>::SE)] = tmp;
+	}
+
+	static void apply_MF(_Center_corners<N, true> &cc) {
+		static_assert(K <= _Center_corners<N, true>::number_of_layers, "K must be less than or equal to _Center_corners<N, true>::number_of_layers");
+		static_assert(K > 0, "K must be greater than 0");
+
+
+		int tmp = cc.perm[K][get_index(U, _Center_corners<N, true>::SW)];
+		cc.perm[K][get_index(U, _Center_corners<N, true>::SW)] = cc.perm[K][get_index(L, _Center_corners<N, true>::SE)];
+		cc.perm[K][get_index(L, _Center_corners<N, true>::SE)] = cc.perm[K][get_index(D, _Center_corners<N, true>::NE)];
+		cc.perm[K][get_index(D, _Center_corners<N, true>::NE)] = cc.perm[K][get_index(R, _Center_corners<N, true>::NW)];
+		cc.perm[K][get_index(R, _Center_corners<N, true>::NW)] = tmp;
+
+		tmp = cc.perm[K][get_index(U, _Center_corners<N, true>::SE)];
+		cc.perm[K][get_index(U, _Center_corners<N, true>::SE)] = cc.perm[K][get_index(L, _Center_corners<N, true>::NE)];
+		cc.perm[K][get_index(L, _Center_corners<N, true>::NE)] = cc.perm[K][get_index(D, _Center_corners<N, true>::NW)];
+		cc.perm[K][get_index(D, _Center_corners<N, true>::NW)] = cc.perm[K][get_index(R, _Center_corners<N, true>::SW)];
+		cc.perm[K][get_index(R, _Center_corners<N, true>::SW)] = tmp;
+	}
+
+	static void apply_MB(_Center_corners<N, true> &cc) {
+		static_assert(K <= _Center_corners<N, true>::number_of_layers, "K must be less than or equal to _Center_corners<N, true>::number_of_layers");
+		static_assert(K > 0, "K must be greater than 0");
+
+		int tmp = cc.perm[K][get_index(U, _Center_corners<N, true>::NW)];
+		cc.perm[K][get_index(U, _Center_corners<N, true>::NW)] = cc.perm[K][get_index(R, _Center_corners<N, true>::NE)];
+		cc.perm[K][get_index(R, _Center_corners<N, true>::NE)] = cc.perm[K][get_index(D, _Center_corners<N, true>::SE)];
+		cc.perm[K][get_index(D, _Center_corners<N, true>::SE)] = cc.perm[K][get_index(L, _Center_corners<N, true>::SW)];
+		cc.perm[K][get_index(L, _Center_corners<N, true>::SW)] = tmp;
+
+		tmp = cc.perm[K][get_index(U, _Center_corners<N, true>::NE)];
+		cc.perm[K][get_index(U, _Center_corners<N, true>::NE)] = cc.perm[K][get_index(R, _Center_corners<N, true>::SE)];
+		cc.perm[K][get_index(R, _Center_corners<N, true>::SE)] = cc.perm[K][get_index(D, _Center_corners<N, true>::SW)];
+		cc.perm[K][get_index(D, _Center_corners<N, true>::SW)] = cc.perm[K][get_index(L, _Center_corners<N, true>::NW)];
+		cc.perm[K][get_index(L, _Center_corners<N, true>::NW)] = tmp;
+	}
+};
+
+template<int N, int K>
+struct _Center_corners_Impl_K<N, K, false> {
+	static void apply_ML(_Center_corners<N, false> &cc) {
+		static_assert(K <= _Center_corners<N, false>::number_of_layers, "K must be less than or equal to _Center_corners<N, false>::number_of_layers");
+		static_assert(K > 0, "K must be greater than 0");
+
+		int tmp = cc.perm[K - 1][cc.get_index(U, _Center_corners<N, false>::NW)];
+		cc.perm[K - 1][cc.get_index(U, _Center_corners<N, false>::NW)] = cc.perm[K - 1][cc.get_index(B, _Center_corners<N, false>::SE)];
+		cc.perm[K - 1][cc.get_index(B, _Center_corners<N, false>::SE)] = cc.perm[K - 1][cc.get_index(D, _Center_corners<N, false>::NW)];
+		cc.perm[K - 1][cc.get_index(D, _Center_corners<N, false>::NW)] = cc.perm[K - 1][cc.get_index(F, _Center_corners<N, false>::NW)];
+		cc.perm[K - 1][cc.get_index(F, _Center_corners<N, false>::NW)] = tmp;
+
+		tmp = cc.perm[K - 1][cc.get_index(U, _Center_corners<N, false>::SW)];
+		cc.perm[K - 1][cc.get_index(U, _Center_corners<N, false>::SW)] = cc.perm[K - 1][cc.get_index(B, _Center_corners<N, false>::NE)];
+		cc.perm[K - 1][cc.get_index(B, _Center_corners<N, false>::NE)] = cc.perm[K - 1][cc.get_index(D, _Center_corners<N, false>::SW)];
+		cc.perm[K - 1][cc.get_index(D, _Center_corners<N, false>::SW)] = cc.perm[K - 1][cc.get_index(F, _Center_corners<N, false>::SW)];
+		cc.perm[K - 1][cc.get_index(F, _Center_corners<N, false>::SW) ] = tmp;
+	}
+
+	static void apply_MR(_Center_corners<N, false> &cc) {
+		static_assert(K <= _Center_corners<N, false>::number_of_layers, "K must be less than or equal to _Center_corners<N, false>::number_of_layers");
+		static_assert(K > 0, "K must be greater than 0");
+
+		int tmp = cc.perm[K - 1][cc.get_index(U, _Center_corners<N, false>::NE)];
+		cc.perm[K - 1][cc.get_index(U, _Center_corners<N, false>::NE)] = cc.perm[K - 1][cc.get_index(F, _Center_corners<N, false>::NE)];
+		cc.perm[K - 1][cc.get_index(F, _Center_corners<N, false>::NE)] = cc.perm[K - 1][cc.get_index(D, _Center_corners<N, false>::NE)];
+		cc.perm[K - 1][cc.get_index(D, _Center_corners<N, false>::NE)] = cc.perm[K - 1][cc.get_index(B, _Center_corners<N, false>::SW)];
+		cc.perm[K - 1][cc.get_index(B, _Center_corners<N, false>::SW)] = tmp;
+
+		tmp = cc.perm[K - 1][cc.get_index(U, _Center_corners<N, false>::SE)];
+		cc.perm[K - 1][cc.get_index(U, _Center_corners<N, false>::SE)] = cc.perm[K - 1][cc.get_index(F, _Center_corners<N, false>::SE)];
+		cc.perm[K - 1][cc.get_index(F, _Center_corners<N, false>::SE)] = cc.perm[K - 1][cc.get_index(D, _Center_corners<N, false>::SE)];
+		cc.perm[K - 1][cc.get_index(D, _Center_corners<N, false>::SE)] = cc.perm[K - 1][cc.get_index(B, _Center_corners<N, false>::NW)];
+		cc.perm[K - 1][cc.get_index(B, _Center_corners<N, false>::NW) ] = tmp;
+	}
+
+	static void apply_MU(_Center_corners<N, false> &cc) {
+		static_assert(K <= _Center_corners<N, false>::number_of_layers, "K must be less than or equal to _Center_corners<N, false>::number_of_layers");
+		static_assert(K > 0, "K must be greater than 0");
+
+		int tmp = cc.perm[K - 1][cc.get_index(F, _Center_corners<N, false>::NW)];
+		cc.perm[K - 1][cc.get_index(F, _Center_corners<N, false>::NW)] = cc.perm[K - 1][cc.get_index(R, _Center_corners<N, false>::NW)];
+		cc.perm[K - 1][cc.get_index(R, _Center_corners<N, false>::NW)] = cc.perm[K - 1][cc.get_index(B, _Center_corners<N, false>::NW)];
+		cc.perm[K - 1][cc.get_index(B, _Center_corners<N, false>::NW)] = cc.perm[K - 1][cc.get_index(L, _Center_corners<N, false>::NW)];
+		cc.perm[K - 1][cc.get_index(L, _Center_corners<N, false>::NW)] = tmp;
+
+		tmp = cc.perm[K - 1][cc.get_index(F, _Center_corners<N, false>::NE)];
+		cc.perm[K - 1][cc.get_index(F, _Center_corners<N, false>::NE)] = cc.perm[K - 1][cc.get_index(R, _Center_corners<N, false>::NE)];
+		cc.perm[K - 1][cc.get_index(R, _Center_corners<N, false>::NE)] = cc.perm[K - 1][cc.get_index(B, _Center_corners<N, false>::NE)];
+		cc.perm[K - 1][cc.get_index(B, _Center_corners<N, false>::NE)] = cc.perm[K - 1][cc.get_index(L, _Center_corners<N, false>::NE)];
+		cc.perm[K - 1][cc.get_index(L, _Center_corners<N, false>::NE)] = tmp;
+	}
+
+	static void apply_MD(_Center_corners<N, false> &cc) {
+		static_assert(K <= _Center_corners<N, false>::number_of_layers, "K must be less than or equal to _Center_corners<N, false>::number_of_layers");
+		static_assert(K > 0, "K must be greater than 0");
+
+		int tmp = cc.perm[K - 1][cc.get_index(F, _Center_corners<N, false>::SW)];
+		cc.perm[K - 1][cc.get_index(F, _Center_corners<N, false>::SW)] = cc.perm[K - 1][cc.get_index(L, _Center_corners<N, false>::SW)];
+		cc.perm[K - 1][cc.get_index(L, _Center_corners<N, false>::SW)] = cc.perm[K - 1][cc.get_index(B, _Center_corners<N, false>::SW)];
+		cc.perm[K - 1][cc.get_index(B, _Center_corners<N, false>::SW)] = cc.perm[K - 1][cc.get_index(R, _Center_corners<N, false>::SW)];
+		cc.perm[K - 1][cc.get_index(R, _Center_corners<N, false>::SW)] = tmp;
+
+		tmp = cc.perm[K - 1][cc.get_index(F, _Center_corners<N, false>::SE)];
+		cc.perm[K - 1][cc.get_index(F, _Center_corners<N, false>::SE)] = cc.perm[K - 1][cc.get_index(L, _Center_corners<N, false>::SE)];
+		cc.perm[K - 1][cc.get_index(L, _Center_corners<N, false>::SE)] = cc.perm[K - 1][cc.get_index(B, _Center_corners<N, false>::SE)];
+		cc.perm[K - 1][cc.get_index(B, _Center_corners<N, false>::SE)] = cc.perm[K - 1][cc.get_index(R, _Center_corners<N, false>::SE)];
+		cc.perm[K - 1][cc.get_index(R, _Center_corners<N, false>::SE)] = tmp;
+	}
+
+	static void apply_MF(_Center_corners<N, false> &cc) {
+		static_assert(K <= _Center_corners<N, false>::number_of_layers, "K must be less than or equal to _Center_corners<N, false>::number_of_layers");
+		static_assert(K > 0, "K must be greater than 0");
+
+		int tmp = cc.perm[K - 1][cc.get_index(U, _Center_corners<N, false>::SW)];
+		cc.perm[K - 1][cc.get_index(U, _Center_corners<N, false>::SW)] = cc.perm[K - 1][cc.get_index(L, _Center_corners<N, false>::SE)];
+		cc.perm[K - 1][cc.get_index(L, _Center_corners<N, false>::SE)] = cc.perm[K - 1][cc.get_index(D, _Center_corners<N, false>::NE)];
+		cc.perm[K - 1][cc.get_index(D, _Center_corners<N, false>::NE)] = cc.perm[K - 1][cc.get_index(R, _Center_corners<N, false>::NW)];
+		cc.perm[K - 1][cc.get_index(R, _Center_corners<N, false>::NW)] = tmp;
+
+		tmp = cc.perm[K - 1][cc.get_index(U, _Center_corners<N, false>::SE)];
+		cc.perm[K - 1][cc.get_index(U, _Center_corners<N, false>::SE)] = cc.perm[K - 1][cc.get_index(L, _Center_corners<N, false>::NE)];
+		cc.perm[K - 1][cc.get_index(L, _Center_corners<N, false>::NE)] = cc.perm[K - 1][cc.get_index(D, _Center_corners<N, false>::NW)];
+		cc.perm[K - 1][cc.get_index(D, _Center_corners<N, false>::NW)] = cc.perm[K - 1][cc.get_index(R, _Center_corners<N, false>::SW)];
+		cc.perm[K - 1][cc.get_index(R, _Center_corners<N, false>::SW)] = tmp;
+	}
+
+	static void apply_MB(_Center_corners<N, false> &cc) {
+		static_assert(K <= _Center_corners<N, false>::number_of_layers, "K must be less than or equal to _Center_corners<N, false>::number_of_layers");
+		static_assert(K > 0, "K must be greater than 0");
+
+		int tmp = cc.perm[K - 1][cc.get_index(U, _Center_corners<N, false>::NW)];
+		cc.perm[K - 1][cc.get_index(U, _Center_corners<N, false>::NW)] = cc.perm[K - 1][cc.get_index(R, _Center_corners<N, false>::NE)];
+		cc.perm[K - 1][cc.get_index(R, _Center_corners<N, false>::NE)] = cc.perm[K - 1][cc.get_index(D, _Center_corners<N, false>::SE)];
+		cc.perm[K - 1][cc.get_index(D, _Center_corners<N, false>::SE)] = cc.perm[K - 1][cc.get_index(L, _Center_corners<N, false>::SW)];
+		cc.perm[K - 1][cc.get_index(L, _Center_corners<N, false>::SW)] = tmp;
+
+		tmp = cc.perm[K - 1][cc.get_index(U, _Center_corners<N, false>::NE)];
+		cc.perm[K - 1][cc.get_index(U, _Center_corners<N, false>::NE)] = cc.perm[K - 1][cc.get_index(R, _Center_corners<N, false>::SE)];
+		cc.perm[K - 1][cc.get_index(R, _Center_corners<N, false>::SE)] = cc.perm[K - 1][cc.get_index(D, _Center_corners<N, false>::SW)];
+		cc.perm[K - 1][cc.get_index(D, _Center_corners<N, false>::SW)] = cc.perm[K - 1][cc.get_index(L, _Center_corners<N, false>::NW)];
+		cc.perm[K - 1][cc.get_index(L, _Center_corners<N, false>::NW)] = tmp;
+	}
+
+};
+
+}

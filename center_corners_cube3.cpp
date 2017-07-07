@@ -3,6 +3,8 @@
 #include <ostream>
 #include "center_corners.h"
 
+using namespace rubik_cube;
+
 int main() {
 	Center_corners<5> cube;
 
