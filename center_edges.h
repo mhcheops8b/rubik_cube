@@ -65,12 +65,13 @@ ML k:
 */
 
 #include <iostream>
-#include <iomanip>
 #include <ostream>
 #include "faces.h"
 
-template <int N, bool isEven> struct _Impl;
-template <int N, int K, bool isEven> struct _Impl_K;
+namespace rubik_cube {
+
+template <int N, bool isEven> struct _Center_edges_Impl;
+template <int N, int K, bool isEven> struct _Center_edges_Impl_K;
 template <int N, bool isEven> class _Center_edges;
 
 template <int N>
@@ -111,14 +112,14 @@ public:
 	template <int U, int K, bool even>
 	friend void apply_MF(_Center_edges<U, even> &ce);
 
-	template <int U, int K>
-	friend void apply_MB(_Center_edges<U, isEven> &ce);
+	template <int U, int K, bool even>
+	friend void apply_MB(_Center_edges<U, even> &ce);
 
-	template <int U, int K>
-	friend void apply_MU(_Center_edges<U, isEven> &ce);
+	template <int U, int K, bool even>
+	friend void apply_MU(_Center_edges<U, even> &ce);
 
-	template <int U, int K>
-	friend void apply_MD(_Center_edges<U, isEven> &ce);
+	template <int U, int K, bool even>
+	friend void apply_MD(_Center_edges<U, even> &ce);
 
 	static const int number_of_indices;
 	static const int number_of_indices_per_face;
@@ -146,19 +147,17 @@ public:
 	static inline int face_WF(const faces &f, int layer, int index);
 
 private:
-	
-
 	// constructor implementation
 	template <int U>
-	friend void _Impl<U, isEven>::_center_edges_impl(_Center_edges<U, isEven> &ce);
+	friend void _Center_edges_Impl<U, isEven>::_center_edges_impl(_Center_edges<U, isEven> &ce);
 	// disp_cube implementation
 
 	template <int U>
-	friend void _Impl<U, isEven>::disp_cube_impl(_Center_edges<U, isEven> &ce, std::ostream &os);
+	friend void _Center_edges_Impl<U, isEven>::disp_cube_impl(_Center_edges<U, isEven> &ce, std::ostream &os);
 
 	// apply_Face implementation
 	template <int U>
-	friend void _Impl<U, isEven>::apply_Face(_Center_edges<U, isEven> &ce, const faces &f);
+	friend void _Center_edges_Impl<U, isEven>::apply_Face(_Center_edges<U, isEven> &ce, const faces &f);
 
 	// apply cycle (internal)
 	template<int U, bool K>
@@ -172,27 +171,26 @@ private:
 	template<int U, bool even>
 	friend void apply_Face(_Center_edges<U, even> &ce, const faces &f);
 
-
-	int perm[_Impl<N,isEven>::number_of_indices];
+	int perm[_Center_edges_Impl<N,isEven>::number_of_indices];
 };
 
 template <int N, bool isEven>
-const int _Center_edges<N, isEven>::number_of_indices = _Impl<N,isEven>::number_of_indices;
+const int _Center_edges<N, isEven>::number_of_indices = _Center_edges_Impl<N,isEven>::number_of_indices;
 
 template <int N, bool isEven>
-const int _Center_edges<N, isEven>::number_of_indices_per_face = _Impl<N,isEven>::number_of_indices_per_face;
+const int _Center_edges<N, isEven>::number_of_indices_per_face = _Center_edges_Impl<N,isEven>::number_of_indices_per_face;
 
 template <int N, bool isEven>
-const int _Center_edges<N, isEven>::number_of_layers = _Impl<N,isEven>::number_of_layers;
+const int _Center_edges<N, isEven>::number_of_layers = _Center_edges_Impl<N,isEven>::number_of_layers;
 
 template <int N, bool isEven>
 _Center_edges<N, isEven>::_Center_edges() {
-	_Impl<N, isEven>::_center_edges_impl(*this);
+	_Center_edges_Impl<N, isEven>::_center_edges_impl(*this);
 }
 
 template <int N, bool isEven>
 void _Center_edges<N, isEven>::disp_cube(std::ostream &os) {
-	_Impl<N, isEven>::disp_cube_impl(*this, os);
+	_Center_edges_Impl<N, isEven>::disp_cube_impl(*this, os);
 }
 
 template <int N, bool isEven>
@@ -205,22 +203,22 @@ void _Center_edges<N, isEven>::disp_perm(std::ostream &os) {
 
 template <int N, bool isEven>
 inline int _Center_edges<N, isEven>::NF(int layer, int index) {
-	return _Impl<N, isEven>::NF(layer, index);
+	return _Center_edges_Impl<N, isEven>::NF(layer, index);
 }
 
 template <int N, bool isEven>
 inline int _Center_edges<N, isEven>::EF(int layer, int index) {
-	return _Impl<N, isEven>::EF(layer, index);
+	return _Center_edges_Impl<N, isEven>::EF(layer, index);
 }
 
 template <int N, bool isEven>
 inline int _Center_edges<N, isEven>::SF(int layer, int index) {
-	return _Impl<N, isEven>::SF(layer, index);
+	return _Center_edges_Impl<N, isEven>::SF(layer, index);
 }
 
 template <int N, bool isEven>
 inline int _Center_edges<N, isEven>::WF(int layer, int index) {
-	return _Impl<N, isEven>::WF(layer, index);
+	return _Center_edges_Impl<N, isEven>::WF(layer, index);
 }
 
 // indices wrt to face
@@ -250,7 +248,7 @@ inline int _Center_edges<N, isEven>::face_WF(const faces &f, int layer, int inde
 
 
 template<int N>
-struct _Impl<N, false> {
+struct _Center_edges_Impl<N, false> {
 
 	static const int number_of_indices = 6 * (N - 3) * (N - 3);
 	static const int number_of_indices_per_face = (N - 3) * (N - 3);
@@ -712,7 +710,7 @@ struct _Impl<N, false> {
 };
 
 template<int N>
-struct _Impl<N, true> {
+struct _Center_edges_Impl<N, true> {
 	static const int number_of_indices_per_face = (N - 2) * (N - 4);
 	static const int number_of_indices = 6 * number_of_indices_per_face;
 	static const int number_of_layers = (N - 2) / 2;
@@ -1226,7 +1224,7 @@ void apply_cycle(_Center_edges<N, isEven> &ce, int idx1, int idx2, int idx3, int
 
 template <int N, bool isEven>
 void apply_Face(_Center_edges<N, isEven> &ce, const faces &f) {
-	_Impl<N, isEven>::apply_Face(ce, f);
+	_Center_edges_Impl<N, isEven>::apply_Face(ce, f);
 }
 
 template <int N, bool isEven>
@@ -1261,37 +1259,37 @@ void apply_D(_Center_edges<N, isEven> &ce) {
 
 template <int N, int K, bool isEven>
 void apply_ML(_Center_edges<N, isEven> &ce) {
-	_Impl_K<N, K, isEven>::apply_ML(ce);
+	_Center_edges_Impl_K<N, K, isEven>::apply_ML(ce);
 }
 
 template <int N, int K, bool isEven>
 void apply_MR(_Center_edges<N, isEven> &ce) {
-	_Impl_K<N, K, isEven>::apply_MR(ce);
+	_Center_edges_Impl_K<N, K, isEven>::apply_MR(ce);
 }
 
 template <int N, int K, bool isEven>
 void apply_MF(_Center_edges<N, isEven> &ce) {
-	_Impl_K<N, K, isEven>::apply_MF(ce);
+	_Center_edges_Impl_K<N, K, isEven>::apply_MF(ce);
 }
 
 template <int N, int K, bool isEven>
 void apply_MB(_Center_edges<N, isEven> &ce) {
-	_Impl_K<N, K, isEven>::apply_MB(ce);
+	_Center_edges_Impl_K<N, K, isEven>::apply_MB(ce);
 }
 
 template <int N, int K, bool isEven>
 void apply_MU(_Center_edges<N, isEven> &ce) {
-	_Impl_K<N, K, isEven>::apply_MU(ce);
+	_Center_edges_Impl_K<N, K, isEven>::apply_MU(ce);
 }
 
 template <int N, int K, bool isEven>
 void apply_MD(_Center_edges<N, isEven> &ce) {
-	_Impl_K<N, K, isEven>::apply_MD(ce);
+	_Center_edges_Impl_K<N, K, isEven>::apply_MD(ce);
 }
 
 
 template <int N, int K>
-struct _Impl_K<N, K, false> {
+struct _Center_edges_Impl_K<N, K, false> {
 
 	static void apply_ML(_Center_edges<N, false> &ce) {
 		static_assert(K>=0, "K must be non-negative.");
@@ -1511,7 +1509,7 @@ struct _Impl_K<N, K, false> {
 
 
 template <int N, int K>
-struct _Impl_K<N, K, true> {
+struct _Center_edges_Impl_K<N, K, true> {
 	static void apply_ML(_Center_edges<N, true> &ce) {
 		static_assert(K >= 1, "K must be positive.");
 		static_assert(K <= _Center_edges<N, true>::number_of_layers, "K must less than number of layers.");
@@ -1950,4 +1948,4 @@ struct _Impl_K<N, K, true> {
 
 };
 
-
+}
