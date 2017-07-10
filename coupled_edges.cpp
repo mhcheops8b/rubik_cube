@@ -381,7 +381,7 @@ int Coupled_edges::perm24_signum() {
 	return signum;
 	
 }
-void apply_L(Coupled_edges &edge) {
+void Coupled_edges::apply_L() {
 /*
 	4b  = + =>  5a
 	^
@@ -401,38 +401,38 @@ void apply_L(Coupled_edges &edge) {
 */
 
 
-	int tmp_a = edge.orient_a[7];
-	int tmp_b = edge.orient_b[7];
+	int tmp_a = orient_a[7];
+	int tmp_b = orient_b[7];
 	
-	edge.orient_a[7] = (edge.orient_b[11] + 1) % 2;
-	edge.orient_b[7] = (edge.orient_a[11] + 1) % 2;
+	orient_a[7] = (orient_b[11] + 1) % 2;
+	orient_b[7] = (orient_a[11] + 1) % 2;
 
-	edge.orient_a[11] = (edge.orient_b[4] + 1) % 2;
-	edge.orient_b[11] = (edge.orient_a[4] + 1) % 2;
+	orient_a[11] = (orient_b[4] + 1) % 2;
+	orient_b[11] = (orient_a[4] + 1) % 2;
 
-	edge.orient_a[4] = (edge.orient_b[3] + 1) % 2;
-	edge.orient_b[4] = (edge.orient_a[3] + 1) % 2;
+	orient_a[4] = (orient_b[3] + 1) % 2;
+	orient_b[4] = (orient_a[3] + 1) % 2;
 
-	edge.orient_a[3] = (tmp_b + 1) % 2;
-	edge.orient_b[3] = (tmp_a + 1) % 2;
+	orient_a[3] = (tmp_b + 1) % 2;
+	orient_b[3] = (tmp_a + 1) % 2;
 
-	tmp_a = edge.perm_a[7];
-	tmp_b = edge.perm_b[7];
+	tmp_a = perm_a[7];
+	tmp_b = perm_b[7];
 	
-	edge.perm_a[7] = edge.perm_b[11];
-	edge.perm_b[7] = edge.perm_a[11];
+	perm_a[7] = perm_b[11];
+	perm_b[7] = perm_a[11];
 
-	edge.perm_a[11] = edge.perm_b[4];
-	edge.perm_b[11] = edge.perm_a[4];
+	perm_a[11] = perm_b[4];
+	perm_b[11] = perm_a[4];
 
-	edge.perm_a[4] = edge.perm_b[3];
-	edge.perm_b[4] = edge.perm_a[3];
+	perm_a[4] = perm_b[3];
+	perm_b[4] = perm_a[3];
 
-	edge.perm_a[3] = tmp_b;
-	edge.perm_b[3] = tmp_a;
+	perm_a[3] = tmp_b;
+	perm_b[3] = tmp_a;
 }
 
-void apply_R(Coupled_edges &edge) {
+void Coupled_edges::apply_R() {
 /*
 	2a  = + =>  7b
 	^
@@ -447,43 +447,43 @@ void apply_R(Coupled_edges &edge) {
 	6a <= + =  10b
 
 
-	( idx -1 )
+	( idx - 1 )
 
 */
 
 
-	int tmp_a = edge.orient_a[5];
-	int tmp_b = edge.orient_b[5];
+	int tmp_a = orient_a[5];
+	int tmp_b = orient_b[5];
 	
-	edge.orient_a[5] = (edge.orient_b[9] + 1) % 2;
-	edge.orient_b[5] = (edge.orient_a[9] + 1) % 2;
+	orient_a[5] = (orient_b[9] + 1) % 2;
+	orient_b[5] = (orient_a[9] + 1) % 2;
 
-	edge.orient_a[9] = (edge.orient_b[6] + 1) % 2;
-	edge.orient_b[9] = (edge.orient_a[6] + 1) % 2;
+	orient_a[9] = (orient_b[6] + 1) % 2;
+	orient_b[9] = (orient_a[6] + 1) % 2;
 
-	edge.orient_a[6] = (edge.orient_b[1] + 1) % 2;
-	edge.orient_b[6] = (edge.orient_a[1] + 1) % 2;
+	orient_a[6] = (orient_b[1] + 1) % 2;
+	orient_b[6] = (orient_a[1] + 1) % 2;
 
-	edge.orient_a[1] = (tmp_b + 1) % 2;
-	edge.orient_b[1] = (tmp_a + 1) % 2;
+	orient_a[1] = (tmp_b + 1) % 2;
+	orient_b[1] = (tmp_a + 1) % 2;
 
-	tmp_a = edge.perm_a[5];
-	tmp_b = edge.perm_b[5];
+	tmp_a = perm_a[5];
+	tmp_b = perm_b[5];
 	
-	edge.perm_a[5] = edge.perm_b[9];
-	edge.perm_b[5] = edge.perm_a[9];
+	perm_a[5] = perm_b[9];
+	perm_b[5] = perm_a[9];
 
-	edge.perm_a[9] = edge.perm_b[6];
-	edge.perm_b[9] = edge.perm_a[6];
+	perm_a[9] = perm_b[6];
+	perm_b[9] = perm_a[6];
 
-	edge.perm_a[6] = edge.perm_b[1];
-	edge.perm_b[6] = edge.perm_a[1];
+	perm_a[6] = perm_b[1];
+	perm_b[6] = perm_a[1];
 
-	edge.perm_a[1] = tmp_b;
-	edge.perm_b[1] = tmp_a;
+	perm_a[1] = tmp_b;
+	perm_b[1] = tmp_a;
 }
 
-void apply_U(Coupled_edges &edge) {
+void Coupled_edges::apply_U() {
 /*
 	1a  = + => 4a
 	^
@@ -498,40 +498,40 @@ void apply_U(Coupled_edges &edge) {
 	2b <= + =  3b
 
 
-	( idx -1 )
+	( idx - 1 )
 
 */
 
-	int tmp = edge.orient_a[1];
+	int tmp = orient_a[1];
 	
-	edge.orient_a[1] = edge.orient_a[2];
-	edge.orient_a[2] = edge.orient_a[3];
-	edge.orient_a[3] = edge.orient_a[0];
-	edge.orient_a[0] = tmp % 2;
+	orient_a[1] = orient_a[2];
+	orient_a[2] = orient_a[3];
+	orient_a[3] = orient_a[0];
+	orient_a[0] = tmp % 2;
 
-	tmp = edge.perm_a[1];
+	tmp = perm_a[1];
 	
-	edge.perm_a[1] = edge.perm_a[2];
-	edge.perm_a[2] = edge.perm_a[3];
-	edge.perm_a[3] = edge.perm_a[0];
-	edge.perm_a[0] = tmp;
+	perm_a[1] = perm_a[2];
+	perm_a[2] = perm_a[3];
+	perm_a[3] = perm_a[0];
+	perm_a[0] = tmp;
 
-	tmp = edge.orient_b[1];
+	tmp = orient_b[1];
 	
-	edge.orient_b[1] = edge.orient_b[2];
-	edge.orient_b[2] = edge.orient_b[3];
-	edge.orient_b[3] = edge.orient_b[0];
-	edge.orient_b[0] = tmp % 2;
+	orient_b[1] = orient_b[2];
+	orient_b[2] = orient_b[3];
+	orient_b[3] = orient_b[0];
+	orient_b[0] = tmp % 2;
 
-	tmp = edge.perm_b[1];
+	tmp = perm_b[1];
 	
-	edge.perm_b[1] = edge.perm_b[2];
-	edge.perm_b[2] = edge.perm_b[3];
-	edge.perm_b[3] = edge.perm_b[0];
-	edge.perm_b[0] = tmp;
+	perm_b[1] = perm_b[2];
+	perm_b[2] = perm_b[3];
+	perm_b[3] = perm_b[0];
+	perm_b[0] = tmp;
 }
 
-void apply_D(Coupled_edges &edge) {
+void Coupled_edges::apply_D() {
 /*
 	9a  = + =>  10a
 	^
@@ -546,42 +546,42 @@ void apply_D(Coupled_edges &edge) {
 	12b <= + =  11b
 
 
-	( idx -1 )
+	( idx - 1 )
 
 */
 
 	// a
-	int tmp = edge.orient_a[11];
+	int tmp = orient_a[11];
 	
-	edge.orient_a[11] = edge.orient_a[10];
-	edge.orient_a[10] = edge.orient_a[9];
-	edge.orient_a[9] = edge.orient_a[8];
-	edge.orient_a[8] = tmp;
+	orient_a[11] = orient_a[10];
+	orient_a[10] = orient_a[9];
+	orient_a[9] = orient_a[8];
+	orient_a[8] = tmp;
 
-	tmp = edge.perm_a[11];
+	tmp = perm_a[11];
 	
-	edge.perm_a[11] = edge.perm_a[10];
-	edge.perm_a[10] = edge.perm_a[9];
-	edge.perm_a[9] = edge.perm_a[8];
-	edge.perm_a[8] = tmp;
+	perm_a[11] = perm_a[10];
+	perm_a[10] = perm_a[9];
+	perm_a[9] = perm_a[8];
+	perm_a[8] = tmp;
 
 	// b
-	tmp = edge.orient_b[11];
+	tmp = orient_b[11];
 	
-	edge.orient_b[11] = edge.orient_b[10];
-	edge.orient_b[10] = edge.orient_b[9];
-	edge.orient_b[9] = edge.orient_b[8];
-	edge.orient_b[8] = tmp;
+	orient_b[11] = orient_b[10];
+	orient_b[10] = orient_b[9];
+	orient_b[9] = orient_b[8];
+	orient_b[8] = tmp;
 
-	tmp = edge.perm_b[11];
+	tmp = perm_b[11];
 	
-	edge.perm_b[11] = edge.perm_b[10];
-	edge.perm_b[10] = edge.perm_b[9];
-	edge.perm_b[9] = edge.perm_b[8];
-	edge.perm_b[8] = tmp;
+	perm_b[11] = perm_b[10];
+	perm_b[10] = perm_b[9];
+	perm_b[9] = perm_b[8];
+	perm_b[8] = tmp;
 }
 
-void apply_F(Coupled_edges &edge) {
+void Coupled_edges::apply_F() {
 /*
 	1a  = + => 6a
 	^
@@ -596,42 +596,42 @@ void apply_F(Coupled_edges &edge) {
 	5b <= + =  9b
 
 
-	( idx -1 )
+	( idx - 1 )
 
 */
 
 	// a
-	int tmp = edge.orient_a[4];
+	int tmp = orient_a[4];
 	
-	edge.orient_a[4] = edge.orient_a[8];
-	edge.orient_a[8] = edge.orient_a[5];
-	edge.orient_a[5] = edge.orient_a[0];
-	edge.orient_a[0] = tmp;
+	orient_a[4] = orient_a[8];
+	orient_a[8] = orient_a[5];
+	orient_a[5] = orient_a[0];
+	orient_a[0] = tmp;
 
-	tmp = edge.perm_a[4];
+	tmp = perm_a[4];
 	
-	edge.perm_a[4] = edge.perm_a[8];
-	edge.perm_a[8] = edge.perm_a[5];
-	edge.perm_a[5] = edge.perm_a[0];
-	edge.perm_a[0] = tmp;
+	perm_a[4] = perm_a[8];
+	perm_a[8] = perm_a[5];
+	perm_a[5] = perm_a[0];
+	perm_a[0] = tmp;
 
 	// b
-	tmp = edge.orient_b[4];
+	tmp = orient_b[4];
 	
-	edge.orient_b[4] = edge.orient_b[8];
-	edge.orient_b[8] = edge.orient_b[5];
-	edge.orient_b[5] = edge.orient_b[0];
-	edge.orient_b[0] = tmp;
+	orient_b[4] = orient_b[8];
+	orient_b[8] = orient_b[5];
+	orient_b[5] = orient_b[0];
+	orient_b[0] = tmp;
 
-	tmp = edge.perm_b[4];
+	tmp = perm_b[4];
 	
-	edge.perm_b[4] = edge.perm_b[8];
-	edge.perm_b[8] = edge.perm_b[5];
-	edge.perm_b[5] = edge.perm_b[0];
-	edge.perm_b[0] = tmp;
+	perm_b[4] = perm_b[8];
+	perm_b[8] = perm_b[5];
+	perm_b[5] = perm_b[0];
+	perm_b[0] = tmp;
 }
 
-void apply_B(Coupled_edges &edge) {
+void Coupled_edges::apply_B() {
 /*
 	3a  = + =>  8a
 	^
@@ -646,42 +646,42 @@ void apply_B(Coupled_edges &edge) {
 	7b <= + =  11b
 
 
-	( idx -1 )
+	( idx - 1 )
 
 */
 
 	// a
-	int tmp = edge.orient_a[6];
+	int tmp = orient_a[6];
 	
-	edge.orient_a[6] = edge.orient_a[10];
-	edge.orient_a[10] = edge.orient_a[7];
-	edge.orient_a[7] = edge.orient_a[2];
-	edge.orient_a[2] = tmp;
+	orient_a[6] = orient_a[10];
+	orient_a[10] = orient_a[7];
+	orient_a[7] = orient_a[2];
+	orient_a[2] = tmp;
 
-	tmp = edge.perm_a[6];
+	tmp = perm_a[6];
 	
-	edge.perm_a[6] = edge.perm_a[10];
-	edge.perm_a[10] = edge.perm_a[7];
-	edge.perm_a[7] = edge.perm_a[2];
-	edge.perm_a[2] = tmp;
+	perm_a[6] = perm_a[10];
+	perm_a[10] = perm_a[7];
+	perm_a[7] = perm_a[2];
+	perm_a[2] = tmp;
 
 	// b
-	tmp = edge.orient_b[6];
+	tmp = orient_b[6];
 	
-	edge.orient_b[6] = edge.orient_b[10];
-	edge.orient_b[10] = edge.orient_b[7];
-	edge.orient_b[7] = edge.orient_b[2];
-	edge.orient_b[2] = tmp;
+	orient_b[6] = orient_b[10];
+	orient_b[10] = orient_b[7];
+	orient_b[7] = orient_b[2];
+	orient_b[2] = tmp;
 
-	tmp = edge.perm_b[6];
+	tmp = perm_b[6];
 	
-	edge.perm_b[6] = edge.perm_b[10];
-	edge.perm_b[10] = edge.perm_b[7];
-	edge.perm_b[7] = edge.perm_b[2];
-	edge.perm_b[2] = tmp;
+	perm_b[6] = perm_b[10];
+	perm_b[10] = perm_b[7];
+	perm_b[7] = perm_b[2];
+	perm_b[2] = tmp;
 }
 
-void apply_ML(Coupled_edges &edge) {
+void Coupled_edges::apply_ML() {
 /*
 	1b  = + => 9a
 	^
@@ -690,27 +690,27 @@ void apply_ML(Coupled_edges &edge) {
 	3a <= + =  11b
 
 
-	( idx -1 )
+	( idx - 1 )
 
 */
 
-	int tmp = edge.orient_a[2];
+	int tmp = orient_a[2];
 	
-	edge.orient_a[2] = (edge.orient_b[10] + 1) % 2;
-	edge.orient_b[10] = (edge.orient_a[8] + 1) % 2;
-	edge.orient_a[8] = (edge.orient_b[0] + 1) % 2;
-	edge.orient_b[0] = (tmp + 1) % 2;
+	orient_a[2] = (orient_b[10] + 1) % 2;
+	orient_b[10] = (orient_a[8] + 1) % 2;
+	orient_a[8] = (orient_b[0] + 1) % 2;
+	orient_b[0] = (tmp + 1) % 2;
 
-	tmp = edge.perm_a[2];
+	tmp = perm_a[2];
 	
-	edge.perm_a[2] = edge.perm_b[10];
-	edge.perm_b[10] = edge.perm_a[8];
-	edge.perm_a[8] = edge.perm_b[0];
-	edge.perm_b[0] = tmp;
+	perm_a[2] = perm_b[10];
+	perm_b[10] = perm_a[8];
+	perm_a[8] = perm_b[0];
+	perm_b[0] = tmp;
 
 }
 
-void apply_MR(Coupled_edges &edge) {
+void Coupled_edges::apply_MR() {
 /*
 	1a  = + => 3b
 	^
@@ -719,26 +719,26 @@ void apply_MR(Coupled_edges &edge) {
 	9b <= + =  11a
 
 
-	( idx -1 )
+	( idx - 1 )
 
 */
 
-	int tmp = edge.orient_b[8];
+	int tmp = orient_b[8];
 	
-	edge.orient_b[8] = (edge.orient_a[10] + 1) % 2;
-	edge.orient_a[10] = (edge.orient_b[2] + 1) % 2;
-	edge.orient_b[2] = (edge.orient_a[0] + 1) % 2;
-	edge.orient_a[0] = (tmp + 1) % 2;
+	orient_b[8] = (orient_a[10] + 1) % 2;
+	orient_a[10] = (orient_b[2] + 1) % 2;
+	orient_b[2] = (orient_a[0] + 1) % 2;
+	orient_a[0] = (tmp + 1) % 2;
 
-	tmp = edge.perm_b[8];
+	tmp = perm_b[8];
 	
-	edge.perm_b[8] = edge.perm_a[10];
-	edge.perm_a[10] = edge.perm_b[2];
-	edge.perm_b[2] = edge.perm_a[0];
-	edge.perm_a[0] = tmp;
+	perm_b[8] = perm_a[10];
+	perm_a[10] = perm_b[2];
+	perm_b[2] = perm_a[0];
+	perm_a[0] = tmp;
 }
 
-void apply_MU(Coupled_edges &edge) {
+void Coupled_edges::apply_MU() {
 /*
 	5a  = + =>  8b
 	^
@@ -747,26 +747,26 @@ void apply_MU(Coupled_edges &edge) {
 	6b <= + =   7a
 
 
-	( idx -1 )
+	( idx - 1 )
 
 */
 
-	int tmp = edge.orient_b[5];
+	int tmp = orient_b[5];
 	
-	edge.orient_b[5] = (edge.orient_a[6] + 1) % 2;
-	edge.orient_a[6] = (edge.orient_b[7] + 1) % 2;
-	edge.orient_b[7] = (edge.orient_a[4] + 1) % 2;
-	edge.orient_a[4] = (tmp + 1) % 2;
+	orient_b[5] = (orient_a[6] + 1) % 2;
+	orient_a[6] = (orient_b[7] + 1) % 2;
+	orient_b[7] = (orient_a[4] + 1) % 2;
+	orient_a[4] = (tmp + 1) % 2;
 
-	tmp = edge.perm_b[5];
+	tmp = perm_b[5];
 	
-	edge.perm_b[5] = edge.perm_a[6];
-	edge.perm_a[6] = edge.perm_b[7];
-	edge.perm_b[7] = edge.perm_a[4];
-	edge.perm_a[4] = tmp;
+	perm_b[5] = perm_a[6];
+	perm_a[6] = perm_b[7];
+	perm_b[7] = perm_a[4];
+	perm_a[4] = tmp;
 }
 
-void apply_MD(Coupled_edges &edge) {
+void Coupled_edges::apply_MD() {
 /*
 	5b  = + => 6a
 	^
@@ -775,26 +775,26 @@ void apply_MD(Coupled_edges &edge) {
 	8a <= + =  7b
 
 
-	( idx -1 )
+	( idx - 1 )
 
 */
 
-	int tmp = edge.orient_a[7];
+	int tmp = orient_a[7];
 	
-	edge.orient_a[7] = (edge.orient_b[6] + 1) % 2;
-	edge.orient_b[6] = (edge.orient_a[5] + 1) % 2;
-	edge.orient_a[5] = (edge.orient_b[4] + 1) % 2;
-	edge.orient_b[4] = (tmp + 1) % 2;
+	orient_a[7] = (orient_b[6] + 1) % 2;
+	orient_b[6] = (orient_a[5] + 1) % 2;
+	orient_a[5] = (orient_b[4] + 1) % 2;
+	orient_b[4] = (tmp + 1) % 2;
 
-	tmp = edge.perm_a[7];
+	tmp = perm_a[7];
 	
-	edge.perm_a[7] = edge.perm_b[6];
-	edge.perm_b[6] = edge.perm_a[5];
-	edge.perm_a[5] = edge.perm_b[4];
-	edge.perm_b[4] = tmp;
+	perm_a[7] = perm_b[6];
+	perm_b[6] = perm_a[5];
+	perm_a[5] = perm_b[4];
+	perm_b[4] = tmp;
 }
 
-void apply_MF(Coupled_edges &edge) {
+void Coupled_edges::apply_MF() {
 /*
 	4a  = + =>  2b
 	 ^
@@ -808,22 +808,22 @@ void apply_MF(Coupled_edges &edge) {
 */
 
 
-	int tmp = edge.orient_b[11];
+	int tmp = orient_b[11];
 	
-	edge.orient_b[11] = (edge.orient_a[9] + 1) % 2;
-	edge.orient_a[9] = (edge.orient_b[1] + 1) % 2;
-	edge.orient_b[1] = (edge.orient_a[3] + 1) % 2;
-	edge.orient_a[3] = (tmp + 1) % 2;
+	orient_b[11] = (orient_a[9] + 1) % 2;
+	orient_a[9] = (orient_b[1] + 1) % 2;
+	orient_b[1] = (orient_a[3] + 1) % 2;
+	orient_a[3] = (tmp + 1) % 2;
 
-	tmp = edge.perm_b[11];
+	tmp = perm_b[11];
 	
-	edge.perm_b[11] = edge.perm_a[9];
-	edge.perm_a[9] = edge.perm_b[1];
-	edge.perm_b[1] = edge.perm_a[3];
-	edge.perm_a[3] = tmp;
+	perm_b[11] = perm_a[9];
+	perm_a[9] = perm_b[1];
+	perm_b[1] = perm_a[3];
+	perm_a[3] = tmp;
 }
 
-void apply_MB(Coupled_edges &edge) {
+void Coupled_edges::apply_MB() {
 /*
 	4b  = + => 12a
 	^
@@ -832,147 +832,147 @@ void apply_MB(Coupled_edges &edge) {
 	2a <= + =  10b
 
 
-	( idx -1 )
+	( idx - 1 )
 
 */
 
 
-	int tmp = edge.orient_a[1];
+	int tmp = orient_a[1];
 	
-	edge.orient_a[1] = (edge.orient_b[9] + 1) % 2;
-	edge.orient_b[9] = (edge.orient_a[11] + 1) % 2;
-	edge.orient_a[11] = (edge.orient_b[3] + 1) % 2;
-	edge.orient_b[3] = (tmp + 1) % 2;
+	orient_a[1] = (orient_b[9] + 1) % 2;
+	orient_b[9] = (orient_a[11] + 1) % 2;
+	orient_a[11] = (orient_b[3] + 1) % 2;
+	orient_b[3] = (tmp + 1) % 2;
 
-	tmp = edge.perm_a[1];
+	tmp = perm_a[1];
 	
-	edge.perm_a[1] = edge.perm_b[9];
-	edge.perm_b[9] = edge.perm_a[11];
-	edge.perm_a[11] = edge.perm_b[3];
-	edge.perm_b[3] = tmp;
+	perm_a[1] = perm_b[9];
+	perm_b[9] = perm_a[11];
+	perm_a[11] = perm_b[3];
+	perm_b[3] = tmp;
 }
 
 Coupled_edges& operator*(Coupled_edges &ce, const moves &f) {
 	switch(f) {
 
 		case U:
-			apply_U(ce);
+			ce.apply_U();
 			break;
 
 		case iU:
-			apply_U(ce);
-			apply_U(ce);
-			apply_U(ce);
+			ce.apply_U();
+			ce.apply_U();
+			ce.apply_U();
 			break;
 
 		case L:
-			apply_L(ce);
+			ce.apply_L();
 			break;
 
 		case iL:
-			apply_L(ce);
-			apply_L(ce);
-			apply_L(ce);
+			ce.apply_L();
+			ce.apply_L();
+			ce.apply_L();
 			break;
 
 		case F:
-			apply_F(ce);
+			ce.apply_F();
 			break;
 
 		case iF:
-			apply_F(ce);
-			apply_F(ce);
-			apply_F(ce);
+			ce.apply_F();
+			ce.apply_F();
+			ce.apply_F();
 			break;
 
 		case R:
-			apply_R(ce);
+			ce.apply_R();
 			break;
 
 		case iR:
-			apply_R(ce);
-			apply_R(ce);
-			apply_R(ce);
+			ce.apply_R();
+			ce.apply_R();
+			ce.apply_R();
 			break;
 
 		case B:
-			apply_B(ce);
+			ce.apply_B();
 			break;
 
 		case iB:
-			apply_B(ce);
-			apply_B(ce);
-			apply_B(ce);
+			ce.apply_B();
+			ce.apply_B();
+			ce.apply_B();
 			break;
 
 		case D:
-			apply_D(ce);
+			ce.apply_D();
 			break;
 
 		case iD:
-			apply_D(ce);
-			apply_D(ce);
-			apply_D(ce);
+			ce.apply_D();
+			ce.apply_D();
+			ce.apply_D();
 			break;
 
 		case MU:
-			apply_MU(ce);
+			ce.apply_MU();
 			break;
 
 		case iMU:
-			apply_MU(ce);
-			apply_MU(ce);
-			apply_MU(ce);
+			ce.apply_MU();
+			ce.apply_MU();
+			ce.apply_MU();
 			break;
 
 		case ML:
-			apply_ML(ce);
+			ce.apply_ML();
 			break;
 
 		case iML:
-			apply_ML(ce);
-			apply_ML(ce);
-			apply_ML(ce);
+			ce.apply_ML();
+			ce.apply_ML();
+			ce.apply_ML();
 			break;
 
 		case MF:
-			apply_MF(ce);
+			ce.apply_MF();
 			break;
 
 		case iMF:
-			apply_MF(ce);
-			apply_MF(ce);
-			apply_MF(ce);
+			ce.apply_MF();
+			ce.apply_MF();
+			ce.apply_MF();
 			break;
 
 		case MR:
-			apply_MR(ce);
+			ce.apply_MR();
 			break;
 
 		case iMR:
-			apply_MR(ce);
-			apply_MR(ce);
-			apply_MR(ce);
+			ce.apply_MR();
+			ce.apply_MR();
+			ce.apply_MR();
 			break;
 
 		case MB:
-			apply_MB(ce);
+			ce.apply_MB();
 			break;
 
 		case iMB:
-			apply_MB(ce);
-			apply_MB(ce);
-			apply_MB(ce);
+			ce.apply_MB();
+			ce.apply_MB();
+			ce.apply_MB();
 			break;
 
 		case MD:
-			apply_MD(ce);
+			ce.apply_MD();
 			break;
 
 		case iMD:
-			apply_MD(ce);
-			apply_MD(ce);
-			apply_MD(ce);
+			ce.apply_MD();
+			ce.apply_MD();
+			ce.apply_MD();
 			break;
 
 		default:

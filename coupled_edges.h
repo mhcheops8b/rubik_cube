@@ -11,6 +11,8 @@ namespace rubik_cube {
 class Coupled_edges {
 public:
 	Coupled_edges();
+	// set cube to initial position
+	void init();
 
 	void disp(std::ostream &os = std::cout);
 	void disp_cube(std::ostream &os = std::cout);
@@ -22,21 +24,18 @@ public:
 
 	friend Coupled_edges &operator*(Coupled_edges &c1, const moves &f);
 
-	friend void apply_L(Coupled_edges &edge); 
-	friend void apply_R(Coupled_edges &edge); 
-	friend void apply_U(Coupled_edges &edge); 
-	friend void apply_D(Coupled_edges &edge); 
-	friend void apply_F(Coupled_edges &edge); 
-	friend void apply_B(Coupled_edges &edge); 
-	friend void apply_ML(Coupled_edges &edge); 
-	friend void apply_MR(Coupled_edges &edge); 
-	friend void apply_MU(Coupled_edges &edge); 
-	friend void apply_MD(Coupled_edges &edge); 
-	friend void apply_MF(Coupled_edges &edge); 
-	friend void apply_MB(Coupled_edges &edge); 
-
-protected:
-	void init();
+	void apply_L(); 
+	void apply_R(); 
+	void apply_U(); 
+	void apply_D(); 
+	void apply_F(); 
+	void apply_B(); 
+	void apply_ML(); 
+	void apply_MR(); 
+	void apply_MU(); 
+	void apply_MD(); 
+	void apply_MF(); 
+	void apply_MB(); 
 
 private:
 
