@@ -29,26 +29,26 @@ int main() {
 #endif
 
 	std::cout << "--\n";
-	apply_ML(new_cube);
-	apply_ML(new_cube);
-	apply_ML(new_cube);
-	apply_L(new_cube);
-	apply_U(new_cube);
-	apply_U(new_cube);
-	apply_U(new_cube);
-	apply_L(new_cube);
-	apply_L(new_cube);
-	apply_L(new_cube);
-	apply_U(new_cube);
-	apply_ML(new_cube);
-	apply_U(new_cube);
-	apply_U(new_cube);
-	apply_U(new_cube);
-	apply_L(new_cube);
-	apply_U(new_cube);
-	apply_L(new_cube);
-	apply_L(new_cube);
-	apply_L(new_cube);
+	new_cube.apply_ML();
+	new_cube.apply_ML();
+	new_cube.apply_ML();
+	new_cube.apply_L();
+	new_cube.apply_U();
+	new_cube.apply_U();
+	new_cube.apply_U();
+	new_cube.apply_L();
+	new_cube.apply_L();
+	new_cube.apply_L();
+	new_cube.apply_U();
+	new_cube.apply_ML();
+	new_cube.apply_U();
+	new_cube.apply_U();
+	new_cube.apply_U();
+	new_cube.apply_L();
+	new_cube.apply_U();
+	new_cube.apply_L();
+	new_cube.apply_L();
+	new_cube.apply_L();
 
 	new_cube.disp();
 	new_cube.disp_cube();

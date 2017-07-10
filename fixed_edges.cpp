@@ -153,7 +153,7 @@ void Fixed_edges::disp_cube(std::ostream &os) {
 	os << '\n';
 }
 
-void apply_R(Fixed_edges &edge) {
+void Fixed_edges::apply_R() {
 /*
 	2  = + => 7
 	^
@@ -167,22 +167,22 @@ void apply_R(Fixed_edges &edge) {
 */
 
 
-	int tmp = edge.orient[5];
+	int tmp = orient[5];
 	
-	edge.orient[5] = (edge.orient[9] + 1) % 2;
-	edge.orient[9] = (edge.orient[6] + 1) % 2;
-	edge.orient[6] = (edge.orient[1] + 1) % 2;
-	edge.orient[1] = (tmp + 1) % 2;
+	orient[5] = (orient[9] + 1) % 2;
+	orient[9] = (orient[6] + 1) % 2;
+	orient[6] = (orient[1] + 1) % 2;
+	orient[1] = (tmp + 1) % 2;
 
-	tmp = edge.perm[5];
+	tmp = perm[5];
 	
-	edge.perm[5] = edge.perm[9];
-	edge.perm[9] = edge.perm[6];
-	edge.perm[6] = edge.perm[1];
-	edge.perm[1] = tmp;
+	perm[5] = perm[9];
+	perm[9] = perm[6];
+	perm[6] = perm[1];
+	perm[1] = tmp;
 }
 
-void apply_L(Fixed_edges &edge) {
+void Fixed_edges::apply_L() {
 /*
 	4  = + => 5
 	^
@@ -196,22 +196,22 @@ void apply_L(Fixed_edges &edge) {
 */
 
 
-	int tmp = edge.orient[7];
+	int tmp = orient[7];
 	
-	edge.orient[7] = (edge.orient[11] + 1) % 2;
-	edge.orient[11] = (edge.orient[4] + 1) % 2;
-	edge.orient[4] = (edge.orient[3] + 1) % 2;
-	edge.orient[3] = (tmp + 1) % 2;
+	orient[7] = (orient[11] + 1) % 2;
+	orient[11] = (orient[4] + 1) % 2;
+	orient[4] = (orient[3] + 1) % 2;
+	orient[3] = (tmp + 1) % 2;
 
-	tmp = edge.perm[7];
+	tmp = perm[7];
 	
-	edge.perm[7] = edge.perm[11];
-	edge.perm[11] = edge.perm[4];
-	edge.perm[4] = edge.perm[3];
-	edge.perm[3] = tmp;
+	perm[7] = perm[11];
+	perm[11] = perm[4];
+	perm[4] = perm[3];
+	perm[3] = tmp;
 }
 
-void apply_U(Fixed_edges &edge) {
+void Fixed_edges::apply_U() {
 /*
 	1  = + => 4
 	^
@@ -225,22 +225,22 @@ void apply_U(Fixed_edges &edge) {
 */
 
 
-	int tmp = edge.orient[1];
+	int tmp = orient[1];
 	
-	edge.orient[1] = edge.orient[2];
-	edge.orient[2] = edge.orient[3];
-	edge.orient[3] = edge.orient[0];
-	edge.orient[0] = tmp % 2;
+	orient[1] = orient[2];
+	orient[2] = orient[3];
+	orient[3] = orient[0];
+	orient[0] = tmp % 2;
 
-	tmp = edge.perm[1];
+	tmp = perm[1];
 	
-	edge.perm[1] = edge.perm[2];
-	edge.perm[2] = edge.perm[3];
-	edge.perm[3] = edge.perm[0];
-	edge.perm[0] = tmp;
+	perm[1] = perm[2];
+	perm[2] = perm[3];
+	perm[3] = perm[0];
+	perm[0] = tmp;
 }
 
-void apply_D(Fixed_edges &edge) {
+void Fixed_edges::apply_D() {
 /*
 	9  = + => 10
 	^
@@ -254,22 +254,22 @@ void apply_D(Fixed_edges &edge) {
 */
 
 
-	int tmp = edge.orient[11];
+	int tmp = orient[11];
 	
-	edge.orient[11] = edge.orient[10];
-	edge.orient[10] = edge.orient[9];
-	edge.orient[9] = edge.orient[8];
-	edge.orient[8] = tmp;
+	orient[11] = orient[10];
+	orient[10] = orient[9];
+	orient[9] = orient[8];
+	orient[8] = tmp;
 
-	tmp = edge.perm[11];
+	tmp = perm[11];
 	
-	edge.perm[11] = edge.perm[10];
-	edge.perm[10] = edge.perm[9];
-	edge.perm[9] = edge.perm[8];
-	edge.perm[8] = tmp;
+	perm[11] = perm[10];
+	perm[10] = perm[9];
+	perm[9] = perm[8];
+	perm[8] = tmp;
 }
 
-void apply_F(Fixed_edges &edge) {
+void Fixed_edges::apply_F() {
 /*
 	1  = + => 6
 	^
@@ -283,22 +283,22 @@ void apply_F(Fixed_edges &edge) {
 */
 
 
-	int tmp = edge.orient[4];
+	int tmp = orient[4];
 	
-	edge.orient[4] = edge.orient[8];
-	edge.orient[8] = edge.orient[5];
-	edge.orient[5] = edge.orient[0];
-	edge.orient[0] = tmp;
+	orient[4] = orient[8];
+	orient[8] = orient[5];
+	orient[5] = orient[0];
+	orient[0] = tmp;
 
-	tmp = edge.perm[4];
+	tmp = perm[4];
 	
-	edge.perm[4] = edge.perm[8];
-	edge.perm[8] = edge.perm[5];
-	edge.perm[5] = edge.perm[0];
-	edge.perm[0] = tmp;
+	perm[4] = perm[8];
+	perm[8] = perm[5];
+	perm[5] = perm[0];
+	perm[0] = tmp;
 }
 
-void apply_B(Fixed_edges &edge) {
+void Fixed_edges::apply_B() {
 /*
 	3  = + => 8
 	^
@@ -312,22 +312,22 @@ void apply_B(Fixed_edges &edge) {
 */
 
 
-	int tmp = edge.orient[6];
+	int tmp = orient[6];
 	
-	edge.orient[6] = edge.orient[10];
-	edge.orient[10] = edge.orient[7];
-	edge.orient[7] = edge.orient[2];
-	edge.orient[2] = tmp;
+	orient[6] = orient[10];
+	orient[10] = orient[7];
+	orient[7] = orient[2];
+	orient[2] = tmp;
 
-	tmp = edge.perm[6];
+	tmp = perm[6];
 	
-	edge.perm[6] = edge.perm[10];
-	edge.perm[10] = edge.perm[7];
-	edge.perm[7] = edge.perm[2];
-	edge.perm[2] = tmp;
+	perm[6] = perm[10];
+	perm[10] = perm[7];
+	perm[7] = perm[2];
+	perm[2] = tmp;
 }
 
-void apply_ML(Fixed_edges &edge) {
+void Fixed_edges::apply_ML() {
 /*
 	1  = + => 9
 	^
@@ -341,22 +341,22 @@ void apply_ML(Fixed_edges &edge) {
 */
 
 
-	int tmp = edge.orient[2];
+	int tmp = orient[2];
 	
-	edge.orient[2] = (edge.orient[10] + 1) % 2;
-	edge.orient[10] = (edge.orient[8] + 1) % 2;
-	edge.orient[8] = (edge.orient[0] + 1) % 2;
-	edge.orient[0] = (tmp + 1) % 2;
+	orient[2] = (orient[10] + 1) % 2;
+	orient[10] = (orient[8] + 1) % 2;
+	orient[8] = (orient[0] + 1) % 2;
+	orient[0] = (tmp + 1) % 2;
 
-	tmp = edge.perm[2];
+	tmp = perm[2];
 	
-	edge.perm[2] = edge.perm[10];
-	edge.perm[10] = edge.perm[8];
-	edge.perm[8] = edge.perm[0];
-	edge.perm[0] = tmp;
+	perm[2] = perm[10];
+	perm[10] = perm[8];
+	perm[8] = perm[0];
+	perm[0] = tmp;
 }
 
-void apply_MR(Fixed_edges &edge) {
+void Fixed_edges::apply_MR() {
 /*
 	1  = + => 3
 	^
@@ -370,22 +370,22 @@ void apply_MR(Fixed_edges &edge) {
 */
 
 
-	int tmp = edge.orient[8];
+	int tmp = orient[8];
 	
-	edge.orient[8] = (edge.orient[10] + 1) % 2;
-	edge.orient[10] = (edge.orient[2] + 1) % 2;
-	edge.orient[2] = (edge.orient[0] + 1) % 2;
-	edge.orient[0] = (tmp + 1) % 2;
+	orient[8] = (orient[10] + 1) % 2;
+	orient[10] = (orient[2] + 1) % 2;
+	orient[2] = (orient[0] + 1) % 2;
+	orient[0] = (tmp + 1) % 2;
 
-	tmp = edge.perm[8];
+	tmp = perm[8];
 	
-	edge.perm[8] = edge.perm[10];
-	edge.perm[10] = edge.perm[2];
-	edge.perm[2] = edge.perm[0];
-	edge.perm[0] = tmp;
+	perm[8] = perm[10];
+	perm[10] = perm[2];
+	perm[2] = perm[0];
+	perm[0] = tmp;
 }
 
-void apply_MF(Fixed_edges &edge) {
+void Fixed_edges::apply_MF() {
 /*
 	4  = + => 2
 	^
@@ -399,22 +399,22 @@ void apply_MF(Fixed_edges &edge) {
 */
 
 
-	int tmp = edge.orient[11];
+	int tmp = orient[11];
 	
-	edge.orient[11] = (edge.orient[9] + 1) % 2;
-	edge.orient[9] = (edge.orient[1] + 1) % 2;
-	edge.orient[1] = (edge.orient[3] + 1) % 2;
-	edge.orient[3] = (tmp + 1) % 2;
+	orient[11] = (orient[9] + 1) % 2;
+	orient[9] = (orient[1] + 1) % 2;
+	orient[1] = (orient[3] + 1) % 2;
+	orient[3] = (tmp + 1) % 2;
 
-	tmp = edge.perm[11];
+	tmp = perm[11];
 	
-	edge.perm[11] = edge.perm[9];
-	edge.perm[9] = edge.perm[1];
-	edge.perm[1] = edge.perm[3];
-	edge.perm[3] = tmp;
+	perm[11] = perm[9];
+	perm[9] = perm[1];
+	perm[1] = perm[3];
+	perm[3] = tmp;
 }
 
-void apply_MB(Fixed_edges &edge) {
+void Fixed_edges::apply_MB() {
 /*
 	4  = + => 12
 	^
@@ -428,22 +428,22 @@ void apply_MB(Fixed_edges &edge) {
 */
 
 
-	int tmp = edge.orient[1];
+	int tmp = orient[1];
 	
-	edge.orient[1] = (edge.orient[9] + 1) % 2;
-	edge.orient[9] = (edge.orient[11] + 1) % 2;
-	edge.orient[11] = (edge.orient[3] + 1) % 2;
-	edge.orient[3] = (tmp + 1) % 2;
+	orient[1] = (orient[9] + 1) % 2;
+	orient[9] = (orient[11] + 1) % 2;
+	orient[11] = (orient[3] + 1) % 2;
+	orient[3] = (tmp + 1) % 2;
 
-	tmp = edge.perm[1];
+	tmp = perm[1];
 	
-	edge.perm[1] = edge.perm[9];
-	edge.perm[9] = edge.perm[11];
-	edge.perm[11] = edge.perm[3];
-	edge.perm[3] = tmp;
+	perm[1] = perm[9];
+	perm[9] = perm[11];
+	perm[11] = perm[3];
+	perm[3] = tmp;
 }
 
-void apply_MU(Fixed_edges &edge) {
+void Fixed_edges::apply_MU() {
 /*
 	5  = + => 8
 	^
@@ -457,22 +457,22 @@ void apply_MU(Fixed_edges &edge) {
 */
 
 
-	int tmp = edge.orient[5];
+	int tmp = orient[5];
 	
-	edge.orient[5] = (edge.orient[6] + 1) % 2;
-	edge.orient[6] = (edge.orient[7] + 1) % 2;
-	edge.orient[7] = (edge.orient[4] + 1) % 2;
-	edge.orient[4] = (tmp + 1) % 2;
+	orient[5] = (orient[6] + 1) % 2;
+	orient[6] = (orient[7] + 1) % 2;
+	orient[7] = (orient[4] + 1) % 2;
+	orient[4] = (tmp + 1) % 2;
 
-	tmp = edge.perm[5];
+	tmp = perm[5];
 	
-	edge.perm[5] = edge.perm[6];
-	edge.perm[6] = edge.perm[7];
-	edge.perm[7] = edge.perm[4];
-	edge.perm[4] = tmp;
+	perm[5] = perm[6];
+	perm[6] = perm[7];
+	perm[7] = perm[4];
+	perm[4] = tmp;
 }
 
-void apply_MD(Fixed_edges &edge) {
+void Fixed_edges::apply_MD() {
 /*
 	5  = + => 6
 	^
@@ -486,142 +486,142 @@ void apply_MD(Fixed_edges &edge) {
 */
 
 
-	int tmp = edge.orient[7];
+	int tmp = orient[7];
 	
-	edge.orient[7] = (edge.orient[6] + 1) % 2;
-	edge.orient[6] = (edge.orient[5] + 1) % 2;
-	edge.orient[5] = (edge.orient[4] + 1) % 2;
-	edge.orient[4] = (tmp + 1) % 2;
+	orient[7] = (orient[6] + 1) % 2;
+	orient[6] = (orient[5] + 1) % 2;
+	orient[5] = (orient[4] + 1) % 2;
+	orient[4] = (tmp + 1) % 2;
 
-	tmp = edge.perm[7];
+	tmp = perm[7];
 	
-	edge.perm[7] = edge.perm[6];
-	edge.perm[6] = edge.perm[5];
-	edge.perm[5] = edge.perm[4];
-	edge.perm[4] = tmp;
+	perm[7] = perm[6];
+	perm[6] = perm[5];
+	perm[5] = perm[4];
+	perm[4] = tmp;
 }
 
 Fixed_edges& operator*(Fixed_edges &fe, const moves &f) {
 	switch (f) {
 
 		case U:
-			apply_U(fe);
+			fe.apply_U();
 			break;
 
 		case iU:
-			apply_U(fe);
-			apply_U(fe);
-			apply_U(fe);
+			fe.apply_U();
+			fe.apply_U();
+			fe.apply_U();
 			break;
 
 		case L:
-			apply_L(fe);
+			fe.apply_L();
 			break;
 
 		case iL:
-			apply_L(fe);
-			apply_L(fe);
-			apply_L(fe);
+			fe.apply_L();
+			fe.apply_L();
+			fe.apply_L();
 			break;
 
 		case F:
-			apply_F(fe);
+			fe.apply_F();
 			break;
 
 		case iF:
-			apply_F(fe);
-			apply_F(fe);
-			apply_F(fe);
+			fe.apply_F();
+			fe.apply_F();
+			fe.apply_F();
 			break;
 
 		case R:
-			apply_R(fe);
+			fe.apply_R();
 			break;
 
 		case iR:
-			apply_R(fe);
-			apply_R(fe);
-			apply_R(fe);
+			fe.apply_R();
+			fe.apply_R();
+			fe.apply_R();
 			break;
 
 		case B:
-			apply_B(fe);
+			fe.apply_B();
 			break;
 
 		case iB:
-			apply_B(fe);
-			apply_B(fe);
-			apply_B(fe);
+			fe.apply_B();
+			fe.apply_B();
+			fe.apply_B();
 			break;
 
 		case D:
-			apply_D(fe);
+			fe.apply_D();
 			break;
 
 		case iD:
-			apply_D(fe);
-			apply_D(fe);
-			apply_D(fe);
+			fe.apply_D();
+			fe.apply_D();
+			fe.apply_D();
 			break;
 
 		case MU:
-			apply_MU(fe);
+			fe.apply_MU();
 			break;
 
 		case iMU:
-			apply_MU(fe);
-			apply_MU(fe);
-			apply_MU(fe);
+			fe.apply_MU();
+			fe.apply_MU();
+			fe.apply_MU();
 			break;
 
 		case ML:
-			apply_ML(fe);
+			fe.apply_ML();
 			break;
 
 		case iML:
-			apply_ML(fe);
-			apply_ML(fe);
-			apply_ML(fe);
+			fe.apply_ML();
+			fe.apply_ML();
+			fe.apply_ML();
 			break;
 
 		case MF:
-			apply_MF(fe);
+			fe.apply_MF();
 			break;
 
 		case iMF:
-			apply_MF(fe);
-			apply_MF(fe);
-			apply_MF(fe);
+			fe.apply_MF();
+			fe.apply_MF();
+			fe.apply_MF();
 			break;
 
 		case MR:
-			apply_MR(fe);
+			fe.apply_MR();
 			break;
 
 		case iMR:
-			apply_MR(fe);
-			apply_MR(fe);
-			apply_MR(fe);
+			fe.apply_MR();
+			fe.apply_MR();
+			fe.apply_MR();
 			break;
 
 		case MB:
-			apply_MB(fe);
+			fe.apply_MB();
 			break;
 
 		case iMB:
-			apply_MB(fe);
-			apply_MB(fe);
-			apply_MB(fe);
+			fe.apply_MB();
+			fe.apply_MB();
+			fe.apply_MB();
 			break;
 
 		case MD:
-			apply_MD(fe);
+			fe.apply_MD();
 			break;
 
 		case iMD:
-			apply_MD(fe);
-			apply_MD(fe);
-			apply_MD(fe);
+			fe.apply_MD();
+			fe.apply_MD();
+			fe.apply_MD();
 			break;
 		
 		default:

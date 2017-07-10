@@ -18,24 +18,22 @@ public:
 
 	friend Fixed_edges& operator*(Fixed_edges &fe, const moves &f);
 
-	friend void apply_R(Fixed_edges &edge);
-	friend void apply_L(Fixed_edges &edge);
-	friend void apply_U(Fixed_edges &edge);
-	friend void apply_D(Fixed_edges &edge);
-	friend void apply_F(Fixed_edges &edge);
-	friend void apply_B(Fixed_edges &edge);
-	friend void apply_ML(Fixed_edges &edge);
-	friend void apply_MR(Fixed_edges &edge);
-	friend void apply_MF(Fixed_edges &edge);
-	friend void apply_MB(Fixed_edges &edge);
-	friend void apply_MU(Fixed_edges &edge);
-	friend void apply_MD(Fixed_edges &edge);
+	void apply_L();
+	void apply_R();
+	void apply_U();
+	void apply_D();
+	void apply_F();
+	void apply_B();
+	void apply_ML();
+	void apply_MR();
+	void apply_MF();
+	void apply_MB();
+	void apply_MU();
+	void apply_MD();
 
 private:
 	int perm[12];
 	int orient[12];
-
-
 };
 
 }
