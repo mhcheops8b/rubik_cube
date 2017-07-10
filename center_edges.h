@@ -81,45 +81,53 @@ template <int N, bool isEven>
 class _Center_edges {
 
 public:
+	friend _Center_edges_Impl<N, isEven>;
+
 	_Center_edges();
 	void disp_cube(std::ostream &os = std::cout);
 	void disp_perm(std::ostream &os = std::cout);
 
-	template<int U, bool even>
-	friend void apply_L(_Center_edges<U, even> &ce);
+	// L move
+	void apply_L();
 
-	template<int U, bool even>
-	friend void apply_R(_Center_edges<U, even> &ce);
+	// R move
+	void apply_R();
 
-	template<int U, bool even>
-	friend void apply_F(_Center_edges<U, even> &ce);
+	// F move
+	void apply_F();
 
-	template<int U, bool even>
-	friend void apply_B(_Center_edges<U, even> &ce);
+	// B move
+	void apply_B();
 
-	template<int U, bool even>
-	friend void apply_U(_Center_edges<U, even> &ce);
+	// U move
+	void apply_U();
 
-	template<int U, bool even>
-	friend void apply_D(_Center_edges<U, even> &ce);
+	// D move
+	void apply_D();
 
-	template <int U, int K, bool even>
-	friend void apply_ML(_Center_edges<U, even> &ce);
+	// ML<K> move
+	template <int K>
+	void apply_ML();
 
-	template <int U, int K, bool even>
-	friend void apply_MR(_Center_edges<U, even> &ce);
+	// MR<K> move
+	template <int K>
+	void apply_MR();
 
-	template <int U, int K, bool even>
-	friend void apply_MF(_Center_edges<U, even> &ce);
+	// MF<K> move
+	template <int K>
+	void apply_MF();
 
-	template <int U, int K, bool even>
-	friend void apply_MB(_Center_edges<U, even> &ce);
+	// MB<K> move
+	template <int K>
+	void apply_MB();
 
-	template <int U, int K, bool even>
-	friend void apply_MU(_Center_edges<U, even> &ce);
+	// MU<K> move
+	template <int K>
+	void apply_MU();
 
-	template <int U, int K, bool even>
-	friend void apply_MD(_Center_edges<U, even> &ce);
+	// MD<K> move
+	template <int K>
+	void apply_MD();
 
 	static const int number_of_indices;
 	static const int number_of_indices_per_face;
@@ -146,32 +154,14 @@ public:
 	// west center edges wrt to face
 	static inline int face_WF(const faces &f, int layer, int index);
 
+	//
+	void apply_Face(const faces &f);
+	//
+	void apply_cycle(int(&cycle)[4]);
+	//
+	void apply_cycle(int idx1, int idx2, int idx3, int idx4);
 private:
-	// constructor implementation
-	template <int U>
-	friend void _Center_edges_Impl<U, isEven>::_center_edges_impl(_Center_edges<U, isEven> &ce);
-	// disp_cube implementation
-
-	template <int U>
-	friend void _Center_edges_Impl<U, isEven>::disp_cube_impl(_Center_edges<U, isEven> &ce, std::ostream &os);
-
-	// apply_Face implementation
-	template <int U>
-	friend void _Center_edges_Impl<U, isEven>::apply_Face(_Center_edges<U, isEven> &ce, const faces &f);
-
-	// apply cycle (internal)
-	template<int U, bool K>
-	friend void apply_cycle(_Center_edges<U, K> &ce, int (&cycle)[4]);
-
-	// apply cycle (internal)
-	template<int U, bool K>
-	friend void apply_cycle(_Center_edges<U, K> &ce, int idx1, int idx2, int idx3, int idx4);
-	
-	// apply face (internal)
-	template<int U, bool even>
-	friend void apply_Face(_Center_edges<U, even> &ce, const faces &f);
-
-	int perm[_Center_edges_Impl<N,isEven>::number_of_indices];
+	int m_perm[_Center_edges_Impl<N,isEven>::number_of_indices];
 };
 
 template <int N, bool isEven>
@@ -196,7 +186,7 @@ void _Center_edges<N, isEven>::disp_cube(std::ostream &os) {
 template <int N, bool isEven>
 void _Center_edges<N, isEven>::disp_perm(std::ostream &os) {
 	for (int i = 0; i < _Center_edges<N, isEven>::number_of_indices; i++)
-		os << perm[i] <<  ", ";
+		os << m_perm[i] <<  ", ";
 
 	os << '\n';
 }
@@ -278,39 +268,19 @@ struct _Center_edges_Impl<N, false> {
 			+ 3 * (2 * layer - 1) + index;
 	}
 
-//	static inline int face_NF(const faces &f, int layer, int index) {
-//		return f * number_of_indices_per_face
-//			+ NF(layer, index);
-//	}
-//
-//	static inline int face_EF(const faces &f, int layer, int index) {
-//		return f * number_of_indices_per_face
-//			+ EF(layer, index);
-//	}
-//
-//	static inline int face_SF(const faces &f, int layer, int index) {
-//		return f * number_of_indices_per_face
-//			+ SF(layer, index);
-//	}
-//
-//	static inline int face_WF(const faces &f, int layer, int index) {
-//		return f * number_of_indices_per_face 
-//			+ WF(layer, index);
-//	}
-
 	static void _center_edges_impl(_Center_edges<N, false> &ce) {
 		static_assert(N % 2 == 1, "N must be odd.");
 		static_assert(N >= 5, "There are no center edges for smaller cubes thant 5x5x5.");
 
 		for (int i = 0; i < _Center_edges<N, false>::number_of_indices; i++)
-			ce.perm[i] = i;
+			ce.m_perm[i] = i;
 	}
 
 	static void apply_Face(_Center_edges<N, false> &ce, const faces &f) {
 	
 		for (int i = 0; i < number_of_layers; i++) {
 			for (int j = 0; j < 2 * i + 1; j++) {
-				apply_cycle(ce,
+				ce.apply_cycle(
 					_Center_edges<N, false>::face_NF(f, i + 1, j),
 					_Center_edges<N, false>::face_EF(f, i + 1, j),
 					_Center_edges<N, false>::face_SF(f, i + 1, j),
@@ -339,21 +309,21 @@ struct _Center_edges_Impl<N, false> {
 			os << '.';
 
 			for (int t = _Center_edges<N, false>::number_of_layers; t > k; t--)
-				os << face_labels[ ce.perm[_Center_edges<N, false>::face_WF(U, t, k + t - 1)] 
+				os << face_labels[ ce.m_perm[_Center_edges<N, false>::face_WF(U, t, k + t - 1)] 
 							/ _Center_edges<N, false>::number_of_indices_per_face ]; 
 				
 			os << '.';
 
 			if (k != 0) {
 				for (int t = 0; t < 2 * k - 1; t++)
-					os << face_labels[ ce.perm[_Center_edges<N, false>::face_NF(U, k, t)] 
+					os << face_labels[ ce.m_perm[_Center_edges<N, false>::face_NF(U, k, t)] 
 								/ _Center_edges<N, false>::number_of_indices_per_face ];
 				
 				os << '.';
 			}
 
 			for (int t = k + 1; t <= _Center_edges<N, false>::number_of_layers;  t++)
-				os << face_labels[ ce.perm[_Center_edges<N, false>::face_EF(U, t, t - k - 1)] 
+				os << face_labels[ ce.m_perm[_Center_edges<N, false>::face_EF(U, t, t - k - 1)] 
 							/ _Center_edges<N, false>::number_of_indices_per_face ]; 
 			
 			os << '.';
@@ -362,7 +332,7 @@ struct _Center_edges_Impl<N, false> {
 
 		}
 
-		// lowe half
+		// lower half
 		for (int k = 1; k <= _Center_edges<N, false>::number_of_layers; k++) {
 			//skip
 			for (int i = 0; i <= N; i++)
@@ -371,19 +341,19 @@ struct _Center_edges_Impl<N, false> {
 			os << '.';
 
 			for (int t = _Center_edges<N, false>::number_of_layers; t > k; t--)
-				os << face_labels[ ce.perm[_Center_edges<N, false>::face_WF(U, t, t - k - 1)] 
+				os << face_labels[ ce.m_perm[_Center_edges<N, false>::face_WF(U, t, t - k - 1)] 
 							/ _Center_edges<N, false>::number_of_indices_per_face ]; 
 				
 			os << '.';
 
 			for (int t = 2 * k - 2; t >=0; t--)
-				os << face_labels[ ce.perm[_Center_edges<N, false>::face_SF(U, k, t)]
+				os << face_labels[ ce.m_perm[_Center_edges<N, false>::face_SF(U, k, t)]
 							/ _Center_edges<N, false>::number_of_indices_per_face ];
 			
 			os << '.';
 
 			for (int t = k + 1; t <= _Center_edges<N, false>::number_of_layers;  t++)
-				os << face_labels[ ce.perm[_Center_edges<N, false>::face_EF(U, t, t + k - 1)] 
+				os << face_labels[ ce.m_perm[_Center_edges<N, false>::face_EF(U, t, t + k - 1)] 
 							/ _Center_edges<N, false>::number_of_indices_per_face ]; 
 			
 			os << '.';
@@ -418,21 +388,21 @@ struct _Center_edges_Impl<N, false> {
 
 			// L
 			for (int t = _Center_edges<N, false>::number_of_layers; t > k; t--)
-				os << face_labels[ ce.perm[_Center_edges<N, false>::face_WF(L, t, k + t - 1)]
+				os << face_labels[ ce.m_perm[_Center_edges<N, false>::face_WF(L, t, k + t - 1)]
 							/ _Center_edges<N, false>::number_of_indices_per_face ]; 
 				
 			os << '.';
 
 			if (k != 0) {
 				for (int t = 0; t < 2 * k - 1; t++)
-					os << face_labels[ ce.perm[_Center_edges<N, false>::face_NF(L, k, t)]
+					os << face_labels[ ce.m_perm[_Center_edges<N, false>::face_NF(L, k, t)]
 								/ _Center_edges<N, false>::number_of_indices_per_face ];
 				
 				os << '.';
 			}
 
 			for (int t = k + 1; t <= _Center_edges<N, false>::number_of_layers;  t++)
-				os << face_labels[ ce.perm[_Center_edges<N, false>::face_EF(L, t, t - k - 1)] 
+				os << face_labels[ ce.m_perm[_Center_edges<N, false>::face_EF(L, t, t - k - 1)] 
 							/ _Center_edges<N, false>::number_of_indices_per_face ]; 
 			
 			os << '.';
@@ -443,21 +413,21 @@ struct _Center_edges_Impl<N, false> {
 
 			// F
 			for (int t = _Center_edges<N, false>::number_of_layers; t > k; t--)
-				os << face_labels[ ce.perm[_Center_edges<N, false>::face_WF(F, t, k + t - 1)] 
+				os << face_labels[ ce.m_perm[_Center_edges<N, false>::face_WF(F, t, k + t - 1)] 
 							/ _Center_edges<N, false>::number_of_indices_per_face ]; 
 				
 			os << '.';
 
 			if (k != 0) {
 				for (int t = 0; t < 2 * k - 1; t++)
-					os << face_labels[ ce.perm[_Center_edges<N, false>::face_NF(F, k, t)]
+					os << face_labels[ ce.m_perm[_Center_edges<N, false>::face_NF(F, k, t)]
 								/ _Center_edges<N, false>::number_of_indices_per_face ];
 				
 				os << '.';
 			}
 
 			for (int t = k + 1; t <= _Center_edges<N, false>::number_of_layers;  t++)
-				os << face_labels[ ce.perm[_Center_edges<N, false>::face_EF(F, t, t - k - 1)]
+				os << face_labels[ ce.m_perm[_Center_edges<N, false>::face_EF(F, t, t - k - 1)]
 							/ _Center_edges<N, false>::number_of_indices_per_face ]; 
 			
 			os << '.';
@@ -468,21 +438,21 @@ struct _Center_edges_Impl<N, false> {
 
 			// R
 			for (int t = _Center_edges<N, false>::number_of_layers; t > k; t--)
-				os << face_labels[ ce.perm[_Center_edges<N, false>::face_WF(R, t, k + t - 1)]
+				os << face_labels[ ce.m_perm[_Center_edges<N, false>::face_WF(R, t, k + t - 1)]
 							/ _Center_edges<N, false>::number_of_indices_per_face ]; 
 				
 			os << '.';
 
 			if (k != 0) {
 				for (int t = 0; t < 2 * k - 1; t++)
-					os << face_labels[ ce.perm[_Center_edges<N, false>::face_NF(R, k, t)]
+					os << face_labels[ ce.m_perm[_Center_edges<N, false>::face_NF(R, k, t)]
 								/ _Center_edges<N, false>::number_of_indices_per_face ];
 				
 				os << '.';
 			}
 
 			for (int t = k + 1; t <= _Center_edges<N, false>::number_of_layers;  t++)
-				os << face_labels[ ce.perm[_Center_edges<N, false>::face_EF(R, t, t - k - 1)]
+				os << face_labels[ ce.m_perm[_Center_edges<N, false>::face_EF(R, t, t - k - 1)]
 							/ _Center_edges<N, false>::number_of_indices_per_face ]; 
 			
 			os << '.';
@@ -493,21 +463,21 @@ struct _Center_edges_Impl<N, false> {
 
 			// B
 			for (int t = _Center_edges<N, false>::number_of_layers; t > k; t--)
-				os << face_labels[ ce.perm[_Center_edges<N, false>::face_WF(B, t, k + t - 1)]
+				os << face_labels[ ce.m_perm[_Center_edges<N, false>::face_WF(B, t, k + t - 1)]
 							/ _Center_edges<N, false>::number_of_indices_per_face ]; 
 				
 			os << '.';
 
 			if (k != 0) {
 				for (int t = 0; t < 2 * k - 1; t++)
-					os << face_labels[ ce.perm[_Center_edges<N, false>::face_NF(B, k, t)]
+					os << face_labels[ ce.m_perm[_Center_edges<N, false>::face_NF(B, k, t)]
 								/ _Center_edges<N, false>::number_of_indices_per_face ];
 				
 				os << '.';
 			}
 
 			for (int t = k + 1; t <= _Center_edges<N, false>::number_of_layers;  t++)
-				os << face_labels[ ce.perm[_Center_edges<N, false>::face_EF(B, t, t - k - 1)]
+				os << face_labels[ ce.m_perm[_Center_edges<N, false>::face_EF(B, t, t - k - 1)]
 							/ _Center_edges<N, false>::number_of_indices_per_face ]; 
 			
 			os << '.';
@@ -523,19 +493,19 @@ struct _Center_edges_Impl<N, false> {
 			os << '.';
 
 			for (int t = _Center_edges<N, false>::number_of_layers; t > k; t--)
-				os << face_labels[ ce.perm[_Center_edges<N, false>::face_WF(L, t, t - k - 1)]
+				os << face_labels[ ce.m_perm[_Center_edges<N, false>::face_WF(L, t, t - k - 1)]
 							/ _Center_edges<N, false>::number_of_indices_per_face ]; 
 				
 			os << '.';
 
 			for (int t = 2 * k - 2; t >=0; t--)
-				os << face_labels[ ce.perm[_Center_edges<N, false>::face_SF(L, k, t)]
+				os << face_labels[ ce.m_perm[_Center_edges<N, false>::face_SF(L, k, t)]
 								/ _Center_edges<N, false>::number_of_indices_per_face ];
 			
 			os << '.';
 
 			for (int t = k + 1; t <= _Center_edges<N, false>::number_of_layers;  t++)
-				os << face_labels[ ce.perm[_Center_edges<N, false>::face_EF(L, t, t + k - 1)]
+				os << face_labels[ ce.m_perm[_Center_edges<N, false>::face_EF(L, t, t + k - 1)]
 							/ _Center_edges<N, false>::number_of_indices_per_face ]; 
 			
 			os << '.';
@@ -546,19 +516,19 @@ struct _Center_edges_Impl<N, false> {
 			os << '.';
 
 			for (int t = _Center_edges<N, false>::number_of_layers; t > k; t--)
-				os << face_labels[ ce.perm[_Center_edges<N, false>::face_WF(F, t, t - k - 1)]
+				os << face_labels[ ce.m_perm[_Center_edges<N, false>::face_WF(F, t, t - k - 1)]
 							/ _Center_edges<N, false>::number_of_indices_per_face ]; 
 				
 			os << '.';
 
 			for (int t = 2 * k - 2; t >=0; t--)
-				os << face_labels[ ce.perm[_Center_edges<N, false>::face_SF(F, k, t)]
+				os << face_labels[ ce.m_perm[_Center_edges<N, false>::face_SF(F, k, t)]
 							/ _Center_edges<N, false>::number_of_indices_per_face ];
 			
 			os << '.';
 
 			for (int t = k + 1; t <= _Center_edges<N, false>::number_of_layers;  t++)
-				os << face_labels[ ce.perm[_Center_edges<N, false>::face_EF(F, t, t + k - 1)] 
+				os << face_labels[ ce.m_perm[_Center_edges<N, false>::face_EF(F, t, t + k - 1)] 
 							/ _Center_edges<N, false>::number_of_indices_per_face ]; 
 			
 			os << '.';
@@ -569,19 +539,19 @@ struct _Center_edges_Impl<N, false> {
 			os << '.';
 
 			for (int t = _Center_edges<N, false>::number_of_layers; t > k; t--)
-				os << face_labels[ ce.perm[_Center_edges<N, false>::face_WF(R, t, t - k - 1)]
+				os << face_labels[ ce.m_perm[_Center_edges<N, false>::face_WF(R, t, t - k - 1)]
 							/ _Center_edges<N, false>::number_of_indices_per_face ]; 
 				
 			os << '.';
 
 			for (int t = 2 * k - 2; t >=0; t--)
-				os << face_labels[ ce.perm[_Center_edges<N, false>::face_SF(R, k, t)]
+				os << face_labels[ ce.m_perm[_Center_edges<N, false>::face_SF(R, k, t)]
 							/ _Center_edges<N, false>::number_of_indices_per_face ];
 			
 			os << '.';
 
 			for (int t = k + 1; t <= _Center_edges<N, false>::number_of_layers;  t++)
-				os << face_labels[ ce.perm[_Center_edges<N, false>::face_EF(R, t, t + k - 1)] 
+				os << face_labels[ ce.m_perm[_Center_edges<N, false>::face_EF(R, t, t + k - 1)] 
 							/ _Center_edges<N, false>::number_of_indices_per_face ]; 
 			
 			os << '.';
@@ -592,19 +562,19 @@ struct _Center_edges_Impl<N, false> {
 			os << '.';
 
 			for (int t = _Center_edges<N, false>::number_of_layers; t > k; t--)
-				os << face_labels[ ce.perm[_Center_edges<N, false>::face_WF(B, t, t - k - 1)]
+				os << face_labels[ ce.m_perm[_Center_edges<N, false>::face_WF(B, t, t - k - 1)]
 							/ _Center_edges<N, false>::number_of_indices_per_face ]; 
 				
 			os << '.';
 
 			for (int t = 2 * k - 2; t >=0; t--)
-				os << face_labels[ ce.perm[_Center_edges<N, false>::face_SF(B, k, t)]
+				os << face_labels[ ce.m_perm[_Center_edges<N, false>::face_SF(B, k, t)]
 						/ _Center_edges<N, false>::number_of_indices_per_face ];
 			
 			os << '.';
 
 			for (int t = k + 1; t <= _Center_edges<N, false>::number_of_layers;  t++)
-				os << face_labels[ ce.perm[_Center_edges<N, false>::face_EF(B, t, t + k - 1)] 
+				os << face_labels[ ce.m_perm[_Center_edges<N, false>::face_EF(B, t, t + k - 1)] 
 							/ _Center_edges<N, false>::number_of_indices_per_face ]; 
 			
 			os << '.';
@@ -642,21 +612,21 @@ struct _Center_edges_Impl<N, false> {
 			os << '.';
 
 			for (int t = _Center_edges<N, false>::number_of_layers; t > k; t--)
-				os << face_labels[ ce.perm[_Center_edges<N, false>::face_WF(D, t, k + t - 1)]
+				os << face_labels[ ce.m_perm[_Center_edges<N, false>::face_WF(D, t, k + t - 1)]
 							/ _Center_edges<N, false>::number_of_indices_per_face ]; 
 				
 			os << '.';
 
 			if (k != 0) {
 				for (int t = 0; t < 2 * k - 1; t++)
-					os << face_labels[ ce.perm[_Center_edges<N, false>::face_NF(D, k, t)]
+					os << face_labels[ ce.m_perm[_Center_edges<N, false>::face_NF(D, k, t)]
 								/ _Center_edges<N, false>::number_of_indices_per_face ];
 				
 				os << '.';
 			}
 
 			for (int t = k + 1; t <= _Center_edges<N, false>::number_of_layers;  t++)
-				os << face_labels[ ce.perm[_Center_edges<N, false>::face_EF(D, t, t - k - 1)] 
+				os << face_labels[ ce.m_perm[_Center_edges<N, false>::face_EF(D, t, t - k - 1)] 
 							/ _Center_edges<N, false>::number_of_indices_per_face ]; 
 			
 			os << '.';
@@ -665,7 +635,7 @@ struct _Center_edges_Impl<N, false> {
 
 		}
 
-		// lowe half
+		// lower half
 		for (int k = 1; k <= _Center_edges<N, false>::number_of_layers; k++) {
 			//skip
 			for (int i = 0; i <=N; i++)
@@ -674,19 +644,19 @@ struct _Center_edges_Impl<N, false> {
 			os << '.';
 
 			for (int t = _Center_edges<N, false>::number_of_layers; t > k; t--)
-				os << face_labels[ ce.perm[_Center_edges<N, false>::face_WF(D, t, t - k - 1)]
+				os << face_labels[ ce.m_perm[_Center_edges<N, false>::face_WF(D, t, t - k - 1)]
 							/ _Center_edges<N, false>::number_of_indices_per_face ]; 
 				
 			os << '.';
 
 			for (int t = 2 * k - 2; t >=0; t--)
-				os << face_labels[ ce.perm[_Center_edges<N, false>::face_SF(D, k, t)]
+				os << face_labels[ ce.m_perm[_Center_edges<N, false>::face_SF(D, k, t)]
 							/ _Center_edges<N, false>::number_of_indices_per_face ];
 			
 			os << '.';
 
 			for (int t = k + 1; t <= _Center_edges<N, false>::number_of_layers;  t++)
-				os << face_labels[ ce.perm[_Center_edges<N, false>::face_EF(D, t, t + k - 1)] 
+				os << face_labels[ ce.m_perm[_Center_edges<N, false>::face_EF(D, t, t + k - 1)] 
 							/ _Center_edges<N, false>::number_of_indices_per_face ]; 
 			
 			os << '.';
@@ -744,7 +714,7 @@ struct _Center_edges_Impl<N, true> {
 		static_assert(N >= 6, "There are no center edges for smaller cubes thant 6x6x6.");
 
 		for (int i = 0; i < _Center_edges<N, true>::number_of_indices; i++)
-			ce.perm[i] = i;
+			ce.m_perm[i] = i;
 	}
 	
 	static void apply_Face(_Center_edges<N, true> &ce, const faces &f) {
@@ -752,7 +722,7 @@ struct _Center_edges_Impl<N, true> {
 			for (int t = 0; t < 2 * k - 2; t++) {
 				//			 NF  ->  EF  ->  SF  ->  WF
 				//			k, t -> k, t -> k, t -> k, t
-				apply_cycle(ce,
+				ce.apply_cycle(
 					_Center_edges<N, true>::face_NF(f, k, t),
 					_Center_edges<N, true>::face_EF(f, k, t),
 					_Center_edges<N, true>::face_SF(f, k, t),
@@ -787,7 +757,7 @@ struct _Center_edges_Impl<N, true> {
 
 			for (int t = _Center_edges<N, true>::number_of_layers; t > k; t--) {
 
-				os << face_labels[ce.perm[_Center_edges<N, true>::face_WF(U, t, t + k - 2)] 
+				os << face_labels[ce.m_perm[_Center_edges<N, true>::face_WF(U, t, t + k - 2)] 
  								/ _Center_edges<N, true>::number_of_indices_per_face];
 
 			}
@@ -795,14 +765,14 @@ struct _Center_edges_Impl<N, true> {
 
 			// middle
 			for (int t = 0; t < 2 * (k - 1); t++)
-				os << face_labels[ce.perm[_Center_edges<N, true>::face_NF(U, k, t)] 
+				os << face_labels[ce.m_perm[_Center_edges<N, true>::face_NF(U, k, t)] 
 								/ _Center_edges<N, true>::number_of_indices_per_face];
 
 			os << '.';
 
 			for (int t = k + 1; t <= _Center_edges<N, true>::number_of_layers; t++) {
 
-				os << face_labels[ce.perm[_Center_edges<N, true>::face_EF(U, t, t - k - 1)] 
+				os << face_labels[ce.m_perm[_Center_edges<N, true>::face_EF(U, t, t - k - 1)] 
 								/ _Center_edges<N, true>::number_of_indices_per_face];
 
 			}
@@ -821,7 +791,7 @@ struct _Center_edges_Impl<N, true> {
 
 			for (int t = _Center_edges<N, true>::number_of_layers; t > k; t--) {
 
-				os << face_labels[ce.perm[_Center_edges<N, true>::face_WF(U, t, t - k - 1)] 
+				os << face_labels[ce.m_perm[_Center_edges<N, true>::face_WF(U, t, t - k - 1)] 
 								/ _Center_edges<N, true>::number_of_indices_per_face];
 
 			}
@@ -829,14 +799,14 @@ struct _Center_edges_Impl<N, true> {
 
 			// middle
 			for (int t = 2 * (k - 1) - 1; t >= 0; t--)
-				os << face_labels[ce.perm[_Center_edges<N, true>::face_SF(U, k, t)] 
+				os << face_labels[ce.m_perm[_Center_edges<N, true>::face_SF(U, k, t)] 
 								/ _Center_edges<N, true>::number_of_indices_per_face];
 
 			os << '.';
 
 			for (int t = k + 1; t <= _Center_edges<N, true>::number_of_layers; t++) {
 
-				os << face_labels[ce.perm[_Center_edges<N, true>::face_EF(U, t, t + k - 2)] 
+				os << face_labels[ce.m_perm[_Center_edges<N, true>::face_EF(U, t, t + k - 2)] 
 								/ _Center_edges<N, true>::number_of_indices_per_face];
 
 			}
@@ -876,7 +846,7 @@ struct _Center_edges_Impl<N, true> {
 
 			for (int t = _Center_edges<N, true>::number_of_layers; t > k; t--) {
 
-				os << face_labels[ce.perm[_Center_edges<N, true>::face_WF(L, t, t + k - 2)] 
+				os << face_labels[ce.m_perm[_Center_edges<N, true>::face_WF(L, t, t + k - 2)] 
 								/ _Center_edges<N, true>::number_of_indices_per_face];
 
 			}
@@ -884,14 +854,14 @@ struct _Center_edges_Impl<N, true> {
 
 			// middle
 			for (int t = 0; t < 2 * (k - 1); t++)
-				os << face_labels[ce.perm[_Center_edges<N, true>::face_NF(L, k, t)] 
+				os << face_labels[ce.m_perm[_Center_edges<N, true>::face_NF(L, k, t)] 
 								/ _Center_edges<N, true>::number_of_indices_per_face];
 
 			os << '.';
 
 			for (int t = k + 1; t <= _Center_edges<N, true>::number_of_layers; t++) {
 
-				os << face_labels[ce.perm[_Center_edges<N, true>::face_EF(L, t, t - k - 1)] 
+				os << face_labels[ce.m_perm[_Center_edges<N, true>::face_EF(L, t, t - k - 1)] 
 								/ _Center_edges<N, true>::number_of_indices_per_face];
 
 			}
@@ -904,7 +874,7 @@ struct _Center_edges_Impl<N, true> {
 
 			for (int t = _Center_edges<N, true>::number_of_layers; t > k; t--) {
 
-				os << face_labels[ce.perm[_Center_edges<N, true>::face_WF(F, t, t + k - 2)] 
+				os << face_labels[ce.m_perm[_Center_edges<N, true>::face_WF(F, t, t + k - 2)] 
 								/ _Center_edges<N, true>::number_of_indices_per_face];
 
 			}
@@ -912,14 +882,14 @@ struct _Center_edges_Impl<N, true> {
 
 			// middle
 			for (int t = 0; t < 2 * (k - 1); t++)
-				os << face_labels[ce.perm[_Center_edges<N, true>::face_NF(F, k, t)] 
+				os << face_labels[ce.m_perm[_Center_edges<N, true>::face_NF(F, k, t)] 
 								/ _Center_edges<N, true>::number_of_indices_per_face];
 
 			os << '.';
 
 			for (int t = k + 1; t <= _Center_edges<N, true>::number_of_layers; t++) {
 
-				os << face_labels[ce.perm[_Center_edges<N, true>::face_EF(F, t, t - k - 1)] 
+				os << face_labels[ce.m_perm[_Center_edges<N, true>::face_EF(F, t, t - k - 1)] 
 								/ _Center_edges<N, true>::number_of_indices_per_face];
 
 			}
@@ -932,7 +902,7 @@ struct _Center_edges_Impl<N, true> {
 
 			for (int t = _Center_edges<N, true>::number_of_layers; t > k; t--) {
 
-				os << face_labels[ce.perm[_Center_edges<N, true>::face_WF(R, t, t + k - 2)] 
+				os << face_labels[ce.m_perm[_Center_edges<N, true>::face_WF(R, t, t + k - 2)] 
 								/ _Center_edges<N, true>::number_of_indices_per_face];
 
 			}
@@ -940,14 +910,14 @@ struct _Center_edges_Impl<N, true> {
 
 			// middle
 			for (int t = 0; t < 2 * (k - 1); t++)
-				os << face_labels[ce.perm[_Center_edges<N, true>::face_NF(R, k, t)] 
+				os << face_labels[ce.m_perm[_Center_edges<N, true>::face_NF(R, k, t)] 
 								/ _Center_edges<N, true>::number_of_indices_per_face];
 
 			os << '.';
 
 			for (int t = k + 1; t <= _Center_edges<N, true>::number_of_layers; t++) {
 
-				os << face_labels[ce.perm[_Center_edges<N, true>::face_EF(R, t, t - k - 1)] 
+				os << face_labels[ce.m_perm[_Center_edges<N, true>::face_EF(R, t, t - k - 1)] 
 								/ _Center_edges<N, true>::number_of_indices_per_face];
 
 			}
@@ -960,7 +930,7 @@ struct _Center_edges_Impl<N, true> {
 
 			for (int t = _Center_edges<N, true>::number_of_layers; t > k; t--) {
 
-				os << face_labels[ce.perm[_Center_edges<N, true>::face_WF(B, t, t + k - 2)] 
+				os << face_labels[ce.m_perm[_Center_edges<N, true>::face_WF(B, t, t + k - 2)] 
 								/ _Center_edges<N, true>::number_of_indices_per_face];
 
 			}
@@ -968,14 +938,14 @@ struct _Center_edges_Impl<N, true> {
 
 			// middle
 			for (int t = 0; t < 2 * (k - 1); t++)
-				os << face_labels[ce.perm[_Center_edges<N, true>::face_NF(B, k, t)] 
+				os << face_labels[ce.m_perm[_Center_edges<N, true>::face_NF(B, k, t)] 
 								/ _Center_edges<N, true>::number_of_indices_per_face];
 
 			os << '.';
 
 			for (int t = k + 1; t <= _Center_edges<N, true>::number_of_layers; t++) {
 
-				os << face_labels[ce.perm[_Center_edges<N, true>::face_EF(B, t, t - k - 1)] 
+				os << face_labels[ce.m_perm[_Center_edges<N, true>::face_EF(B, t, t - k - 1)] 
 								/ _Center_edges<N, true>::number_of_indices_per_face];
 
 			}
@@ -991,7 +961,7 @@ struct _Center_edges_Impl<N, true> {
 
 			for (int t = _Center_edges<N, true>::number_of_layers; t > k; t--) {
 
-				os << face_labels[ce.perm[_Center_edges<N, true>::face_WF(L, t, t - k - 1)] 
+				os << face_labels[ce.m_perm[_Center_edges<N, true>::face_WF(L, t, t - k - 1)] 
 							/ _Center_edges<N, true>::number_of_indices_per_face];
 
 			}
@@ -999,14 +969,14 @@ struct _Center_edges_Impl<N, true> {
 
 			// middle
 			for (int t = 2 * (k - 1) - 1; t >= 0; t--)
-				os << face_labels[ce.perm[_Center_edges<N, true>::face_SF(L, k, t)] 
+				os << face_labels[ce.m_perm[_Center_edges<N, true>::face_SF(L, k, t)] 
 								/ _Center_edges<N, true>::number_of_indices_per_face];
 
 			os << '.';
 
 			for (int t = k + 1; t <= _Center_edges<N, true>::number_of_layers; t++) {
 
-				os << face_labels[ce.perm[_Center_edges<N, true>::face_EF(L, t, t + k - 2)] 
+				os << face_labels[ce.m_perm[_Center_edges<N, true>::face_EF(L, t, t + k - 2)] 
 								/ _Center_edges<N, true>::number_of_indices_per_face];
 
 			}
@@ -1019,7 +989,7 @@ struct _Center_edges_Impl<N, true> {
 
 			for (int t = _Center_edges<N, true>::number_of_layers; t > k; t--) {
 
-				os << face_labels[ce.perm[_Center_edges<N, true>::face_WF(F, t, t - k - 1)] 
+				os << face_labels[ce.m_perm[_Center_edges<N, true>::face_WF(F, t, t - k - 1)] 
 								/ _Center_edges<N, true>::number_of_indices_per_face];
 
 			}
@@ -1027,14 +997,14 @@ struct _Center_edges_Impl<N, true> {
 
 			// middle
 			for (int t = 2 * (k - 1) - 1; t >= 0; t--)
-				os << face_labels[ce.perm[_Center_edges<N, true>::face_SF(F, k, t)] 
+				os << face_labels[ce.m_perm[_Center_edges<N, true>::face_SF(F, k, t)] 
 								/ _Center_edges<N, true>::number_of_indices_per_face];
 
 			os << '.';
 
 			for (int t = k + 1; t <= _Center_edges<N, true>::number_of_layers; t++) {
 
-				os << face_labels[ce.perm[_Center_edges<N, true>::face_EF(F, t, t + k - 2)] 
+				os << face_labels[ce.m_perm[_Center_edges<N, true>::face_EF(F, t, t + k - 2)] 
 								/ _Center_edges<N, true>::number_of_indices_per_face];
 
 			}
@@ -1047,7 +1017,7 @@ struct _Center_edges_Impl<N, true> {
 
 			for (int t = _Center_edges<N, true>::number_of_layers; t > k; t--) {
 
-				os << face_labels[ce.perm[_Center_edges<N, true>::face_WF(R, t, t - k - 1)] 
+				os << face_labels[ce.m_perm[_Center_edges<N, true>::face_WF(R, t, t - k - 1)] 
 								/ _Center_edges<N, true>::number_of_indices_per_face];
 
 			}
@@ -1055,14 +1025,14 @@ struct _Center_edges_Impl<N, true> {
 
 			// middle
 			for (int t = 2 * (k - 1) - 1; t >= 0; t--)
-				os << face_labels[ce.perm[_Center_edges<N, true>::face_SF(R, k, t)] 
+				os << face_labels[ce.m_perm[_Center_edges<N, true>::face_SF(R, k, t)] 
 								/ _Center_edges<N, true>::number_of_indices_per_face];
 
 			os << '.';
 
 			for (int t = k + 1; t <= _Center_edges<N, true>::number_of_layers; t++) {
 
-				os << face_labels[ce.perm[_Center_edges<N, true>::face_EF(R, t, t + k - 2)] 
+				os << face_labels[ce.m_perm[_Center_edges<N, true>::face_EF(R, t, t + k - 2)] 
 								/ _Center_edges<N, true>::number_of_indices_per_face];
 
 			}
@@ -1075,7 +1045,7 @@ struct _Center_edges_Impl<N, true> {
 
 			for (int t = _Center_edges<N, true>::number_of_layers; t > k; t--) {
 
-				os << face_labels[ce.perm[_Center_edges<N, true>::face_WF(B, t, t - k - 1)] 
+				os << face_labels[ce.m_perm[_Center_edges<N, true>::face_WF(B, t, t - k - 1)] 
 								/ _Center_edges<N, true>::number_of_indices_per_face];
 
 			}
@@ -1083,14 +1053,14 @@ struct _Center_edges_Impl<N, true> {
 
 			// middle
 			for (int t = 2 * (k - 1) - 1; t >= 0; t--)
-				os << face_labels[ce.perm[_Center_edges<N, true>::face_SF(B, k, t)] 
+				os << face_labels[ce.m_perm[_Center_edges<N, true>::face_SF(B, k, t)] 
 								/ _Center_edges<N, true>::number_of_indices_per_face];
 
 			os << '.';
 
 			for (int t = k + 1; t <= _Center_edges<N, true>::number_of_layers; t++) {
 
-				os << face_labels[ce.perm[_Center_edges<N, true>::face_EF(B, t, t + k - 2)] 
+				os << face_labels[ce.m_perm[_Center_edges<N, true>::face_EF(B, t, t + k - 2)] 
 								/ _Center_edges<N, true>::number_of_indices_per_face];
 
 			}
@@ -1133,7 +1103,7 @@ struct _Center_edges_Impl<N, true> {
 
 			for (int t = _Center_edges<N, true>::number_of_layers; t > k; t--) {
 
-				os << face_labels[ce.perm[_Center_edges<N, true>::face_WF(D, t, t + k - 2)] 
+				os << face_labels[ce.m_perm[_Center_edges<N, true>::face_WF(D, t, t + k - 2)] 
 								/ _Center_edges<N, true>::number_of_indices_per_face];
 
 			}
@@ -1141,14 +1111,14 @@ struct _Center_edges_Impl<N, true> {
 
 			// middle
 			for (int t = 0; t < 2 * (k - 1); t++)
-				os << face_labels[ce.perm[_Center_edges<N, true>::face_NF(D, k, t)] 
+				os << face_labels[ce.m_perm[_Center_edges<N, true>::face_NF(D, k, t)] 
 								/ _Center_edges<N, true>::number_of_indices_per_face];
 
 			os << '.';
 
 			for (int t = k + 1; t <= _Center_edges<N, true>::number_of_layers; t++) {
 
-				os << face_labels[ce.perm[_Center_edges<N, true>::face_EF(D, t, t - k - 1)] 
+				os << face_labels[ce.m_perm[_Center_edges<N, true>::face_EF(D, t, t - k - 1)] 
 							/ _Center_edges<N, true>::number_of_indices_per_face];
 
 			}
@@ -1167,7 +1137,7 @@ struct _Center_edges_Impl<N, true> {
 
 			for (int t = _Center_edges<N, true>::number_of_layers; t > k; t--) {
 
-				os << face_labels[ce.perm[_Center_edges<N, true>::face_WF(D, t, t - k - 1)] 
+				os << face_labels[ce.m_perm[_Center_edges<N, true>::face_WF(D, t, t - k - 1)] 
 								/ _Center_edges<N, true>::number_of_indices_per_face];
 
 			}
@@ -1175,14 +1145,14 @@ struct _Center_edges_Impl<N, true> {
 
 			// middle
 			for (int t = 2 * (k - 1) - 1; t >= 0; t--)
-				os << face_labels[ce.perm[_Center_edges<N, true>::face_SF(D, k, t)] 
+				os << face_labels[ce.m_perm[_Center_edges<N, true>::face_SF(D, k, t)] 
 						/ _Center_edges<N, true>::number_of_indices_per_face];
 
 			os << '.';
 
 			for (int t = k + 1; t <= _Center_edges<N, true>::number_of_layers; t++) {
 
-				os << face_labels[ce.perm[_Center_edges<N, true>::face_EF(D, t, t + k - 2)] 
+				os << face_labels[ce.m_perm[_Center_edges<N, true>::face_EF(D, t, t + k - 2)] 
 								/ _Center_edges<N, true>::number_of_indices_per_face];
 
 			}
@@ -1204,161 +1174,176 @@ struct _Center_edges_Impl<N, true> {
 };
 
 template <int N, bool isEven>
-void apply_cycle(_Center_edges<N, isEven> &ce, int(&cycle)[4]) {
+void _Center_edges<N, isEven>::apply_cycle(int(&cycle)[4]) {
 
-	int tmp = ce.perm[cycle[3]];
+	int tmp = m_perm[cycle[3]];
 	for (int j = 2; j >= 0; j--)
-		ce.perm[cycle[j + 1]] = ce.perm[cycle[j]];
-	ce.perm[cycle[0]] = tmp;
+		m_perm[cycle[j + 1]] = m_perm[cycle[j]];
+	m_perm[cycle[0]] = tmp;
 
 }
 
 template <int N, bool isEven>
-void apply_cycle(_Center_edges<N, isEven> &ce, int idx1, int idx2, int idx3, int idx4) {
+void _Center_edges<N, isEven>::apply_cycle(int idx1, int idx2, int idx3, int idx4) {
 
 	int tmp_array[] = { idx1, idx2, idx3, idx4 };
 
-	apply_cycle<N, isEven>(ce, tmp_array);
-}
-
-
-template <int N, bool isEven>
-void apply_Face(_Center_edges<N, isEven> &ce, const faces &f) {
-	_Center_edges_Impl<N, isEven>::apply_Face(ce, f);
+	apply_cycle(tmp_array);
 }
 
 template <int N, bool isEven>
-void apply_L(_Center_edges<N, isEven> &ce) {
-	apply_Face<N, isEven>(ce, L);
+void _Center_edges<N, isEven>::apply_Face(const faces &f) {
+	_Center_edges_Impl<N, isEven>::apply_Face(*this, f);
 }
 
 template <int N, bool isEven>
-void apply_R(_Center_edges<N, isEven> &ce) {
-	apply_Face<N, isEven>(ce, R);
+void _Center_edges<N, isEven>::apply_L() {
+	apply_Face(L);
 }
 
 template <int N, bool isEven>
-void apply_F(_Center_edges<N, isEven> &ce) {
-	apply_Face<N, isEven>(ce, F);
+void _Center_edges<N, isEven>::apply_R() {
+	apply_Face(R);
 }
 
 template <int N, bool isEven>
-void apply_B(_Center_edges<N, isEven> &ce) {
-	apply_Face<N, isEven>(ce, B);
+void _Center_edges<N, isEven>::apply_F() {
+	apply_Face(F);
 }
 
 template <int N, bool isEven>
-void apply_U(_Center_edges<N, isEven> &ce) {
-	apply_Face<N, isEven>(ce, U);
+void _Center_edges<N, isEven>::apply_B() {
+	apply_Face(B);
 }
 
 template <int N, bool isEven>
-void apply_D(_Center_edges<N, isEven> &ce) {
-	apply_Face<N, isEven>(ce, D);
+void _Center_edges<N, isEven>::apply_U() {
+	apply_Face(U);
 }
 
-template <int N, int K, bool isEven>
-void apply_ML(_Center_edges<N, isEven> &ce) {
-	_Center_edges_Impl_K<N, K, isEven>::apply_ML(ce);
+template <int N, bool isEven>
+void _Center_edges<N, isEven>::apply_D() {
+	apply_Face(D);
 }
 
-template <int N, int K, bool isEven>
-void apply_MR(_Center_edges<N, isEven> &ce) {
-	_Center_edges_Impl_K<N, K, isEven>::apply_MR(ce);
+template <int N, bool isEven>
+template <int K>
+void _Center_edges<N, isEven>::apply_ML() {
+	_Center_edges_Impl_K<N, K, isEven>::apply_ML(*this);
+	
 }
 
-template <int N, int K, bool isEven>
-void apply_MF(_Center_edges<N, isEven> &ce) {
-	_Center_edges_Impl_K<N, K, isEven>::apply_MF(ce);
+template <int N, bool isEven>
+template <int K>
+void _Center_edges<N, isEven>::apply_MR() {
+	_Center_edges_Impl_K<N, K, isEven>::apply_MR(*this);
+	
 }
 
-template <int N, int K, bool isEven>
-void apply_MB(_Center_edges<N, isEven> &ce) {
-	_Center_edges_Impl_K<N, K, isEven>::apply_MB(ce);
+template <int N, bool isEven>
+template <int K>
+void _Center_edges<N, isEven>::apply_MF() {
+	_Center_edges_Impl_K<N, K, isEven>::apply_MF(*this);
+	
 }
 
-template <int N, int K, bool isEven>
-void apply_MU(_Center_edges<N, isEven> &ce) {
-	_Center_edges_Impl_K<N, K, isEven>::apply_MU(ce);
+template <int N, bool isEven>
+template <int K>
+void _Center_edges<N, isEven>::apply_MB() {
+	_Center_edges_Impl_K<N, K, isEven>::apply_MB(*this);
+	
 }
 
-template <int N, int K, bool isEven>
-void apply_MD(_Center_edges<N, isEven> &ce) {
-	_Center_edges_Impl_K<N, K, isEven>::apply_MD(ce);
+template <int N, bool isEven>
+template <int K>
+void _Center_edges<N, isEven>::apply_MU() {
+	_Center_edges_Impl_K<N, K, isEven>::apply_MU(*this);
+	
 }
 
+template <int N, bool isEven>
+template <int K>
+void _Center_edges<N, isEven>::apply_MD() {
+	_Center_edges_Impl_K<N, K, isEven>::apply_MD(*this);
+	
+}
 
 template <int N, int K>
 struct _Center_edges_Impl_K<N, K, false> {
 
 	static void apply_ML(_Center_edges<N, false> &ce) {
-		static_assert(K>=0, "K must be non-negative.");
-		static_assert(K<=_Center_edges<N, false>::number_of_layers, "K must be less than or equal to number of layers.");
+		static_assert(K >= 0, "K must be non-negative.");
+		static_assert(K <= _Center_edges_Impl<N, false>::number_of_layers, "K must be less than or equal to number of layers.");
 
 		// U face cubes
 
 		// West cubes 	
 		for (int t = 0; t < 2 * K - 1; t++) {
 
-			apply_cycle(ce,
+			ce.apply_cycle(
 				_Center_edges<N, false>::face_WF(U, K, t),
 				_Center_edges<N, false>::face_WF(F, K, t),
 				_Center_edges<N, false>::face_WF(D, K, t),
-				_Center_edges<N, false>::face_EF(B, K, t));
+				_Center_edges<N, false>::face_EF(B, K, t)
+			);
 		}
 
 		// North cubes
 		for (int t = K + 1; t <= _Center_edges<N, false>::number_of_layers; t++) {
-			apply_cycle(ce,
+			ce.apply_cycle(
 				_Center_edges<N, false>::face_NF(U, t, t - K - 1),
 				_Center_edges<N, false>::face_NF(F, t, t - K - 1),
 				_Center_edges<N, false>::face_NF(D, t, t - K - 1),
-				_Center_edges<N, false>::face_SF(B, t, t - K - 1));
+				_Center_edges<N, false>::face_SF(B, t, t - K - 1)
+			);
 		}
 
 		// South cubes
 		for (int t = K + 1; t <= _Center_edges<N, false>::number_of_layers; t++) {
-			apply_cycle(ce,
+			ce.apply_cycle(
 				_Center_edges<N, false>::face_SF(U, t, t + K - 1),
 				_Center_edges<N, false>::face_SF(F, t, t + K - 1),
 				_Center_edges<N, false>::face_SF(D, t, t + K - 1),
-				_Center_edges<N, false>::face_NF(B, t, t + K - 1));
+				_Center_edges<N, false>::face_NF(B, t, t + K - 1)
+			);
 		}
 
 	}
 
 	static void apply_MR(_Center_edges<N, false> &ce) {
-		static_assert(K>=0, "K must be non-negative.");
-		static_assert(K<=_Center_edges<N, false>::number_of_layers, "K must be less than or equal to number of layers.");
+		static_assert(K >= 0, "K must be non-negative.");
+		static_assert(K <= _Center_edges_Impl<N, false>::number_of_layers, "K must be less than or equal to number of layers.");
 
 		// U face cubes
 
 		// East cubes 	
 		for (int t = 0; t < 2 * K - 1; t++) {
-			apply_cycle(ce,
+			ce.apply_cycle(
 				_Center_edges<N, false>::face_EF(U, K, t),
 				_Center_edges<N, false>::face_WF(B, K, t),
 				_Center_edges<N, false>::face_EF(D, K, t),
 				_Center_edges<N, false>::face_EF(F, K, t)
-				);
+			);
 		}
 
 		// North cubes
 		for (int t = K + 1; t <= _Center_edges<N, false>::number_of_layers; t++) {
-			apply_cycle(ce,
+			ce.apply_cycle(
 				_Center_edges<N, false>::face_NF(U, t, t + K - 1),
 				_Center_edges<N, false>::face_SF(B, t, t + K - 1),
 				_Center_edges<N, false>::face_NF(D, t, t + K - 1),
-				_Center_edges<N, false>::face_NF(F, t, t + K - 1));
+				_Center_edges<N, false>::face_NF(F, t, t + K - 1)
+			);
 		}
 
 		// South cubes
 		for (int t = K + 1; t <= _Center_edges<N, false>::number_of_layers; t++) {
-			apply_cycle(ce,
+			ce.apply_cycle(
 				_Center_edges<N, false>::face_SF(U, t, t - K - 1),
 				_Center_edges<N, false>::face_NF(B, t, t - K - 1),
 				_Center_edges<N, false>::face_SF(D, t, t - K - 1),
-				_Center_edges<N, false>::face_SF(F, t, t - K - 1));
+				_Center_edges<N, false>::face_SF(F, t, t - K - 1)
+			);
 		}
 	}
 
@@ -1368,32 +1353,32 @@ struct _Center_edges_Impl_K<N, K, false> {
 
 		// West cubes 	
 		for (int t = 0; t < 2 * K - 1; t++) {
-			apply_cycle(ce,
+			ce.apply_cycle(
 				_Center_edges<N, false>::face_WF(R, K, t),
 				_Center_edges<N, false>::face_NF(D, K, t),
 				_Center_edges<N, false>::face_EF(L, K, t),
 				_Center_edges<N, false>::face_SF(U, K, t)
-				);
+			);
 		}
 
 		// North cubes
 		for (int t = K + 1; t <= _Center_edges<N, false>::number_of_layers; t++) {
-			apply_cycle(ce,
+			ce.apply_cycle(
 				_Center_edges<N, false>::face_NF(R, t, t - K - 1),
 				_Center_edges<N, false>::face_EF(D, t, t - K - 1),
 				_Center_edges<N, false>::face_SF(L, t, t - K - 1),
 				_Center_edges<N, false>::face_WF(U, t, t - K - 1)
-				);
+			);
 		}
 
 		// South cubes
 		for (int t = K + 1; t <= _Center_edges<N, false>::number_of_layers; t++) {
-			apply_cycle(ce,
+			ce.apply_cycle(
 				_Center_edges<N, false>::face_SF(R, t, t + K - 1),
 				_Center_edges<N, false>::face_WF(D, t, t + K - 1),
 				_Center_edges<N, false>::face_NF(L, t, t + K - 1),
 				_Center_edges<N, false>::face_EF(U, t, t + K - 1)
-				);
+			);
 		}
 
 	}
@@ -1404,32 +1389,32 @@ struct _Center_edges_Impl_K<N, K, false> {
 
 		// West cubes 	
 		for (int t = 0; t < 2 * K - 1; t++) {
-			apply_cycle(ce,
+			ce.apply_cycle(
 				_Center_edges<N, false>::face_WF(L, K, t),
 				_Center_edges<N, false>::face_SF(D, K, t),
 				_Center_edges<N, false>::face_EF(R, K, t),
 				_Center_edges<N, false>::face_NF(U, K, t)
-				);
+			);
 		}
 
 		// North cubes
 		for (int t = K + 1; t <= _Center_edges<N, false>::number_of_layers; t++) {
-			apply_cycle(ce,
+			ce.apply_cycle(
 				_Center_edges<N, false>::face_NF(L, t, t - K - 1),
 				_Center_edges<N, false>::face_WF(D, t, t - K - 1),
 				_Center_edges<N, false>::face_SF(R, t, t - K - 1),
 				_Center_edges<N, false>::face_EF(U, t, t - K - 1)
-				);
+			);
 		}
 
 		// South cubes
 		for (int t = K + 1; t <= _Center_edges<N, false>::number_of_layers; t++) {
-			apply_cycle(ce,
+			ce.apply_cycle(
 				_Center_edges<N, false>::face_SF(L, t, t + K - 1),
 				_Center_edges<N, false>::face_EF(D, t, t + K - 1),
 				_Center_edges<N, false>::face_NF(R, t, t + K - 1),
 				_Center_edges<N, false>::face_WF(U, t, t + K - 1)
-				);
+			);
 		}
 
 	}
@@ -1440,32 +1425,32 @@ struct _Center_edges_Impl_K<N, K, false> {
 
 		// North cubes 	
 		for (int t = 0; t < 2 * K - 1; t++) {
-			apply_cycle(ce,
+			ce.apply_cycle(
 				_Center_edges<N, false>::face_NF(F, K, t),
 				_Center_edges<N, false>::face_NF(L, K, t),
 				_Center_edges<N, false>::face_NF(B, K, t),
 				_Center_edges<N, false>::face_NF(R, K, t)
-				);
+			);
 		}
 
 		// West cubes
 		for (int t = K + 1; t <= _Center_edges<N, false>::number_of_layers; t++) {
-			apply_cycle(ce,
+			ce.apply_cycle(
 				_Center_edges<N, false>::face_WF(F, t, t + K - 1),
 				_Center_edges<N, false>::face_WF(L, t, t + K - 1),
 				_Center_edges<N, false>::face_WF(B, t, t + K - 1),
 				_Center_edges<N, false>::face_WF(R, t, t + K - 1)
-				);
+			);
 		}
 
 		// East cubes
 		for (int t = K + 1; t <= _Center_edges<N, false>::number_of_layers; t++) {
-			apply_cycle(ce,
+			ce.apply_cycle(
 				_Center_edges<N, false>::face_EF(F, t, t - K - 1),
 				_Center_edges<N, false>::face_EF(L, t, t - K - 1),
 				_Center_edges<N, false>::face_EF(B, t, t - K - 1),
 				_Center_edges<N, false>::face_EF(R, t, t - K - 1)
-				);
+			);
 		}
 
 	}
@@ -1476,32 +1461,32 @@ struct _Center_edges_Impl_K<N, K, false> {
 
 		// South cubes 	
 		for (int t = 0; t < 2 * K - 1; t++) {
-			apply_cycle(ce,
+			ce.apply_cycle(
 				_Center_edges<N, false>::face_SF(F, K, t),
 				_Center_edges<N, false>::face_SF(R, K, t),
 				_Center_edges<N, false>::face_SF(B, K, t),
 				_Center_edges<N, false>::face_SF(L, K, t)
-				);
+			);
 		}
 
 		// West cubes
 		for (int t = K + 1; t <= _Center_edges<N, false>::number_of_layers; t++) {
-			apply_cycle(ce,
+			ce.apply_cycle(
 				_Center_edges<N, false>::face_WF(F, t, t - K - 1),
 				_Center_edges<N, false>::face_WF(R, t, t - K - 1),
 				_Center_edges<N, false>::face_WF(B, t, t - K - 1),
 				_Center_edges<N, false>::face_WF(L, t, t - K - 1)
-				);
+			);
 		}
 
 		// East cubes
 		for (int t = K + 1; t <= _Center_edges<N, false>::number_of_layers; t++) {
-			apply_cycle(ce,
+			ce.apply_cycle(
 				_Center_edges<N, false>::face_EF(F, t, t + K - 1),
 				_Center_edges<N, false>::face_EF(R, t, t + K - 1),
 				_Center_edges<N, false>::face_EF(B, t, t + K - 1),
 				_Center_edges<N, false>::face_EF(L, t, t + K - 1)
-				);
+			);
 		}
 
 	}
@@ -1512,437 +1497,219 @@ template <int N, int K>
 struct _Center_edges_Impl_K<N, K, true> {
 	static void apply_ML(_Center_edges<N, true> &ce) {
 		static_assert(K >= 1, "K must be positive.");
-		static_assert(K <= _Center_edges<N, true>::number_of_layers, "K must less than number of layers.");
+		static_assert(K <= _Center_edges_Impl<N, true>::number_of_layers, "K must less than number of layers.");
 
 		for (int k = _Center_edges<N, true>::number_of_layers; k > K; k--) {
 
-			apply_cycle(ce,
+			ce.apply_cycle(
 				_Center_edges<N, true>::face_NF(U, k, k - K - 1),
 				_Center_edges<N, true>::face_NF(F, k, k - K - 1),
 				_Center_edges<N, true>::face_NF(D, k, k - K - 1),	
 				_Center_edges<N, true>::face_SF(B, k, k - K - 1)
-				);
-
-#if 0
-			int tmp = ce.perm[face_NF_even<N>(U, k, k - K - 1)];
-
-			ce.perm[face_NF_even<N>(U, k, k - K - 1)] =
-				ce.perm[face_SF_even<N>(B, k, k - K - 1)];
-
-			ce.perm[face_SF_even<N>(B, k, k - K - 1)] =
-				ce.perm[face_NF_even<N>(D, k, k - K - 1)];
-
-			ce.perm[face_NF_even<N>(D, k, k - K - 1)] =
-				ce.perm[face_NF_even<N>(F, k, k - K - 1)];
-
-			ce.perm[face_NF_even<N>(F, k, k - K - 1)] = tmp;
-#endif
+			);
 		}
 		for (int k = 2 * K - 3; k >= 0; k--) {
 			// U-WF(K, k) -> F-WF(K, k) -> D-WF(K, k) -> B-EF(K, k)
 
-			apply_cycle(ce, 
+			ce.apply_cycle(
 				_Center_edges<N, true>::face_WF(U, K, k),	
 				_Center_edges<N, true>::face_WF(F, K, k),
 				_Center_edges<N, true>::face_WF(D, K, k),
 				_Center_edges<N, true>::face_EF(B, K, k)
-				);
-#if 0
-			int tmp = ce.perm[face_WF_even<N>(U, K, k)];
-
-			ce.perm[face_WF_even<N>(U, K, k)] = ce.perm[face_EF_even<N>(B, K, k)];
-			ce.perm[face_EF_even<N>(B, K, k)] = ce.perm[face_WF_even<N>(D, K, k)];
-			ce.perm[face_WF_even<N>(D, K, k)] = ce.perm[face_WF_even<N>(F, K, k)];
-			ce.perm[face_WF_even<N>(F, K, k)] = tmp;
-#endif
+			);
 		}
 
 		for (int k = _Center_edges<N, true>::number_of_layers; k > K; k--) {
 
 
-			apply_cycle(ce, 
+			ce.apply_cycle(
 				_Center_edges<N, true>::face_SF(U, k, k + K - 2), 
 				_Center_edges<N, true>::face_SF(F, k, k + K - 2),
 				_Center_edges<N, true>::face_SF(D, k, k + K - 2),
 				_Center_edges<N, true>::face_NF(B, k, k + K - 2)
-				);
-#if 0
-
-			int tmp = ce.perm[face_SF_even<N>(U, k, k + K - 2)];
-
-			ce.perm[face_SF_even<N>(U, k, k + K - 2)] =
-				ce.perm[face_NF_even<N>(B, k, k + K - 2)];
-
-			ce.perm[face_NF_even<N>(B, k, k + K - 2)] =
-				ce.perm[face_SF_even<N>(D, k, k + K - 2)];
-
-			ce.perm[face_SF_even<N>(D, k, k + K - 2)] =
-				ce.perm[face_SF_even<N>(F, k, k + K - 2)];
-
-			ce.perm[face_SF_even<N>(F, k, k + K - 2)] = tmp;
-#endif
+			);
 		}
 
 	}
 
 	static void apply_MR(_Center_edges<N, true> &ce) {
 		static_assert(K >= 1, "K must be positive.");
-		static_assert(K <= _Center_edges<N, true>::number_of_layers, "K must less than number of layers.");
+		static_assert(K <= _Center_edges_Impl<N, true>::number_of_layers, "K must less than number of layers.");
 
 		for (int k = _Center_edges<N, true>::number_of_layers; k > K; k--) {
 
-			apply_cycle(ce,
+			ce.apply_cycle(
 				_Center_edges<N, true>::face_NF(U, k, k + K - 2),	
 				_Center_edges<N, true>::face_SF(B, k, k + K - 2),
 				_Center_edges<N, true>::face_NF(D, k, k + K - 2),
 				_Center_edges<N, true>::face_NF(F, k, k + K - 2)
-				);
-#if 0
-			int tmp = ce.perm[face_NF_even<N>(U, k, k + K - 2)];
-
-			ce.perm[face_NF_even<N>(U, k, k + K - 2)] =
-				ce.perm[face_NF_even<N>(F, k, k + K - 2)];
-
-			ce.perm[face_NF_even<N>(F, k, k + K - 2)] =
-				ce.perm[face_NF_even<N>(D, k, k + K - 2)];
-
-			ce.perm[face_NF_even<N>(D, k, k + K - 2)] =
-				ce.perm[face_SF_even<N>(B, k, k + K - 2)];
-
-			ce.perm[face_SF_even<N>(B, k, k + K - 2)] = tmp;
-#endif
+			);
 		}
 		for (int k = 2 * K - 3; k >= 0; k--) {
 			// U-WF(K, k) -> F-WF(K, k) -> D-WF(K, k) -> B-EF(K, k)
 
-			apply_cycle(ce,
+			ce.apply_cycle(
 				_Center_edges<N, true>::face_EF(U, K, k),	
 				_Center_edges<N, true>::face_WF(B, K, k),
 				_Center_edges<N, true>::face_EF(D, K, k),
 				_Center_edges<N, true>::face_EF(F, K, k)
-				);
-#if 0
-			int tmp = ce.perm[face_EF_even<N>(U, K, k)];
-
-			ce.perm[face_EF_even<N>(U, K, k)] = ce.perm[face_EF_even<N>(F, K, k)];
-			ce.perm[face_EF_even<N>(F, K, k)] = ce.perm[face_EF_even<N>(D, K, k)];
-			ce.perm[face_EF_even<N>(D, K, k)] = ce.perm[face_WF_even<N>(B, K, k)];
-			ce.perm[face_WF_even<N>(B, K, k)] = tmp;
-#endif
+			);
 		}
 
 		for (int k = _Center_edges<N, true>::number_of_layers; k > K; k--) {
 
-			apply_cycle(ce,
+			ce.apply_cycle(
 				_Center_edges<N, true>::face_SF(U, k, k - K - 1),	
 				_Center_edges<N, true>::face_NF(B, k, k - K - 1),
 				_Center_edges<N, true>::face_SF(D, k, k - K - 1),
 				_Center_edges<N, true>::face_SF(F, k, k - K - 1)
-				);
-#if 0
-			int tmp = ce.perm[face_SF_even<N>(U, k, k - K - 1)];
-
-			ce.perm[face_SF_even<N>(U, k, k - K - 1)] =
-				ce.perm[face_SF_even<N>(F, k, k - K - 1)];
-
-			ce.perm[face_SF_even<N>(F, k, k - K - 1)] =
-				ce.perm[face_SF_even<N>(D, k, k - K - 1)];
-
-			ce.perm[face_SF_even<N>(D, k, k - K - 1)] =
-				ce.perm[face_NF_even<N>(B, k, k - K - 1)];
-
-			ce.perm[face_NF_even<N>(B, k, k - K - 1)] = tmp;
-#endif
+			);
 		}
 
 	}
 
 	static void apply_MF(_Center_edges<N, true> &ce) {
 		static_assert(K >= 1, "K must be positive.");
-		static_assert(K <= _Center_edges<N, true>::number_of_layers, "K must less than number of layers.");
+		static_assert(K <= _Center_edges_Impl<N, true>::number_of_layers, "K must less than number of layers.");
 
 		for (int k = _Center_edges<N, true>::number_of_layers; k > K; k--) {
 
-			apply_cycle(ce,
+			ce.apply_cycle(
 				_Center_edges<N, true>::face_NF(R, k, k - K - 1),	
 				_Center_edges<N, true>::face_EF(D, k, k - K - 1),
 				_Center_edges<N, true>::face_SF(L, k, k - K - 1),	
 				_Center_edges<N, true>::face_WF(U, k, k - K - 1)
-				);
+			);
 
-#if 0
-			int tmp = ce.perm[face_NF_even<N>(R, k, k - K - 1)];
-
-			ce.perm[face_NF_even<N>(R, k, k - K - 1)] =
-				ce.perm[face_WF_even<N>(U, k, k - K - 1)];
-
-			ce.perm[face_WF_even<N>(U, k, k - K - 1)] =
-				ce.perm[face_SF_even<N>(L, k, k - K - 1)];
-
-			ce.perm[face_SF_even<N>(L, k, k - K - 1)] =
-				ce.perm[face_EF_even<N>(D, k, k - K - 1)];
-
-			ce.perm[face_EF_even<N>(D, k, k - K - 1)] = tmp;
-#endif
 		}
 
 		for (int k = 2 * K - 3; k >= 0; k--) {
-			apply_cycle(ce,
+			ce.apply_cycle(
 				_Center_edges<N, true>::face_WF(R, K, k),
 				_Center_edges<N, true>::face_NF(D, K, k),	
 				_Center_edges<N, true>::face_EF(L, K, k),
 				_Center_edges<N, true>::face_SF(U, K, k)
-				);
-#if 0
-			int tmp = ce.perm[face_WF_even<N>(R, K, k)];
-
-			ce.perm[face_WF_even<N>(R, K, k)] = ce.perm[face_SF_even<N>(U, K, k)];
-			ce.perm[face_SF_even<N>(U, K, k)] = ce.perm[face_EF_even<N>(L, K, k)];
-			ce.perm[face_EF_even<N>(L, K, k)] = ce.perm[face_NF_even<N>(D, K, k)];
-			ce.perm[face_NF_even<N>(D, K, k)] = tmp;
-#endif
+			);
 		}
 
 		for (int k = _Center_edges<N, true>::number_of_layers; k > K; k--) {
 
-			apply_cycle(ce,
+			ce.apply_cycle(
 				_Center_edges<N, true>::face_SF(R, k, k + K - 2),
 				_Center_edges<N, true>::face_WF(D, k, k + K - 2),
 				_Center_edges<N, true>::face_NF(L, k, k + K - 2),
 				_Center_edges<N, true>::face_EF(U, k, k + K - 2)
-				);
+			);
 	
-#if 0
-			int tmp = ce.perm[face_SF_even<N>(R, k, k + K - 2)];
-
-			ce.perm[face_SF_even<N>(R, k, k + K - 2)] =
-				ce.perm[face_EF_even<N>(U, k, k + K - 2)];
-
-			ce.perm[face_EF_even<N>(U, k, k + K - 2)] =
-				ce.perm[face_NF_even<N>(L, k, k + K - 2)];
-
-			ce.perm[face_NF_even<N>(L, k, k + K - 2)] =
-				ce.perm[face_WF_even<N>(D, k, k + K - 2)];
-
-			ce.perm[face_WF_even<N>(D, k, k + K - 2)] = tmp;
-#endif
 		}
 
 	}
 
 	static void apply_MB(_Center_edges<N, true> &ce) {
 		static_assert(K >= 1, "K must be positive.");
-		static_assert(K <= _Center_edges<N, true>::number_of_layers, "K must less than number of layers.");
+		static_assert(K <= _Center_edges_Impl<N, true>::number_of_layers, "K must less than number of layers.");
 
 		for (int k = _Center_edges<N, true>::number_of_layers; k > K; k--) {
 
-			apply_cycle(ce,
+			ce.apply_cycle(
 				_Center_edges<N, true>::face_NF(R, k, k + K - 2),
 				_Center_edges<N, true>::face_WF(U, k, k + K - 2),	
 				_Center_edges<N, true>::face_SF(L, k, k + K - 2),
 				_Center_edges<N, true>::face_EF(D, k, k + K - 2)
-				);
-#if 0
-			int tmp = ce.perm[face_NF_even<N>(R, k, k + K - 2)];
-
-			ce.perm[face_NF_even<N>(R, k, k + K - 2)] =
-				ce.perm[face_EF_even<N>(D, k, k + K - 2)];
-
-			ce.perm[face_EF_even<N>(D, k, k + K - 2)] =
-				ce.perm[face_SF_even<N>(L, k, k + K - 2)];
-
-			ce.perm[face_SF_even<N>(L, k, k + K - 2)] =
-				ce.perm[face_WF_even<N>(U, k, k + K - 2)];
-
-			ce.perm[face_WF_even<N>(U, k, k + K - 2)] = tmp;
-#endif
+			);
 		}
 
 		for (int k = 2 * K - 3; k >= 0; k--) {
-			apply_cycle(ce,
+			ce.apply_cycle(
 				_Center_edges<N, true>::face_EF(R, K, k),
 				_Center_edges<N, true>::face_NF(U, K, k),
 				_Center_edges<N, true>::face_WF(L, K, k),
 				_Center_edges<N, true>::face_SF(D, K, k)
-				);
+			);
 
-#if 0
-			int tmp = ce.perm[face_EF_even<N>(R, K, k)];
-
-			ce.perm[face_EF_even<N>(R, K, k)] = ce.perm[face_SF_even<N>(D, K, k)];
-			ce.perm[face_SF_even<N>(D, K, k)] = ce.perm[face_WF_even<N>(L, K, k)];
-			ce.perm[face_WF_even<N>(L, K, k)] = ce.perm[face_NF_even<N>(U, K, k)];
-			ce.perm[face_NF_even<N>(U, K, k)] = tmp;
-#endif
 		}
 
 		for (int k = _Center_edges<N, true>::number_of_layers; k > K; k--) {
 
-			apply_cycle(ce,
+			ce.apply_cycle(
 				_Center_edges<N, true>::face_SF(R, k, k - K - 1),
 				_Center_edges<N, true>::face_EF(U, k, k - K - 1),
 				_Center_edges<N, true>::face_NF(L, k, k - K - 1),
 				_Center_edges<N, true>::face_WF(D, k, k - K - 1)
-				);
-#if 0
-			int tmp = ce.perm[face_SF_even<N>(R, k, k - K - 1)];
-
-			ce.perm[face_SF_even<N>(R, k, k - K - 1)] =
-				ce.perm[face_WF_even<N>(D, k, k - K - 1)];
-
-			ce.perm[face_WF_even<N>(D, k, k - K - 1)] =
-				ce.perm[face_NF_even<N>(L, k, k - K - 1)];
-
-			ce.perm[face_NF_even<N>(L, k, k - K - 1)] =
-				ce.perm[face_EF_even<N>(U, k, k - K - 1)];
-
-			ce.perm[face_EF_even<N>(U, k, k - K - 1)] = tmp;
-#endif
+			);
 		}
 
 	}
 
 	static void apply_MU(_Center_edges<N, true> &ce) {
 		static_assert(K >= 1, "K must be positive.");
-		static_assert(K <= _Center_edges<N, true>::number_of_layers, "K must less than number of layers.");
+		static_assert(K <= _Center_edges_Impl<N, true>::number_of_layers, "K must less than number of layers.");
 
 		for (int k = _Center_edges<N, true>::number_of_layers; k > K; k--) {
 
-			apply_cycle(ce, 
+			ce.apply_cycle(
 				_Center_edges<N, true>::face_WF(F, k, k + K - 2),
 				_Center_edges<N, true>::face_WF(L, k, k + K - 2),
 				_Center_edges<N, true>::face_EF(B, k, k - K - 1),
 				_Center_edges<N, true>::face_WF(R, k, k + K - 2)	
-				);
-#if 0
-			int tmp = ce.perm[face_WF_even<N>(F, k, k + K - 2)];
-
-			ce.perm[face_WF_even<N>(F, k, k + K - 2)] =
-				ce.perm[face_WF_even<N>(R, k, k + K - 2)];
-
-			ce.perm[face_WF_even<N>(R, k, k + K - 2)] =
-				ce.perm[face_EF_even<N>(B, k, k - K - 1)];
-
-			ce.perm[face_EF_even<N>(B, k, k - K - 1)] =
-				ce.perm[face_WF_even<N>(L, k, k + K - 2)];
-
-			ce.perm[face_WF_even<N>(L, k, k + K - 2)] = tmp;
-#endif
+			);
 		}
 
 
 		for (int k = 2 * K - 3; k >= 0; k--) {
-			apply_cycle(ce,
+			ce.apply_cycle(
 				_Center_edges<N, true>::face_NF(F, K, k),
 				_Center_edges<N, true>::face_NF(L, K, k),
 				_Center_edges<N, true>::face_NF(B, K, 2 * K - 3 - k),
 				_Center_edges<N, true>::face_NF(R, K, k)
-				);
-#if 0
-			int tmp = ce.perm[face_NF_even<N>(F, K, k)];
-
-			ce.perm[face_NF_even<N>(F, K, k)] = ce.perm[face_NF_even<N>(R, K, k)];
-			ce.perm[face_NF_even<N>(R, K, k)] = ce.perm[face_NF_even<N>(B, K, 2 * K - 3 - k)];
-			ce.perm[face_NF_even<N>(B, K, 2 * K - 3 - k)] = ce.perm[face_NF_even<N>(L, K, k)];
-			ce.perm[face_NF_even<N>(L, K, k)] = tmp;
-#endif
+			);
 		}
 
 
 		for (int k = _Center_edges<N, true>::number_of_layers; k > K; k--) {
 
-			apply_cycle(ce,
+			ce.apply_cycle(
 				_Center_edges<N, true>::face_EF(F, k, k - K - 1),
 				_Center_edges<N, true>::face_EF(L, k, k - K - 1),
 				_Center_edges<N, true>::face_WF(B, k, k + K - 2),
 				_Center_edges<N, true>::face_EF(R, k, k - K - 1)
-				);
-#if 0
-			int tmp = ce.perm[face_EF_even<N>(F, k, k - K - 1)];
-
-			ce.perm[face_EF_even<N>(F, k, k - K - 1)] =
-				ce.perm[face_EF_even<N>(R, k, k - K - 1)];
-
-			ce.perm[face_EF_even<N>(R, k, k - K - 1)] =
-				ce.perm[face_WF_even<N>(B, k, k + K - 2)];
-
-			ce.perm[face_WF_even<N>(B, k, k + K - 2)] =
-				ce.perm[face_EF_even<N>(L, k, k - K - 1)];
-
-			ce.perm[face_EF_even<N>(L, k, k - K - 1)] = tmp;
-#endif
+			);
 		}
 
 	}
 
 	static void apply_MD(_Center_edges<N, true> &ce) {
 		static_assert(K >= 1, "K must be positive.");
-		static_assert(K <= _Center_edges<N, true>::number_of_layers, "K must less than number of layers.");
+		static_assert(K <= _Center_edges_Impl<N, true>::number_of_layers, "K must less than number of layers.");
 
 		for (int k = _Center_edges<N, true>::number_of_layers; k > K; k--) {
 
-			apply_cycle(ce,
+			ce.apply_cycle(
 				_Center_edges<N, true>::face_WF(F, k, k - K - 1),	
 				_Center_edges<N, true>::face_WF(R, k, k - K - 1),
 				_Center_edges<N, true>::face_EF(B, k, k + K - 2), 
 				_Center_edges<N, true>::face_WF(L, k, k - K - 1)
-				);
-#if 0
-			int tmp = ce.perm[face_WF_even<N>(F, k, k - K - 1)];
-
-			ce.perm[face_WF_even<N>(F, k, k - K - 1)] =
-				ce.perm[face_WF_even<N>(L, k, k - K - 1)];
-
-			ce.perm[face_WF_even<N>(L, k, k - K - 1)] =
-				ce.perm[face_EF_even<N>(B, k, k + K - 2)];
-
-			ce.perm[face_EF_even<N>(B, k, k + K - 2)] =
-				ce.perm[face_WF_even<N>(R, k, k - K - 1)];
-
-			ce.perm[face_WF_even<N>(R, k, k - K - 1)] = tmp;
-#endif
+			);
 		}
 
 		for (int k = 2 * K - 3; k >= 0; k--) {
-			apply_cycle(ce,
+			ce.apply_cycle(
 				_Center_edges<N, true>::face_SF(F, K, k),
 				_Center_edges<N, true>::face_SF(R, K, k),	
 				_Center_edges<N, true>::face_SF(B, K, 2 * K - 3 - k),	
 				_Center_edges<N, true>::face_SF(L, K, k)
-				);
-#if 0
-			int tmp = ce.perm[face_SF_even<N>(F, K, k)];
-
-			ce.perm[face_SF_even<N>(F, K, k)] = ce.perm[face_SF_even<N>(L, K, k)];
-			ce.perm[face_SF_even<N>(L, K, k)] = ce.perm[face_SF_even<N>(B, K, 2 * K - 3 - k)];
-			ce.perm[face_SF_even<N>(B, K, 2 * K - 3 - k)] = ce.perm[face_SF_even<N>(R, K, k)];
-			ce.perm[face_SF_even<N>(R, K, k)] = tmp;
-#endif
+			);
 		}
 
 		for (int k = _Center_edges<N, true>::number_of_layers; k > K; k--) {
 
-			apply_cycle(ce,
+			ce.apply_cycle(
 				_Center_edges<N, true>::face_EF(F, k, k + K - 2),
 				_Center_edges<N, true>::face_EF(R, k, k + K - 2),
 				_Center_edges<N, true>::face_WF(B, k, k - K - 1),
 				_Center_edges<N, true>::face_EF(L, k, k + K - 2)
-				);
+			);
 
-#if 0
-			int tmp = ce.perm[face_EF_even<N>(F, k, k + K - 2)];
-
-			ce.perm[face_EF_even<N>(F, k, k + K - 2)] =
-				ce.perm[face_EF_even<N>(L, k, k + K - 2)];
-
-			ce.perm[face_EF_even<N>(L, k, k + K - 2)] =
-				ce.perm[face_WF_even<N>(B, k, k - K - 1)];
-
-			ce.perm[face_WF_even<N>(B, k, k - K - 1)] =
-				ce.perm[face_EF_even<N>(R, k, k + K - 2)];
-
-			ce.perm[face_EF_even<N>(R, k, k + K - 2)] = tmp;
-#endif
 		}
 	}
 
