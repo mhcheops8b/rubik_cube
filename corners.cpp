@@ -98,36 +98,7 @@ void Corners::disp_cube(std::ostream &os) {
 
 }
 
-void apply_R(Corners &corn) {
-/*
-	2  = + => 3
-	^
-	-         - 
-		  v
-	6 <= + =  7
-
-
-	( idx -1 )
-
-*/
-
-
-	int tmp = corn.orient[5];
-	
-	corn.orient[5] = (corn.orient[6] + 1) % 3;
-	corn.orient[6] = (corn.orient[2] + 2) % 3;
-	corn.orient[2] = (corn.orient[1] + 1) % 3;
-	corn.orient[1] = (tmp + 2) % 3;
-
-	tmp = corn.perm[5];
-	
-	corn.perm[5] = corn.perm[6];
-	corn.perm[6] = corn.perm[2];
-	corn.perm[2] = corn.perm[1];
-	corn.perm[1] = tmp;
-}
-
-void apply_L(Corners &corn) {
+void Corners::apply_L() {
 /*
 	1  = - => 5
 	^
@@ -141,23 +112,54 @@ void apply_L(Corners &corn) {
 */
 
 
-	int tmp = corn.orient[3];
+	int tmp = orient[3];
 	
-	corn.orient[3] = (corn.orient[7] + 2) % 3;
-	corn.orient[7] = (corn.orient[4] + 1) % 3;
-	corn.orient[4] = (corn.orient[0] + 2) % 3;
-	corn.orient[0] = (tmp + 1) % 3;
+	orient[3] = (orient[7] + 2) % 3;
+	orient[7] = (orient[4] + 1) % 3;
+	orient[4] = (orient[0] + 2) % 3;
+	orient[0] = (tmp + 1) % 3;
 
-	tmp = corn.perm[3];
+	tmp = perm[3];
 	
-	corn.perm[3] = corn.perm[7];
-	corn.perm[7] = corn.perm[4];
-	corn.perm[4] = corn.perm[0];
-	corn.perm[0] = tmp;
+	perm[3] = perm[7];
+	perm[7] = perm[4];
+	perm[4] = perm[0];
+	perm[0] = tmp;
+}
+
+void Corners::apply_R() {
+/*
+	2  = + => 3
+	^
+	-         - 
+		  v
+	6 <= + =  7
+
+
+	( idx -1 )
+
+*/
+
+
+	int tmp = orient[5];
+	
+	orient[5] = (orient[6] + 1) % 3;
+	orient[6] = (orient[2] + 2) % 3;
+	orient[2] = (orient[1] + 1) % 3;
+	orient[1] = (tmp + 2) % 3;
+
+	tmp = perm[5];
+	
+	perm[5] = perm[6];
+	perm[6] = perm[2];
+	perm[2] = perm[1];
+	perm[1] = tmp;
 }
 
 
-void apply_U(Corners &corn) {
+
+
+void Corners::apply_U() {
 /*
 	1  = 0 => 4
 	^
@@ -170,22 +172,22 @@ void apply_U(Corners &corn) {
 
 */
 
-	int tmp = corn.orient[1];
+	int tmp = orient[1];
 	
-	corn.orient[1] = corn.orient[2];
-	corn.orient[2] = corn.orient[3];
-	corn.orient[3] = corn.orient[0];
-	corn.orient[0] = tmp;
+	orient[1] = orient[2];
+	orient[2] = orient[3];
+	orient[3] = orient[0];
+	orient[0] = tmp;
 
-	tmp = corn.perm[1];
+	tmp = perm[1];
 	
-	corn.perm[1] = corn.perm[2];
-	corn.perm[2] = corn.perm[3];
-	corn.perm[3] = corn.perm[0];
-	corn.perm[0] = tmp;
+	perm[1] = perm[2];
+	perm[2] = perm[3];
+	perm[3] = perm[0];
+	perm[0] = tmp;
 }
 
-void apply_D(Corners &corn) {
+void Corners::apply_D() {
 /*
 	5  = 0 => 6
 	^
@@ -198,22 +200,22 @@ void apply_D(Corners &corn) {
 
 */
 
-	int tmp = corn.orient[7];
+	int tmp = orient[7];
 	
-	corn.orient[7] = corn.orient[6];
-	corn.orient[6] = corn.orient[5];
-	corn.orient[5] = corn.orient[4];
-	corn.orient[4] = tmp;
+	orient[7] = orient[6];
+	orient[6] = orient[5];
+	orient[5] = orient[4];
+	orient[4] = tmp;
 
-	tmp = corn.perm[7];
+	tmp = perm[7];
 	
-	corn.perm[7] = corn.perm[6];
-	corn.perm[6] = corn.perm[5];
-	corn.perm[5] = corn.perm[4];
-	corn.perm[4] = tmp;
+	perm[7] = perm[6];
+	perm[6] = perm[5];
+	perm[5] = perm[4];
+	perm[4] = tmp;
 }
 
-void apply_F(Corners &corn) {
+void Corners::apply_F() {
 /*
 	1  = + => 2
 	^
@@ -227,22 +229,22 @@ void apply_F(Corners &corn) {
 */
 
 
-	int tmp = corn.orient[4];
+	int tmp = orient[4];
 	
-	corn.orient[4] = (corn.orient[5] + 1) % 3;
-	corn.orient[5] = (corn.orient[1] + 2) % 3;
-	corn.orient[1] = (corn.orient[0] + 1) % 3;
-	corn.orient[0] = (tmp + 2) % 3;
+	orient[4] = (orient[5] + 1) % 3;
+	orient[5] = (orient[1] + 2) % 3;
+	orient[1] = (orient[0] + 1) % 3;
+	orient[0] = (tmp + 2) % 3;
 
-	tmp = corn.perm[4];
+	tmp = perm[4];
 	
-	corn.perm[4] = corn.perm[5];
-	corn.perm[5] = corn.perm[1];
-	corn.perm[1] = corn.perm[0];
-	corn.perm[0] = tmp;
+	perm[4] = perm[5];
+	perm[5] = perm[1];
+	perm[1] = perm[0];
+	perm[0] = tmp;
 }
 
-void apply_B(Corners &corn) {
+void Corners::apply_B() {
 /*
 	4  = - => 8
 	^
@@ -254,21 +256,19 @@ void apply_B(Corners &corn) {
 	( idx -1 )
 
 */
-
-
-	int tmp = corn.orient[2];
+	int tmp = orient[2];
 	
-	corn.orient[2] = (corn.orient[6] + 2) % 3;
-	corn.orient[6] = (corn.orient[7] + 1) % 3;
-	corn.orient[7] = (corn.orient[3] + 2) % 3;
-	corn.orient[3] = (tmp + 1) % 3;
+	orient[2] = (orient[6] + 2) % 3;
+	orient[6] = (orient[7] + 1) % 3;
+	orient[7] = (orient[3] + 2) % 3;
+	orient[3] = (tmp + 1) % 3;
 
-	tmp = corn.perm[2];
+	tmp = perm[2];
 	
-	corn.perm[2] = corn.perm[6];
-	corn.perm[6] = corn.perm[7];
-	corn.perm[7] = corn.perm[3];
-	corn.perm[3] = tmp;
+	perm[2] = perm[6];
+	perm[6] = perm[7];
+	perm[7] = perm[3];
+	perm[3] = tmp;
 }
 
 
@@ -293,63 +293,63 @@ void Corners::disp(std::ostream &os) {
 Corners& operator*(Corners &c1, const moves &f) {
 	switch (f) {
 		case U:
-			apply_U(c1);
+			c1.apply_U();
 			break;
 
 		case L:
-			apply_L(c1);
+			c1.apply_L();
 			break;
 
 		case F:
-			apply_F(c1);
+			c1.apply_F();
 			break;
 
 		case D:
-			apply_D(c1);
+			c1.apply_D();
 			break;
 
 		case R:
-			apply_R(c1);
+			c1.apply_R();
 			break;
 
 		case B:
-			apply_B(c1);
+			c1.apply_B();
 			break;
 
 		case iU:
-			apply_U(c1);
-			apply_U(c1);
-			apply_U(c1);
+			c1.apply_U();
+			c1.apply_U();
+			c1.apply_U();
 			break;
 
 		case iL:
-			apply_L(c1);
-			apply_L(c1);
-			apply_L(c1);
+			c1.apply_L();
+			c1.apply_L();
+			c1.apply_L();
 			break;
 
 		case iF:
-			apply_F(c1);
-			apply_F(c1);
-			apply_F(c1);
+			c1.apply_F();
+			c1.apply_F();
+			c1.apply_F();
 			break;
 
 		case iD:
-			apply_D(c1);
-			apply_D(c1);
-			apply_D(c1);
+			c1.apply_D();
+			c1.apply_D();
+			c1.apply_D();
 			break;
 
 		case iR:
-			apply_R(c1);
-			apply_R(c1);
-			apply_R(c1);
+			c1.apply_R();
+			c1.apply_R();
+			c1.apply_R();
 			break;
 
 		case iB:
-			apply_B(c1);
-			apply_B(c1);
-			apply_B(c1);
+			c1.apply_B();
+			c1.apply_B();
+			c1.apply_B();
 			break;
 
 		default:

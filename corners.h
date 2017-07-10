@@ -17,18 +17,21 @@ public:
 	void disp(std::ostream &os = std::cout);
 	void disp_cube(std::ostream &os = std::cout);
 	friend Corners &operator*(Corners &c1, const moves &f);
-
-	friend void apply_R(Corners &corn); 
-	friend void apply_L(Corners &corn); 
-	friend void apply_U(Corners &corn); 
-	friend void apply_D(Corners &corn); 
-	friend void apply_F(Corners &corn); 
-	friend void apply_B(Corners &corn); 
-
+	// L move
+	void apply_L();
+	// R move
+	void apply_R();
+	// U move
+	void apply_U(); 
+	// D move
+	void apply_D(); 
+	// F move
+	void apply_F(); 
+	// B move
+	void apply_B(); 
 private:
 	int perm[8];
 	int orient[8];
-
 };
 
 
