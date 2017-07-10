@@ -1129,7 +1129,7 @@ struct _Center_corners_Impl_K<N, K, false> {
 	}
 
 	static void apply_MB(_Center_corners<N, false> &cc) {
-		static_assert(K <= _Center_corners<N, false>::number_of_layers, "K must be less than or equal to _Center_corners<N, false>::number_of_layers");
+		static_assert(K <= _Center_corners_Impl<N, false>::number_of_layers, "K must be less than or equal to _Center_corners<N, false>::number_of_layers");
 		static_assert(K > 0, "K must be greater than 0");
 
 		cc.apply_cycle(

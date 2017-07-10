@@ -3,7 +3,7 @@
 #define __COUPLED_EDGES_H__
 
 #include <ostream>
-#include "fixed_edges.h"
+//#include "fixed_edges.h"
 #include "rubik_moves.h"
 
 namespace rubik_cube {

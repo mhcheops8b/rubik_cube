@@ -12,7 +12,7 @@ struct Permutation {
 
 	Permutation();
 	Permutation(const Permutation &_perm);
-	Permutation(const int init[Permutation::_count]);
+	Permutation(const int init[Permutation<N>::_count]);
 	Permutation inv();
 
 	void disp_elem(std::ostream &os, int i);

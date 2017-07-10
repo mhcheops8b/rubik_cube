@@ -9,6 +9,7 @@ template <int N>
 constexpr int number_of_indices = 24 * number_of_layers<N> * number_of_layers<N>;
 
 
+
 template <int N>
 struct center_edges_odd {
 	int perm[number_of_indices<N>];
@@ -330,8 +331,7 @@ void apply_MR(center_edges_odd<N> &ce) {
 }
 
 template <int N>
-void disp_face(center_edges_odd<N> &ce, enum center_edges_odd<N>::ce_faces f, std::ostream &os = std::cout) {
-
+void disp_face(center_edges_odd<N> &ce, const enum center_edges_odd<N>::ce_faces &f, std::ostream &os = std::cout) {
 	for (int k = number_of_layers<N>; k >= 0; k--) {
 
 		for (int r = 0; r < number_of_layers<N> -k; r++) {
@@ -730,17 +730,17 @@ int signum(center_edges_odd<N> &ec) {
 template <int N>
 void center_edges_odd<N>::disp_cube(std::ostream &os) {
 	os << "U Face:\n";
-	disp_face(*this, center_edges_odd<N>::U, os);
+	disp_face<N>(*this, center_edges_odd<N>::U, os);
 	os << "L Face:\n";
-	disp_face(*this, center_edges_odd<N>::L, os);
+	disp_face<N>(*this, center_edges_odd<N>::L, os);
 	os << "F Face:\n";
-	disp_face(*this, center_edges_odd<N>::F, os);
+	disp_face<N>(*this, center_edges_odd<N>::F, os);
 	os << "R Face:\n";
-	disp_face(*this, center_edges_odd<N>::R, os);
+	disp_face<N>(*this, center_edges_odd<N>::R, os);
 	os << "B Face:\n";
-	disp_face(*this, center_edges_odd<N>::B, os);
+	disp_face<N>(*this, center_edges_odd<N>::B, os);
 	os << "D Face:\n";
-	disp_face(*this, center_edges_odd<N>::D, os);
+	disp_face<N>(*this, center_edges_odd<N>::D, os);
 }
 //-------------------------------------------
 // Even cube
