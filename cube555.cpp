@@ -9,7 +9,7 @@
 
 #include "_cube555.h"
 
-int const N = 5;
+//int const N = 5;
 #if 0
 int const N2 = N * N;
 struct Permutation150 {
