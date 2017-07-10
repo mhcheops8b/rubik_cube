@@ -86,23 +86,23 @@ center_edges: center_edges.cpp
 	g++ -O3 -Wall --pedantic --ansi -o $@ $<
 
 center_edges_cube: center_edges_cube.cpp center_edges_old.h
-	g++ -std=c++14 -O3 -Wall --pedantic -o $@ $<
+	g++ -O3 -Wall --pedantic -std=c++14 -o $@ $<
 
 center_corners_cube: center_corners_cube.cpp
 	g++ -O3 -Wall --pedantic --ansi -o $@ $<
 
 center_corners_cube2: center_corners_cube2.cpp center_corners.h 
-	g++ --std=c++14 -O3 -Wall --pedantic  -o $@ $<
+	g++ -O3 -Wall --pedantic -std=c++11  -o $@ $<
 
 center_corners_cube3: center_corners_cube3.cpp center_corners.h 
-	g++ --std=c++14 -O3 -Wall --pedantic  -o $@ $<
+	g++ -O3 -Wall --pedantic -std=c++11 -o $@ $<
 
 
 test_center_edges_even: test_center_edges_even.cpp center_edges_old.h center_edges.h
-	g++ -O3 -Wall --pedantic --std=c++11 -o $@ $<
+	g++ -O3 -Wall --pedantic -std=c++11 -o $@ $<
 
 test_cube: test_cube.cpp center_corners.h center_edges_old.h
-	g++ --std=c++14 -O3 -Wall --pedantic -o $@ $<
+	g++ -O3 -Wall --pedantic -std=c++14 -o $@ $<
 
 clean: 
 	@rm -fv $(APPS) $(OBJECTS)
