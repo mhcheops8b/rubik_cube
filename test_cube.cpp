@@ -11,7 +11,7 @@ struct cube {
 int main() {
 	cube test;
 
-	apply_ML<5,0>(test.cc5);
+	test.cc5.apply_ML<0>();
 	apply_ML<5,1>(test.ce5);
 
 	test.cc5.disp_perm();
