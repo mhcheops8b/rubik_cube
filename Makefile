@@ -101,8 +101,8 @@ center_corners_cube3: center_corners_cube3.cpp center_corners.h
 test_center_edges_even: test_center_edges_even.cpp center_edges_old.h center_edges.h
 	g++ -O3 -Wall --pedantic -std=c++11 -o $@ $<
 
-test_cube: test_cube.cpp center_corners.h center_edges_old.h
-	g++ -O3 -Wall --pedantic -std=c++14 -o $@ $<
+test_cube: test_cube.cpp center_corners.h center_edges_old.h corners.o fixed_edges.o
+	g++ -O3 -Wall --pedantic -std=c++14 -o $@ $< corners.o fixed_edges.o edge_positions.o
 
 clean: 
 	@rm -fv $(APPS) $(OBJECTS)
