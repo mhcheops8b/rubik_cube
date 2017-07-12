@@ -141,7 +141,7 @@ void Fixed_edges::disp_cube(std::ostream &os) {
 	for (int i = 0; i < 4; i++)
 		os << ' ';
 	os << edge_positions[orient[11]][perm[11]].at(0);
-	os << 'U';
+	os << 'D';
 	os << edge_positions[orient[9]][perm[9]].at(0);
 	os << '\n';
 
