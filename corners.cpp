@@ -2,10 +2,10 @@
 
 namespace rubik_cube {
 
-static const std::string positions[3][8] = {
+const std::string Corners::positions[3][8] = {
 	{"UFL", "URF", "UBR", "ULB", "DLF", "DFR", "DRB", "DBL"},
 	{"LUF", "FUR", "RUB", "BUL", "FDL", "RDF", "BDR", "LDB"},
-	{"UFL", "URF", "UBR", "ULB", "DLF", "DFR", "DRB", "DBL"},
+	{"FLU", "RFU", "BRU", "LBU", "LFD", "FRD", "RBD", "BLD"}
 };
 
 Corners::Corners() {

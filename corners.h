@@ -5,6 +5,7 @@
 
 #include <iostream>
 #include <ostream>
+#include <string>
 #include "rubik_moves.h"
 
 namespace rubik_cube {
@@ -29,6 +30,9 @@ public:
 	void apply_F(); 
 	// B move
 	void apply_B(); 
+
+	// constant positions for display
+	static const std::string positions[3][8];
 private:
 	int perm[8];
 	int orient[8];
