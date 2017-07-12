@@ -144,6 +144,11 @@
   <ItemGroup>
     <ClInclude Include="..\..\..\center_corners.h" />
   </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\faces\faces.vcxproj">
+      <Project>{fdeee46e-c588-43f2-88da-c1ca8174378d}</Project>
+    </ProjectReference>
+  </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
   </ImportGroup>

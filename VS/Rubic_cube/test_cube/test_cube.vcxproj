@@ -145,6 +145,20 @@
     <ClInclude Include="..\..\..\center_corners.h" />
     <ClInclude Include="..\..\..\center_edges_old.h" />
   </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\corners\corners.vcxproj">
+      <Project>{75210cb6-01d0-4890-af68-9d7d3a9687a1}</Project>
+    </ProjectReference>
+    <ProjectReference Include="..\edge_positions\edge_positions.vcxproj">
+      <Project>{19869704-64ad-4637-9726-744b89d997cc}</Project>
+    </ProjectReference>
+    <ProjectReference Include="..\faces\faces.vcxproj">
+      <Project>{fdeee46e-c588-43f2-88da-c1ca8174378d}</Project>
+    </ProjectReference>
+    <ProjectReference Include="..\fixed_edges\fixed_edges.vcxproj">
+      <Project>{c22b3871-07ae-4c7f-8c83-c74c8d002f84}</Project>
+    </ProjectReference>
+  </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
   </ImportGroup>

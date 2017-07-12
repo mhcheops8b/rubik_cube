@@ -20,9 +20,9 @@
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>15.0</VCProjectVersion>
-    <ProjectGuid>{B44F9908-1DDB-4422-A031-0C3A272C39B0}</ProjectGuid>
+    <ProjectGuid>{40FB8A0E-FDFA-4E51-82EB-E912671764FE}</ProjectGuid>
     <Keyword>Win32Proj</Keyword>
-    <RootNamespace>center_corners_cube3</RootNamespace>
+    <RootNamespace>cube444_comp</RootNamespace>
     <WindowsTargetPlatformVersion>10.0.14393.0</WindowsTargetPlatformVersion>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
@@ -139,12 +139,18 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="..\..\..\center_corners_cube3.cpp" />
+    <ClCompile Include="..\..\..\cube444_comp.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="..\..\..\center_corners.h" />
-  </ItemGroup>
-  <ItemGroup>
+    <ProjectReference Include="..\corners\corners.vcxproj">
+      <Project>{75210cb6-01d0-4890-af68-9d7d3a9687a1}</Project>
+    </ProjectReference>
+    <ProjectReference Include="..\coupled_edges\coupled_edges.vcxproj">
+      <Project>{4a6d4f0c-0b9a-49d5-8296-bc91391e3e54}</Project>
+    </ProjectReference>
+    <ProjectReference Include="..\edge_positions\edge_positions.vcxproj">
+      <Project>{19869704-64ad-4637-9726-744b89d997cc}</Project>
+    </ProjectReference>
     <ProjectReference Include="..\faces\faces.vcxproj">
       <Project>{fdeee46e-c588-43f2-88da-c1ca8174378d}</Project>
     </ProjectReference>
