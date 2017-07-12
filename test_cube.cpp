@@ -10,6 +10,7 @@ struct cube333 {
 	rubik_cube::Fixed_edges fe;
 	rubik_cube::Center_corners<3> cc;
 
+	cube333(): c(), fe(), cc(){}
 	void disp_cube(std::ostream &os = std::cout);
 	void apply_L();
 	void apply_R();

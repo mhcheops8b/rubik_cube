@@ -765,7 +765,7 @@ struct center_edges_even {
 	void disp_cube(std::ostream &os = std::cout);
 
 	template<int U>
-	friend void apply_Face(const faces &f, center_edges_even<U, isEven> &ce);
+	friend void apply_Face(const enum rubik_cube::Faces::faces &f, center_edges_even<U, isEven> &ce);
 
 	template<int U>
 	friend void apply_L(center_edges_even<U, isEven> &ce);
@@ -839,22 +839,22 @@ inline int SF_even(int layer, int index) {
 }
 
 template <int N>
-inline int face_NF_even(const faces &f, int layer, int index) {
+inline int face_NF_even(const enum rubik_cube::Faces::faces &f, int layer, int index) {
 	return f * number_of_indices_per_face_even<N> +NF_even<N>(layer, index);
 }
 
 template <int N>
-inline int face_EF_even(const faces &f, int layer, int index) {
+inline int face_EF_even(const enum rubik_cube::Faces::faces &f, int layer, int index) {
 	return f * number_of_indices_per_face_even<N> +EF_even<N>(layer, index);
 }
 
 template <int N>
-inline int face_WF_even(const faces &f, int layer, int index) {
+inline int face_WF_even(const enum rubik_cube::Faces::faces &f, int layer, int index) {
 	return f * number_of_indices_per_face_even<N> +WF_even<N>(layer, index);
 }
 
 template <int N>
-inline int face_SF_even(const faces &f, int layer, int index) {
+inline int face_SF_even(const enum rubik_cube::Faces::faces &f, int layer, int index) {
 	return f * number_of_indices_per_face_even<N> +SF_even<N>(layer, index);
 }
 
@@ -883,20 +883,20 @@ void center_edges_even<N, isEven>::disp_cube(std::ostream &os) {
 
 		for (int t = number_of_layers_even<N>; t > k; t--) {
 
-			os << face_labels[perm[face_WF_even<N>(U, t, t + k - 2)] / number_of_indices_per_face_even<N>];
+			os << rubik_cube::Faces::labels[perm[face_WF_even<N>(rubik_cube::Faces::U, t, t + k - 2)] / number_of_indices_per_face_even<N>];
 
 		}
 		os << '.';
 
 		// padding middle
 		for (int t = 0; t < 2 * (k - 1); t++)
-			os << face_labels[perm[face_NF_even<N>(U, k, t)] / number_of_indices_per_face_even<N>];
+			os << rubik_cube::Faces::labels[perm[face_NF_even<N>(rubik_cube::Faces::U, k, t)] / number_of_indices_per_face_even<N>];
 
 		os << '.';
 
 		for (int t = k + 1; t <= number_of_layers_even<N>; t++) {
 
-			os << face_labels[perm[face_EF_even<N>(U, t, t - k - 1)] / number_of_indices_per_face_even<N>];
+			os << rubik_cube::Faces::labels[perm[face_EF_even<N>(rubik_cube::Faces::U, t, t - k - 1)] / number_of_indices_per_face_even<N>];
 
 		}
 
@@ -914,20 +914,20 @@ void center_edges_even<N, isEven>::disp_cube(std::ostream &os) {
 
 		for (int t = number_of_layers_even<N>; t > k; t--) {
 
-			os << face_labels[perm[face_WF_even<N>(U, t, t - k - 1)] / number_of_indices_per_face_even<N>];
+			os << rubik_cube::Faces::labels[perm[face_WF_even<N>(rubik_cube::Faces::U, t, t - k - 1)] / number_of_indices_per_face_even<N>];
 
 		}
 		os << '.';
 
 		// middle
 		for (int t = 2 * (k - 1) - 1; t >= 0; t--)
-			os << face_labels[perm[face_SF_even<N>(U, k, t)] / number_of_indices_per_face_even<N>];
+			os << rubik_cube::Faces::labels[perm[face_SF_even<N>(rubik_cube::Faces::U, k, t)] / number_of_indices_per_face_even<N>];
 
 		os << '.';
 
 		for (int t = k + 1; t <= number_of_layers_even<N>; t++) {
 
-			os << face_labels[perm[face_EF_even<N>(U, t, t + k - 2)] / number_of_indices_per_face_even<N>];
+			os << rubik_cube::Faces::labels[perm[face_EF_even<N>(rubik_cube::Faces::U, t, t + k - 2)] / number_of_indices_per_face_even<N>];
 
 		}
 
@@ -966,20 +966,20 @@ void center_edges_even<N, isEven>::disp_cube(std::ostream &os) {
 
 		for (int t = number_of_layers_even<N>; t > k; t--) {
 
-			os << face_labels[perm[face_WF_even<N>(L, t, t + k - 2)] / number_of_indices_per_face_even<N>];
+			os << rubik_cube::Faces::labels[perm[face_WF_even<N>(rubik_cube::Faces::L, t, t + k - 2)] / number_of_indices_per_face_even<N>];
 
 		}
 		os << '.';
 
 		// middle
 		for (int t = 0; t < 2 * (k - 1); t++)
-			os << face_labels[perm[face_NF_even<N>(L, k, t)] / number_of_indices_per_face_even<N>];
+			os << rubik_cube::Faces::labels[perm[face_NF_even<N>(rubik_cube::Faces::L, k, t)] / number_of_indices_per_face_even<N>];
 
 		os << '.';
 
 		for (int t = k + 1; t <= number_of_layers_even<N>; t++) {
 
-			os << face_labels[perm[face_EF_even<N>(L, t, t - k - 1)] / number_of_indices_per_face_even<N>];
+			os << rubik_cube::Faces::labels[perm[face_EF_even<N>(rubik_cube::Faces::L, t, t - k - 1)] / number_of_indices_per_face_even<N>];
 
 		}
 
@@ -991,20 +991,20 @@ void center_edges_even<N, isEven>::disp_cube(std::ostream &os) {
 
 		for (int t = number_of_layers_even<N>; t > k; t--) {
 
-			os << face_labels[perm[face_WF_even<N>(F, t, t + k - 2)] / number_of_indices_per_face_even<N>];
+			os << rubik_cube::Faces::labels[perm[face_WF_even<N>(rubik_cube::Faces::F, t, t + k - 2)] / number_of_indices_per_face_even<N>];
 
 		}
 		os << '.';
 
 		// middle
 		for (int t = 0; t < 2 * (k - 1); t++)
-			os << face_labels[perm[face_NF_even<N>(F, k, t)] / number_of_indices_per_face_even<N>];
+			os << rubik_cube::Faces::labels[perm[face_NF_even<N>(rubik_cube::Faces::F, k, t)] / number_of_indices_per_face_even<N>];
 
 		os << '.';
 
 		for (int t = k + 1; t <= number_of_layers_even<N>; t++) {
 
-			os << face_labels[perm[face_EF_even<N>(F, t, t - k - 1)] / number_of_indices_per_face_even<N>];
+			os << rubik_cube::Faces::labels[perm[face_EF_even<N>(rubik_cube::Faces::F, t, t - k - 1)] / number_of_indices_per_face_even<N>];
 
 		}
 
@@ -1016,20 +1016,20 @@ void center_edges_even<N, isEven>::disp_cube(std::ostream &os) {
 
 		for (int t = number_of_layers_even<N>; t > k; t--) {
 
-			os << face_labels[perm[face_WF_even<N>(R, t, t + k - 2)] / number_of_indices_per_face_even<N>];
+			os << rubik_cube::Faces::labels[perm[face_WF_even<N>(rubik_cube::Faces::R, t, t + k - 2)] / number_of_indices_per_face_even<N>];
 
 		}
 		os << '.';
 
 		// middle
 		for (int t = 0; t < 2 * (k - 1); t++)
-			os << face_labels[perm[face_NF_even<N>(R, k, t)] / number_of_indices_per_face_even<N>];
+			os << rubik_cube::Faces::labels[perm[face_NF_even<N>(rubik_cube::Faces::R, k, t)] / number_of_indices_per_face_even<N>];
 
 		os << '.';
 
 		for (int t = k + 1; t <= number_of_layers_even<N>; t++) {
 
-			os << face_labels[perm[face_EF_even<N>(R, t, t - k - 1)] / number_of_indices_per_face_even<N>];
+			os << rubik_cube::Faces::labels[perm[face_EF_even<N>(rubik_cube::Faces::R, t, t - k - 1)] / number_of_indices_per_face_even<N>];
 
 		}
 
@@ -1041,20 +1041,20 @@ void center_edges_even<N, isEven>::disp_cube(std::ostream &os) {
 
 		for (int t = number_of_layers_even<N>; t > k; t--) {
 
-			os << face_labels[perm[face_WF_even<N>(B, t, t + k - 2)] / number_of_indices_per_face_even<N>];
+			os << rubik_cube::Faces::labels[perm[face_WF_even<N>(rubik_cube::Faces::B, t, t + k - 2)] / number_of_indices_per_face_even<N>];
 
 		}
 		os << '.';
 
 		// middle
 		for (int t = 0; t < 2 * (k - 1); t++)
-			os << face_labels[perm[face_NF_even<N>(B, k, t)] / number_of_indices_per_face_even<N>];
+			os << rubik_cube::Faces::labels[perm[face_NF_even<N>(rubik_cube::Faces::B, k, t)] / number_of_indices_per_face_even<N>];
 
 		os << '.';
 
 		for (int t = k + 1; t <= number_of_layers_even<N>; t++) {
 
-			os << face_labels[perm[face_EF_even<N>(B, t, t - k - 1)] / number_of_indices_per_face_even<N>];
+			os << rubik_cube::Faces::labels[perm[face_EF_even<N>(rubik_cube::Faces::B, t, t - k - 1)] / number_of_indices_per_face_even<N>];
 
 		}
 
@@ -1069,20 +1069,20 @@ void center_edges_even<N, isEven>::disp_cube(std::ostream &os) {
 
 		for (int t = number_of_layers_even<N>; t > k; t--) {
 
-			os << face_labels[perm[face_WF_even<N>(L, t, t - k - 1)] / number_of_indices_per_face_even<N>];
+			os << rubik_cube::Faces::labels[perm[face_WF_even<N>(rubik_cube::Faces::L, t, t - k - 1)] / number_of_indices_per_face_even<N>];
 
 		}
 		os << '.';
 
 		// middle
 		for (int t = 2 * (k - 1) - 1; t >= 0; t--)
-			os << face_labels[perm[face_SF_even<N>(L, k, t)] / number_of_indices_per_face_even<N>];
+			os << rubik_cube::Faces::labels[perm[face_SF_even<N>(rubik_cube::Faces::L, k, t)] / number_of_indices_per_face_even<N>];
 
 		os << '.';
 
 		for (int t = k + 1; t <= number_of_layers_even<N>; t++) {
 
-			os << face_labels[perm[face_EF_even<N>(L, t, t + k - 2)] / number_of_indices_per_face_even<N>];
+			os << rubik_cube::Faces::labels[perm[face_EF_even<N>(rubik_cube::Faces::L, t, t + k - 2)] / number_of_indices_per_face_even<N>];
 
 		}
 
@@ -1094,20 +1094,20 @@ void center_edges_even<N, isEven>::disp_cube(std::ostream &os) {
 
 		for (int t = number_of_layers_even<N>; t > k; t--) {
 
-			os << face_labels[perm[face_WF_even<N>(F, t, t - k - 1)] / number_of_indices_per_face_even<N>];
+			os << rubik_cube::Faces::labels[perm[face_WF_even<N>(rubik_cube::Faces::F, t, t - k - 1)] / number_of_indices_per_face_even<N>];
 
 		}
 		os << '.';
 
 		// middle
 		for (int t = 2 * (k - 1) - 1; t >= 0; t--)
-			os << face_labels[perm[face_SF_even<N>(F, k, t)] / number_of_indices_per_face_even<N>];
+			os << rubik_cube::Faces::labels[perm[face_SF_even<N>(rubik_cube::Faces::F, k, t)] / number_of_indices_per_face_even<N>];
 
 		os << '.';
 
 		for (int t = k + 1; t <= number_of_layers_even<N>; t++) {
 
-			os << face_labels[perm[face_EF_even<N>(F, t, t + k - 2)] / number_of_indices_per_face_even<N>];
+			os << rubik_cube::Faces::labels[perm[face_EF_even<N>(rubik_cube::Faces::F, t, t + k - 2)] / number_of_indices_per_face_even<N>];
 
 		}
 
@@ -1119,20 +1119,20 @@ void center_edges_even<N, isEven>::disp_cube(std::ostream &os) {
 
 		for (int t = number_of_layers_even<N>; t > k; t--) {
 
-			os << face_labels[perm[face_WF_even<N>(R, t, t - k - 1)] / number_of_indices_per_face_even<N>];
+			os << rubik_cube::Faces::labels[perm[face_WF_even<N>(rubik_cube::Faces::R, t, t - k - 1)] / number_of_indices_per_face_even<N>];
 
 		}
 		os << '.';
 
 		// middle
 		for (int t = 2 * (k - 1) - 1; t >= 0; t--)
-			os << face_labels[perm[face_SF_even<N>(R, k, t)] / number_of_indices_per_face_even<N>];
+			os << rubik_cube::Faces::labels[perm[face_SF_even<N>(rubik_cube::Faces::R, k, t)] / number_of_indices_per_face_even<N>];
 
 		os << '.';
 
 		for (int t = k + 1; t <= number_of_layers_even<N>; t++) {
 
-			os << face_labels[perm[face_EF_even<N>(R, t, t + k - 2)] / number_of_indices_per_face_even<N>];
+			os << rubik_cube::Faces::labels[perm[face_EF_even<N>(rubik_cube::Faces::R, t, t + k - 2)] / number_of_indices_per_face_even<N>];
 
 		}
 
@@ -1144,20 +1144,20 @@ void center_edges_even<N, isEven>::disp_cube(std::ostream &os) {
 
 		for (int t = number_of_layers_even<N>; t > k; t--) {
 
-			os << face_labels[perm[face_WF_even<N>(B, t, t - k - 1)] / number_of_indices_per_face_even<N>];
+			os << rubik_cube::Faces::labels[perm[face_WF_even<N>(rubik_cube::Faces::B, t, t - k - 1)] / number_of_indices_per_face_even<N>];
 
 		}
 		os << '.';
 
 		// middle
 		for (int t = 2 * (k - 1) - 1; t >= 0; t--)
-			os << face_labels[perm[face_SF_even<N>(B, k, t)] / number_of_indices_per_face_even<N>];
+			os << rubik_cube::Faces::labels[perm[face_SF_even<N>(rubik_cube::Faces::B, k, t)] / number_of_indices_per_face_even<N>];
 
 		os << '.';
 
 		for (int t = k + 1; t <= number_of_layers_even<N>; t++) {
 
-			os << face_labels[perm[face_EF_even<N>(B, t, t + k - 2)] / number_of_indices_per_face_even<N>];
+			os << rubik_cube::Faces::labels[perm[face_EF_even<N>(rubik_cube::Faces::B, t, t + k - 2)] / number_of_indices_per_face_even<N>];
 
 		}
 
@@ -1196,20 +1196,20 @@ void center_edges_even<N, isEven>::disp_cube(std::ostream &os) {
 
 		for (int t = number_of_layers_even<N>; t > k; t--) {
 
-			os << face_labels[perm[face_WF_even<N>(D, t, t + k - 2)] / number_of_indices_per_face_even<N>];
+			os << rubik_cube::Faces::labels[perm[face_WF_even<N>(rubik_cube::Faces::D, t, t + k - 2)] / number_of_indices_per_face_even<N>];
 
 		}
 		os << '.';
 
 		// middle
 		for (int t = 0; t < 2 * (k - 1); t++)
-			os << face_labels[perm[face_NF_even<N>(D, k, t)] / number_of_indices_per_face_even<N>];
+			os << rubik_cube::Faces::labels[perm[face_NF_even<N>(rubik_cube::Faces::D, k, t)] / number_of_indices_per_face_even<N>];
 
 		os << '.';
 
 		for (int t = k + 1; t <= number_of_layers_even<N>; t++) {
 
-			os << face_labels[perm[face_EF_even<N>(D, t, t - k - 1)] / number_of_indices_per_face_even<N>];
+			os << rubik_cube::Faces::labels[perm[face_EF_even<N>(rubik_cube::Faces::D, t, t - k - 1)] / number_of_indices_per_face_even<N>];
 
 		}
 
@@ -1227,20 +1227,20 @@ void center_edges_even<N, isEven>::disp_cube(std::ostream &os) {
 
 		for (int t = number_of_layers_even<N>; t > k; t--) {
 
-			os << face_labels[perm[face_WF_even<N>(D, t, t - k - 1)] / number_of_indices_per_face_even<N>];
+			os << rubik_cube::Faces::labels[perm[face_WF_even<N>(rubik_cube::Faces::D, t, t - k - 1)] / number_of_indices_per_face_even<N>];
 
 		}
 		os << '.';
 
 		// middle
 		for (int t = 2 * (k - 1) - 1; t >= 0; t--)
-			os << face_labels[perm[face_SF_even<N>(D, k, t)] / number_of_indices_per_face_even<N>];
+			os << rubik_cube::Faces::labels[perm[face_SF_even<N>(rubik_cube::Faces::D, k, t)] / number_of_indices_per_face_even<N>];
 
 		os << '.';
 
 		for (int t = k + 1; t <= number_of_layers_even<N>; t++) {
 
-			os << face_labels[perm[face_EF_even<N>(D, t, t + k - 2)] / number_of_indices_per_face_even<N>];
+			os << rubik_cube::Faces::labels[perm[face_EF_even<N>(rubik_cube::Faces::D, t, t + k - 2)] / number_of_indices_per_face_even<N>];
 
 		}
 
@@ -1260,7 +1260,7 @@ void center_edges_even<N, isEven>::disp_cube(std::ostream &os) {
 }
 
 template <int N>
-void apply_Face(const faces &f, center_edges_even<N, true> &ce) {
+void apply_Face(const enum rubik_cube::Faces::faces &f, center_edges_even<N, true> &ce) {
 	for (int k = 2; k <= number_of_layers_even<N>; k++) {
 		for (int t = 0; t < 2 * k; t++) {
 			//			 NF  ->  EF  ->  SF  ->  WF
@@ -1279,32 +1279,32 @@ void apply_Face(const faces &f, center_edges_even<N, true> &ce) {
 
 template <int N>
 void apply_L(center_edges_even<N, true> &ce) {
-	apply_Face(L, ce);
+	apply_Face(rubik_cube::Faces::L, ce);
 }
 
 template <int N>
 void apply_R(center_edges_even<N, true> &ce) {
-	apply_Face(R, ce);
+	apply_Face(rubik_cube::Faces::R, ce);
 }
 
 template <int N>
 void apply_F(center_edges_even<N, true> &ce) {
-	apply_Face(F, ce);
+	apply_Face(rubik_cube::Faces::F, ce);
 }
 
 template <int N>
 void apply_B(center_edges_even<N, true> &ce) {
-	apply_Face(B, ce);
+	apply_Face(rubik_cube::Faces::B, ce);
 }
 
 template <int N>
 void apply_U(center_edges_even<N, true> &ce) {
-	apply_Face(U, ce);
+	apply_Face(rubik_cube::Faces::U, ce);
 }
 
 template <int N>
 void apply_D(center_edges_even<N, true> &ce) {
-	apply_Face(D, ce);
+	apply_Face(rubik_cube::Faces::D, ce);
 }
 
 template <int N, int K>
@@ -1314,44 +1314,44 @@ void apply_ML(center_edges_even<N, true> &ce) {
 
 	for (int k = number_of_layers_even<N>; k > K; k--) {
 
-		int tmp = ce.perm[face_NF_even<N>(U, k, k - K - 1)];
+		int tmp = ce.perm[face_NF_even<N>(rubik_cube::Faces::U, k, k - K - 1)];
 
-		ce.perm[face_NF_even<N>(U, k, k - K - 1)] =
-			ce.perm[face_SF_even<N>(B, k, k - K - 1)];
+		ce.perm[face_NF_even<N>(rubik_cube::Faces::U, k, k - K - 1)] =
+			ce.perm[face_SF_even<N>(rubik_cube::Faces::B, k, k - K - 1)];
 
-		ce.perm[face_SF_even<N>(B, k, k - K - 1)] =
-			ce.perm[face_NF_even<N>(D, k, k - K - 1)];
+		ce.perm[face_SF_even<N>(rubik_cube::Faces::B, k, k - K - 1)] =
+			ce.perm[face_NF_even<N>(rubik_cube::Faces::D, k, k - K - 1)];
 
-		ce.perm[face_NF_even<N>(D, k, k - K - 1)] =
-			ce.perm[face_NF_even<N>(F, k, k - K - 1)];
+		ce.perm[face_NF_even<N>(rubik_cube::Faces::D, k, k - K - 1)] =
+			ce.perm[face_NF_even<N>(rubik_cube::Faces::F, k, k - K - 1)];
 
-		ce.perm[face_NF_even<N>(F, k, k - K - 1)] = tmp;
+		ce.perm[face_NF_even<N>(rubik_cube::Faces::F, k, k - K - 1)] = tmp;
 	}
 	for (int k = 2 * K - 3; k >= 0; k--) {
 		// U-WF(K, k) -> F-WF(K, k) -> D-WF(K, k) -> B-EF(K, k)
 
-		int tmp = ce.perm[face_WF_even<N>(U, K, k)];
+		int tmp = ce.perm[face_WF_even<N>(rubik_cube::Faces::U, K, k)];
 
-		ce.perm[face_WF_even<N>(U, K, k)] = ce.perm[face_EF_even<N>(B, K, k)];
-		ce.perm[face_EF_even<N>(B, K, k)] = ce.perm[face_WF_even<N>(D, K, k)];
-		ce.perm[face_WF_even<N>(D, K, k)] = ce.perm[face_WF_even<N>(F, K, k)];
-		ce.perm[face_WF_even<N>(F, K, k)] = tmp;
+		ce.perm[face_WF_even<N>(rubik_cube::Faces::U, K, k)] = ce.perm[face_EF_even<N>(rubik_cube::Faces::B, K, k)];
+		ce.perm[face_EF_even<N>(rubik_cube::Faces::B, K, k)] = ce.perm[face_WF_even<N>(rubik_cube::Faces::D, K, k)];
+		ce.perm[face_WF_even<N>(rubik_cube::Faces::D, K, k)] = ce.perm[face_WF_even<N>(rubik_cube::Faces::F, K, k)];
+		ce.perm[face_WF_even<N>(rubik_cube::Faces::F, K, k)] = tmp;
 	}
 
 	for (int k = number_of_layers_even<N>; k > K; k--) {
 
-		int tmp = ce.perm[face_SF_even<N>(U, k, k + K - 2)];
+		int tmp = ce.perm[face_SF_even<N>(rubik_cube::Faces::U, k, k + K - 2)];
 
-		ce.perm[face_SF_even<N>(U, k, k + K - 2)] =
-			ce.perm[face_NF_even<N>(B, k, k + K - 2)];
+		ce.perm[face_SF_even<N>(rubik_cube::Faces::U, k, k + K - 2)] =
+			ce.perm[face_NF_even<N>(rubik_cube::Faces::B, k, k + K - 2)];
 
-		ce.perm[face_NF_even<N>(B, k, k + K - 2)] =
-			ce.perm[face_SF_even<N>(D, k, k + K - 2)];
+		ce.perm[face_NF_even<N>(rubik_cube::Faces::B, k, k + K - 2)] =
+			ce.perm[face_SF_even<N>(rubik_cube::Faces::D, k, k + K - 2)];
 
-		ce.perm[face_SF_even<N>(D, k, k + K - 2)] =
-			ce.perm[face_SF_even<N>(F, k, k + K - 2)];
+		ce.perm[face_SF_even<N>(rubik_cube::Faces::D, k, k + K - 2)] =
+			ce.perm[face_SF_even<N>(rubik_cube::Faces::F, k, k + K - 2)];
 
-		ce.perm[face_SF_even<N>(F, k, k + K - 2)] = tmp;
+		ce.perm[face_SF_even<N>(rubik_cube::Faces::F, k, k + K - 2)] = tmp;
 	}
 
 }
@@ -1363,44 +1363,44 @@ void apply_MR(center_edges_even<N, true> &ce) {
 
 	for (int k = number_of_layers_even<N>; k > K; k--) {
 
-		int tmp = ce.perm[face_NF_even<N>(U, k, k + K - 2)];
+		int tmp = ce.perm[face_NF_even<N>(rubik_cube::Faces::U, k, k + K - 2)];
 
-		ce.perm[face_NF_even<N>(U, k, k + K - 2)] =
-			ce.perm[face_NF_even<N>(F, k, k + K - 2)];
+		ce.perm[face_NF_even<N>(rubik_cube::Faces::U, k, k + K - 2)] =
+			ce.perm[face_NF_even<N>(rubik_cube::Faces::F, k, k + K - 2)];
 
-		ce.perm[face_NF_even<N>(F, k, k + K - 2)] =
-			ce.perm[face_NF_even<N>(D, k, k + K - 2)];
+		ce.perm[face_NF_even<N>(rubik_cube::Faces::F, k, k + K - 2)] =
+			ce.perm[face_NF_even<N>(rubik_cube::Faces::D, k, k + K - 2)];
 
-		ce.perm[face_NF_even<N>(D, k, k + K - 2)] =
-			ce.perm[face_SF_even<N>(B, k, k + K - 2)];
+		ce.perm[face_NF_even<N>(rubik_cube::Faces::D, k, k + K - 2)] =
+			ce.perm[face_SF_even<N>(rubik_cube::Faces::B, k, k + K - 2)];
 
-		ce.perm[face_SF_even<N>(B, k, k + K - 2)] = tmp;
+		ce.perm[face_SF_even<N>(rubik_cube::Faces::B, k, k + K - 2)] = tmp;
 	}
 	for (int k = 2 * K - 3; k >= 0; k--) {
 		// U-WF(K, k) -> F-WF(K, k) -> D-WF(K, k) -> B-EF(K, k)
 
-		int tmp = ce.perm[face_EF_even<N>(U, K, k)];
+		int tmp = ce.perm[face_EF_even<N>(rubik_cube::Faces::U, K, k)];
 
-		ce.perm[face_EF_even<N>(U, K, k)] = ce.perm[face_EF_even<N>(F, K, k)];
-		ce.perm[face_EF_even<N>(F, K, k)] = ce.perm[face_EF_even<N>(D, K, k)];
-		ce.perm[face_EF_even<N>(D, K, k)] = ce.perm[face_WF_even<N>(B, K, k)];
-		ce.perm[face_WF_even<N>(B, K, k)] = tmp;
+		ce.perm[face_EF_even<N>(rubik_cube::Faces::U, K, k)] = ce.perm[face_EF_even<N>(rubik_cube::Faces::F, K, k)];
+		ce.perm[face_EF_even<N>(rubik_cube::Faces::F, K, k)] = ce.perm[face_EF_even<N>(rubik_cube::Faces::D, K, k)];
+		ce.perm[face_EF_even<N>(rubik_cube::Faces::D, K, k)] = ce.perm[face_WF_even<N>(rubik_cube::Faces::B, K, k)];
+		ce.perm[face_WF_even<N>(rubik_cube::Faces::B, K, k)] = tmp;
 	}
 
 	for (int k = number_of_layers_even<N>; k > K; k--) {
 
-		int tmp = ce.perm[face_SF_even<N>(U, k, k - K - 1)];
+		int tmp = ce.perm[face_SF_even<N>(rubik_cube::Faces::U, k, k - K - 1)];
 
-		ce.perm[face_SF_even<N>(U, k, k - K - 1)] =
-			ce.perm[face_SF_even<N>(F, k, k - K - 1)];
+		ce.perm[face_SF_even<N>(rubik_cube::Faces::U, k, k - K - 1)] =
+			ce.perm[face_SF_even<N>(rubik_cube::Faces::F, k, k - K - 1)];
 
-		ce.perm[face_SF_even<N>(F, k, k - K - 1)] =
-			ce.perm[face_SF_even<N>(D, k, k - K - 1)];
+		ce.perm[face_SF_even<N>(rubik_cube::Faces::F, k, k - K - 1)] =
+			ce.perm[face_SF_even<N>(rubik_cube::Faces::D, k, k - K - 1)];
 
-		ce.perm[face_SF_even<N>(D, k, k - K - 1)] =
-			ce.perm[face_NF_even<N>(B, k, k - K - 1)];
+		ce.perm[face_SF_even<N>(rubik_cube::Faces::D, k, k - K - 1)] =
+			ce.perm[face_NF_even<N>(rubik_cube::Faces::B, k, k - K - 1)];
 
-		ce.perm[face_NF_even<N>(B, k, k - K - 1)] = tmp;
+		ce.perm[face_NF_even<N>(rubik_cube::Faces::B, k, k - K - 1)] = tmp;
 	}
 
 }
@@ -1412,43 +1412,43 @@ void apply_MF(center_edges_even<N, true> &ce) {
 
 	for (int k = number_of_layers_even<N>; k > K; k--) {
 
-		int tmp = ce.perm[face_NF_even<N>(R, k, k - K - 1)];
+		int tmp = ce.perm[face_NF_even<N>(rubik_cube::Faces::R, k, k - K - 1)];
 
-		ce.perm[face_NF_even<N>(R, k, k - K - 1)] =
-			ce.perm[face_WF_even<N>(U, k, k - K - 1)];
+		ce.perm[face_NF_even<N>(rubik_cube::Faces::R, k, k - K - 1)] =
+			ce.perm[face_WF_even<N>(rubik_cube::Faces::U, k, k - K - 1)];
 
-		ce.perm[face_WF_even<N>(U, k, k - K - 1)] =
-			ce.perm[face_SF_even<N>(L, k, k - K - 1)];
+		ce.perm[face_WF_even<N>(rubik_cube::Faces::U, k, k - K - 1)] =
+			ce.perm[face_SF_even<N>(rubik_cube::Faces::L, k, k - K - 1)];
 
-		ce.perm[face_SF_even<N>(L, k, k - K - 1)] =
-			ce.perm[face_EF_even<N>(D, k, k - K - 1)];
+		ce.perm[face_SF_even<N>(rubik_cube::Faces::L, k, k - K - 1)] =
+			ce.perm[face_EF_even<N>(rubik_cube::Faces::D, k, k - K - 1)];
 
-		ce.perm[face_EF_even<N>(D, k, k - K - 1)] = tmp;
+		ce.perm[face_EF_even<N>(rubik_cube::Faces::D, k, k - K - 1)] = tmp;
 	}
 
 	for (int k = 2 * K - 3; k >= 0; k--) {
-		int tmp = ce.perm[face_WF_even<N>(R, K, k)];
+		int tmp = ce.perm[face_WF_even<N>(rubik_cube::Faces::R, K, k)];
 
-		ce.perm[face_WF_even<N>(R, K, k)] = ce.perm[face_SF_even<N>(U, K, k)];
-		ce.perm[face_SF_even<N>(U, K, k)] = ce.perm[face_EF_even<N>(L, K, k)];
-		ce.perm[face_EF_even<N>(L, K, k)] = ce.perm[face_NF_even<N>(D, K, k)];
-		ce.perm[face_NF_even<N>(D, K, k)] = tmp;
+		ce.perm[face_WF_even<N>(rubik_cube::Faces::R, K, k)] = ce.perm[face_SF_even<N>(rubik_cube::Faces::U, K, k)];
+		ce.perm[face_SF_even<N>(rubik_cube::Faces::U, K, k)] = ce.perm[face_EF_even<N>(rubik_cube::Faces::L, K, k)];
+		ce.perm[face_EF_even<N>(rubik_cube::Faces::L, K, k)] = ce.perm[face_NF_even<N>(rubik_cube::Faces::D, K, k)];
+		ce.perm[face_NF_even<N>(rubik_cube::Faces::D, K, k)] = tmp;
 	}
 
 	for (int k = number_of_layers_even<N>; k > K; k--) {
 
-		int tmp = ce.perm[face_SF_even<N>(R, k, k + K - 2)];
+		int tmp = ce.perm[face_SF_even<N>(rubik_cube::Faces::R, k, k + K - 2)];
 
-		ce.perm[face_SF_even<N>(R, k, k + K - 2)] =
-			ce.perm[face_EF_even<N>(U, k, k + K - 2)];
+		ce.perm[face_SF_even<N>(rubik_cube::Faces::R, k, k + K - 2)] =
+			ce.perm[face_EF_even<N>(rubik_cube::Faces::U, k, k + K - 2)];
 
-		ce.perm[face_EF_even<N>(U, k, k + K - 2)] =
-			ce.perm[face_NF_even<N>(L, k, k + K - 2)];
+		ce.perm[face_EF_even<N>(rubik_cube::Faces::U, k, k + K - 2)] =
+			ce.perm[face_NF_even<N>(rubik_cube::Faces::L, k, k + K - 2)];
 
-		ce.perm[face_NF_even<N>(L, k, k + K - 2)] =
-			ce.perm[face_WF_even<N>(D, k, k + K - 2)];
+		ce.perm[face_NF_even<N>(rubik_cube::Faces::L, k, k + K - 2)] =
+			ce.perm[face_WF_even<N>(rubik_cube::Faces::D, k, k + K - 2)];
 
-		ce.perm[face_WF_even<N>(D, k, k + K - 2)] = tmp;
+		ce.perm[face_WF_even<N>(rubik_cube::Faces::D, k, k + K - 2)] = tmp;
 	}
 
 }
@@ -1460,43 +1460,43 @@ void apply_MB(center_edges_even<N, true> &ce) {
 
 	for (int k = number_of_layers_even<N>; k > K; k--) {
 
-		int tmp = ce.perm[face_NF_even<N>(R, k, k + K - 2)];
+		int tmp = ce.perm[face_NF_even<N>(rubik_cube::Faces::R, k, k + K - 2)];
 
-		ce.perm[face_NF_even<N>(R, k, k + K - 2)] =
-			ce.perm[face_EF_even<N>(D, k, k + K - 2)];
+		ce.perm[face_NF_even<N>(rubik_cube::Faces::R, k, k + K - 2)] =
+			ce.perm[face_EF_even<N>(rubik_cube::Faces::D, k, k + K - 2)];
 
-		ce.perm[face_EF_even<N>(D, k, k + K - 2)] =
-			ce.perm[face_SF_even<N>(L, k, k + K - 2)];
+		ce.perm[face_EF_even<N>(rubik_cube::Faces::D, k, k + K - 2)] =
+			ce.perm[face_SF_even<N>(rubik_cube::Faces::L, k, k + K - 2)];
 
-		ce.perm[face_SF_even<N>(L, k, k + K - 2)] =
-			ce.perm[face_WF_even<N>(U, k, k + K - 2)];
+		ce.perm[face_SF_even<N>(rubik_cube::Faces::L, k, k + K - 2)] =
+			ce.perm[face_WF_even<N>(rubik_cube::Faces::U, k, k + K - 2)];
 
-		ce.perm[face_WF_even<N>(U, k, k + K - 2)] = tmp;
+		ce.perm[face_WF_even<N>(rubik_cube::Faces::U, k, k + K - 2)] = tmp;
 	}
 
 	for (int k = 2 * K - 3; k >= 0; k--) {
-		int tmp = ce.perm[face_EF_even<N>(R, K, k)];
+		int tmp = ce.perm[face_EF_even<N>(rubik_cube::Faces::R, K, k)];
 
-		ce.perm[face_EF_even<N>(R, K, k)] = ce.perm[face_SF_even<N>(D, K, k)];
-		ce.perm[face_SF_even<N>(D, K, k)] = ce.perm[face_WF_even<N>(L, K, k)];
-		ce.perm[face_WF_even<N>(L, K, k)] = ce.perm[face_NF_even<N>(U, K, k)];
-		ce.perm[face_NF_even<N>(U, K, k)] = tmp;
+		ce.perm[face_EF_even<N>(rubik_cube::Faces::R, K, k)] = ce.perm[face_SF_even<N>(rubik_cube::Faces::D, K, k)];
+		ce.perm[face_SF_even<N>(rubik_cube::Faces::D, K, k)] = ce.perm[face_WF_even<N>(rubik_cube::Faces::L, K, k)];
+		ce.perm[face_WF_even<N>(rubik_cube::Faces::L, K, k)] = ce.perm[face_NF_even<N>(rubik_cube::Faces::U, K, k)];
+		ce.perm[face_NF_even<N>(rubik_cube::Faces::U, K, k)] = tmp;
 	}
 
 	for (int k = number_of_layers_even<N>; k > K; k--) {
 
-		int tmp = ce.perm[face_SF_even<N>(R, k, k - K - 1)];
+		int tmp = ce.perm[face_SF_even<N>(rubik_cube::Faces::R, k, k - K - 1)];
 
-		ce.perm[face_SF_even<N>(R, k, k - K - 1)] =
-			ce.perm[face_WF_even<N>(D, k, k - K - 1)];
+		ce.perm[face_SF_even<N>(rubik_cube::Faces::R, k, k - K - 1)] =
+			ce.perm[face_WF_even<N>(rubik_cube::Faces::D, k, k - K - 1)];
 
-		ce.perm[face_WF_even<N>(D, k, k - K - 1)] =
-			ce.perm[face_NF_even<N>(L, k, k - K - 1)];
+		ce.perm[face_WF_even<N>(rubik_cube::Faces::D, k, k - K - 1)] =
+			ce.perm[face_NF_even<N>(rubik_cube::Faces::L, k, k - K - 1)];
 
-		ce.perm[face_NF_even<N>(L, k, k - K - 1)] =
-			ce.perm[face_EF_even<N>(U, k, k - K - 1)];
+		ce.perm[face_NF_even<N>(rubik_cube::Faces::L, k, k - K - 1)] =
+			ce.perm[face_EF_even<N>(rubik_cube::Faces::U, k, k - K - 1)];
 
-		ce.perm[face_EF_even<N>(U, k, k - K - 1)] = tmp;
+		ce.perm[face_EF_even<N>(rubik_cube::Faces::U, k, k - K - 1)] = tmp;
 	}
 
 }
@@ -1508,45 +1508,45 @@ void apply_MU(center_edges_even<N, true> &ce) {
 
 	for (int k = number_of_layers_even<N>; k > K; k--) {
 
-		int tmp = ce.perm[face_WF_even<N>(F, k, k + K - 2)];
+		int tmp = ce.perm[face_WF_even<N>(rubik_cube::Faces::F, k, k + K - 2)];
 
-		ce.perm[face_WF_even<N>(F, k, k + K - 2)] =
-			ce.perm[face_WF_even<N>(R, k, k + K - 2)];
+		ce.perm[face_WF_even<N>(rubik_cube::Faces::F, k, k + K - 2)] =
+			ce.perm[face_WF_even<N>(rubik_cube::Faces::R, k, k + K - 2)];
 
-		ce.perm[face_WF_even<N>(R, k, k + K - 2)] =
-			ce.perm[face_EF_even<N>(B, k, k - K - 1)];
+		ce.perm[face_WF_even<N>(rubik_cube::Faces::R, k, k + K - 2)] =
+			ce.perm[face_EF_even<N>(rubik_cube::Faces::B, k, k - K - 1)];
 
-		ce.perm[face_EF_even<N>(B, k, k - K - 1)] =
-			ce.perm[face_WF_even<N>(L, k, k + K - 2)];
+		ce.perm[face_EF_even<N>(rubik_cube::Faces::B, k, k - K - 1)] =
+			ce.perm[face_WF_even<N>(rubik_cube::Faces::L, k, k + K - 2)];
 
-		ce.perm[face_WF_even<N>(L, k, k + K - 2)] = tmp;
+		ce.perm[face_WF_even<N>(rubik_cube::Faces::L, k, k + K - 2)] = tmp;
 	}
 
 
 	for (int k = 2 * K - 3; k >= 0; k--) {
-		int tmp = ce.perm[face_NF_even<N>(F, K, k)];
+		int tmp = ce.perm[face_NF_even<N>(rubik_cube::Faces::F, K, k)];
 
-		ce.perm[face_NF_even<N>(F, K, k)] = ce.perm[face_NF_even<N>(R, K, k)];
-		ce.perm[face_NF_even<N>(R, K, k)] = ce.perm[face_NF_even<N>(B, K, 2 * K - 3 - k)];
-		ce.perm[face_NF_even<N>(B, K, 2 * K - 3 - k)] = ce.perm[face_NF_even<N>(L, K, k)];
-		ce.perm[face_NF_even<N>(L, K, k)] = tmp;
+		ce.perm[face_NF_even<N>(rubik_cube::Faces::F, K, k)] = ce.perm[face_NF_even<N>(rubik_cube::Faces::R, K, k)];
+		ce.perm[face_NF_even<N>(rubik_cube::Faces::R, K, k)] = ce.perm[face_NF_even<N>(rubik_cube::Faces::B, K, 2 * K - 3 - k)];
+		ce.perm[face_NF_even<N>(rubik_cube::Faces::B, K, 2 * K - 3 - k)] = ce.perm[face_NF_even<N>(rubik_cube::Faces::L, K, k)];
+		ce.perm[face_NF_even<N>(rubik_cube::Faces::L, K, k)] = tmp;
 	}
 
 
 	for (int k = number_of_layers_even<N>; k > K; k--) {
 
-		int tmp = ce.perm[face_EF_even<N>(F, k, k - K - 1)];
+		int tmp = ce.perm[face_EF_even<N>(rubik_cube::Faces::F, k, k - K - 1)];
 
-		ce.perm[face_EF_even<N>(F, k, k - K - 1)] =
-			ce.perm[face_EF_even<N>(R, k, k - K - 1)];
+		ce.perm[face_EF_even<N>(rubik_cube::Faces::F, k, k - K - 1)] =
+			ce.perm[face_EF_even<N>(rubik_cube::Faces::R, k, k - K - 1)];
 
-		ce.perm[face_EF_even<N>(R, k, k - K - 1)] =
-			ce.perm[face_WF_even<N>(B, k, k + K - 2)];
+		ce.perm[face_EF_even<N>(rubik_cube::Faces::R, k, k - K - 1)] =
+			ce.perm[face_WF_even<N>(rubik_cube::Faces::B, k, k + K - 2)];
 
-		ce.perm[face_WF_even<N>(B, k, k + K - 2)] =
-			ce.perm[face_EF_even<N>(L, k, k - K - 1)];
+		ce.perm[face_WF_even<N>(rubik_cube::Faces::B, k, k + K - 2)] =
+			ce.perm[face_EF_even<N>(rubik_cube::Faces::L, k, k - K - 1)];
 
-		ce.perm[face_EF_even<N>(L, k, k - K - 1)] = tmp;
+		ce.perm[face_EF_even<N>(rubik_cube::Faces::L, k, k - K - 1)] = tmp;
 	}
 
 }
@@ -1558,43 +1558,43 @@ void apply_MD(center_edges_even<N, true> &ce) {
 
 	for (int k = number_of_layers_even<N>; k > K; k--) {
 
-		int tmp = ce.perm[face_WF_even<N>(F, k, k - K - 1)];
+		int tmp = ce.perm[face_WF_even<N>(rubik_cube::Faces::F, k, k - K - 1)];
 
-		ce.perm[face_WF_even<N>(F, k, k - K - 1)] =
-			ce.perm[face_WF_even<N>(L, k, k - K - 1)];
+		ce.perm[face_WF_even<N>(rubik_cube::Faces::F, k, k - K - 1)] =
+			ce.perm[face_WF_even<N>(rubik_cube::Faces::L, k, k - K - 1)];
 
-		ce.perm[face_WF_even<N>(L, k, k - K - 1)] =
-			ce.perm[face_EF_even<N>(B, k, k + K - 2)];
+		ce.perm[face_WF_even<N>(rubik_cube::Faces::L, k, k - K - 1)] =
+			ce.perm[face_EF_even<N>(rubik_cube::Faces::B, k, k + K - 2)];
 
-		ce.perm[face_EF_even<N>(B, k, k + K - 2)] =
-			ce.perm[face_WF_even<N>(R, k, k - K - 1)];
+		ce.perm[face_EF_even<N>(rubik_cube::Faces::B, k, k + K - 2)] =
+			ce.perm[face_WF_even<N>(rubik_cube::Faces::R, k, k - K - 1)];
 
-		ce.perm[face_WF_even<N>(R, k, k - K - 1)] = tmp;
+		ce.perm[face_WF_even<N>(rubik_cube::Faces::R, k, k - K - 1)] = tmp;
 	}
 
 	for (int k = 2 * K - 3; k >= 0; k--) {
-		int tmp = ce.perm[face_SF_even<N>(F, K, k)];
+		int tmp = ce.perm[face_SF_even<N>(rubik_cube::Faces::F, K, k)];
 
-		ce.perm[face_SF_even<N>(F, K, k)] = ce.perm[face_SF_even<N>(L, K, k)];
-		ce.perm[face_SF_even<N>(L, K, k)] = ce.perm[face_SF_even<N>(B, K, 2 * K - 3 - k)];
-		ce.perm[face_SF_even<N>(B, K, 2 * K - 3 - k)] = ce.perm[face_SF_even<N>(R, K, k)];
-		ce.perm[face_SF_even<N>(R, K, k)] = tmp;
+		ce.perm[face_SF_even<N>(rubik_cube::Faces::F, K, k)] = ce.perm[face_SF_even<N>(rubik_cube::Faces::L, K, k)];
+		ce.perm[face_SF_even<N>(rubik_cube::Faces::L, K, k)] = ce.perm[face_SF_even<N>(rubik_cube::Faces::B, K, 2 * K - 3 - k)];
+		ce.perm[face_SF_even<N>(rubik_cube::Faces::B, K, 2 * K - 3 - k)] = ce.perm[face_SF_even<N>(rubik_cube::Faces::R, K, k)];
+		ce.perm[face_SF_even<N>(rubik_cube::Faces::R, K, k)] = tmp;
 	}
 
 	for (int k = number_of_layers_even<N>; k > K; k--) {
 
-		int tmp = ce.perm[face_EF_even<N>(F, k, k + K - 2)];
+		int tmp = ce.perm[face_EF_even<N>(rubik_cube::Faces::F, k, k + K - 2)];
 
-		ce.perm[face_EF_even<N>(F, k, k + K - 2)] =
-			ce.perm[face_EF_even<N>(L, k, k + K - 2)];
+		ce.perm[face_EF_even<N>(rubik_cube::Faces::F, k, k + K - 2)] =
+			ce.perm[face_EF_even<N>(rubik_cube::Faces::L, k, k + K - 2)];
 
-		ce.perm[face_EF_even<N>(L, k, k + K - 2)] =
-			ce.perm[face_WF_even<N>(B, k, k - K - 1)];
+		ce.perm[face_EF_even<N>(rubik_cube::Faces::L, k, k + K - 2)] =
+			ce.perm[face_WF_even<N>(rubik_cube::Faces::B, k, k - K - 1)];
 
-		ce.perm[face_WF_even<N>(B, k, k - K - 1)] =
-			ce.perm[face_EF_even<N>(R, k, k + K - 2)];
+		ce.perm[face_WF_even<N>(rubik_cube::Faces::B, k, k - K - 1)] =
+			ce.perm[face_EF_even<N>(rubik_cube::Faces::R, k, k + K - 2)];
 
-		ce.perm[face_EF_even<N>(R, k, k + K - 2)] = tmp;
+		ce.perm[face_EF_even<N>(rubik_cube::Faces::R, k, k + K - 2)] = tmp;
 	}
 }
 
