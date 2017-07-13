@@ -1,4 +1,5 @@
 #include "corners.h"
+#include "faces.h"
 
 namespace rubik_cube {
 
@@ -285,6 +286,165 @@ void Corners::disp(std::ostream &os) {
 	for (int i = 0; i < 8; i++)
 		os << orient[i] << " ";
 	os << '\n';
+
+}
+
+int Corners::get_index(int position, char face, int cube_dim) {
+	int index = 0;
+	switch (position) {
+		case 0:
+			// UFL = U(n,1)F(1,1)L(1,n)
+			switch (face) {
+				case 'U':
+					index = Faces::U * cube_dim * cube_dim + (cube_dim - 1) * cube_dim;
+					break;
+				case 'F':
+					index = Faces::F * cube_dim * cube_dim;
+					break;
+				case 'L':
+					index = Faces::L * cube_dim * cube_dim + cube_dim - 1;
+					break;
+				default:
+					break;
+			};
+			break;
+		case 1:
+			// URF = U(n,n)R(1,1)F(1,n)
+			switch (face) {
+				case 'U':
+					index = Faces::U * cube_dim * cube_dim + (cube_dim - 1) * cube_dim + (cube_dim - 1);
+					break;
+				case 'R':
+					index = Faces::R * cube_dim * cube_dim;
+					break;
+				case 'F':
+					index = Faces::F * cube_dim * cube_dim + cube_dim - 1;
+					break;
+				default:
+					break;
+			};
+			break;
+		case 2:
+			// UBR = U(1,n)B(1,1)R(1,n)
+			switch (face) {
+				case 'U':
+					index = Faces::U * cube_dim * cube_dim + (cube_dim - 1);
+					break;
+				case 'B':
+					index = Faces::B * cube_dim * cube_dim;
+					break;
+				case 'R':
+					index = Faces::R * cube_dim * cube_dim + cube_dim - 1;
+					break;
+				default:
+					break;
+			};
+			break;
+		case 3:
+			// ULB = U(1,1)L(1,1)B(1,n)
+			switch (face) {
+				case 'U':
+					index = Faces::U * cube_dim * cube_dim;
+					break;
+				case 'L':
+					index = Faces::L * cube_dim * cube_dim;
+					break;
+				case 'B':
+					index = Faces::B * cube_dim * cube_dim + cube_dim - 1;
+					break;
+				default:
+					break;
+			};
+			break;
+		case 4:
+			// DLF = D(1,1)L(n,n)F(n,1)
+			switch (face) {
+				case 'D':
+					index = Faces::D * cube_dim * cube_dim;
+					break;
+				case 'L':
+					index = Faces::L * cube_dim * cube_dim + (cube_dim - 1) * cube_dim + (cube_dim - 1);
+					break;
+				case 'F':
+					index = Faces::F * cube_dim * cube_dim + (cube_dim - 1) * cube_dim;
+					break;
+				default:
+					break;
+			};
+			break;
+		case 5:
+			// DFR = D(1,n)F(n,n)R(n,1)
+			switch (face) {
+				case 'D':
+					index = Faces::D * cube_dim * cube_dim + cube_dim - 1;
+					break;
+				case 'F':
+					index = Faces::F * cube_dim * cube_dim + (cube_dim - 1) * cube_dim + (cube_dim - 1);
+					break;
+				case 'R':
+					index = Faces::R * cube_dim * cube_dim + (cube_dim - 1) * cube_dim;
+					break;
+				default:
+					break;
+			};
+			break;
+		case 6:
+			// DRB = D(n,n)R(n,n)B(n,1)
+			switch (face) {
+				case 'D':
+					index = Faces::D * cube_dim * cube_dim + (cube_dim - 1) * cube_dim + (cube_dim - 1);
+					break;
+				case 'R':
+					index = Faces::R * cube_dim * cube_dim + (cube_dim - 1) * cube_dim + (cube_dim - 1);
+					break;
+				case 'B':
+					index = Faces::B * cube_dim * cube_dim + (cube_dim - 1) * cube_dim;
+					break;
+				default:
+					break;
+			};
+			break;
+		case 7:
+			// DBL = D(n,1)B(n,n)L(n,1)
+			switch (face) {
+				case 'D':
+					index = Faces::D * cube_dim * cube_dim + (cube_dim - 1) * cube_dim;
+					break;
+				case 'B':
+					index = Faces::B * cube_dim * cube_dim + (cube_dim - 1) * cube_dim + (cube_dim - 1);
+					break;
+				case 'L':
+					index = Faces::L * cube_dim * cube_dim + (cube_dim - 1) * cube_dim;
+					break;
+				default:
+					break;
+			};
+			break;
+
+		default:
+//			std::cerr << "Unknown position, (0 - 7) are allowed.\n";
+			break;
+	};
+	
+	return index;
+}
+
+void Corners::toPermutationN(int cube_dim) {
+
+	for (int i = 0; i < 8; i++) {
+		std::cout << "perm: " << perm[i] << ", orient: " << orient[i] << '\n';
+		std::cout << Corners::positions[orient[i]][perm[i]] << "->" << Corners::positions[0][i] << "\n";
+
+		for (int j = 0; j < 3; j++) {
+			int idx1 = get_index(perm[i], positions[orient[i]][perm[i]].at(j), 2),
+			idx2 = get_index(i, positions[0][i].at(j), 2);
+
+			if (idx1 != idx2) 
+				std::cout << idx1 << "->" << idx2 << ", ";
+		
+		}
+		std:: cout << '\n';
+	}
 
 }
 

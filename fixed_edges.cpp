@@ -2,6 +2,7 @@
 #include <iomanip>
 #include "fixed_edges.h"
 #include "edge_positions.h"
+#include "faces.h"
 
 namespace rubik_cube {
 
@@ -631,5 +632,193 @@ Fixed_edges& operator*(Fixed_edges &fe, const moves &f) {
 	}
 	return fe;
 }
+
+	void Fixed_edges::toPermutationN(int cube_dim) {
+		for (int i = 0; i < 12; i++) {
+			std::cout << edge_positions[orient[i]][perm[i]] << "->" << edge_positions[0][i] << '\n';
+
+			for (int j = 0; j < 2; j++) {
+				int idx1 = get_index(perm[i], edge_positions[orient[i]][perm[i]].at(j), cube_dim),
+				idx2 = get_index(i, edge_positions[0][i].at(j),  cube_dim);
+				if (idx1 != idx2)
+					std::cout << idx1 << "->" << idx2 << ", ";
+
+			}
+			std::cout << '\n';
+			
+		}
+
+	}
+
+	int Fixed_edges::get_index(int position, char face, int cube_dim) {
+		// cube_dim must be odd
+		int index = 0,
+		center = (cube_dim - 1) / 2;
+		switch (position) {
+			// UF = U(n,c)F(1,c)
+			case 0:
+				switch (face) {
+					case 'U':
+						index = Faces::U * cube_dim * cube_dim + (cube_dim  - 1) * cube_dim + center;
+						break;
+					case 'F':
+						index = Faces::F * cube_dim * cube_dim + center;
+						break;
+					default: 
+						break;
+				};
+				break;
+			// UR = U(c,n)R(1,c)
+			case 1:
+				switch (face) {
+					case 'U':
+						index = Faces::U * cube_dim * cube_dim + center * cube_dim + (cube_dim  - 1);
+						break;
+					case 'R':
+						index = Faces::R * cube_dim * cube_dim + center;
+						break;
+					default: 
+						break;
+				};
+				break;
+			// UB = U(1,c)B(1,c)
+			case 2:
+				switch (face) {
+					case 'U':
+						index = Faces::U * cube_dim * cube_dim + center;
+						break;
+					case 'B':
+						index = Faces::B * cube_dim * cube_dim + center;
+						break;
+					default: 
+						break;
+				};
+				break;
+			// UL = U(c,1)L(1,c)
+			case 3:
+				switch (face) {
+					case 'U':
+						index = Faces::U * cube_dim * cube_dim + center * cube_dim;
+						break;
+					case 'L':
+						index = Faces::L * cube_dim * cube_dim + center;
+						break;
+					default: 
+						break;
+				};
+				break;
+
+			// LF = L(c,n)F(c,1)
+			case 4:
+				switch (face) {
+					case 'L':
+						index = Faces::L * cube_dim * cube_dim + center * cube_dim + (cube_dim - 1);
+						break;
+					case 'F':
+						index = Faces::F * cube_dim * cube_dim + center * cube_dim;
+						break;
+					default: 
+						break;
+				};
+				break;
+			// FR = F(c,n)R(c,1)
+			case 5:
+				switch (face) {
+					case 'F':
+						index = Faces::F * cube_dim * cube_dim + center * cube_dim + (cube_dim - 1);
+						break;
+					case 'R':
+						index = Faces::R * cube_dim * cube_dim + center * cube_dim;
+						break;
+					default: 
+						break;
+				};
+				break;
+			// RB = R(c,n)B(c,1)
+			case 6:
+				switch (face) {
+					case 'R':
+						index = Faces::R * cube_dim * cube_dim + center * cube_dim + (cube_dim - 1);
+						break;
+					case 'B':
+						index = Faces::B * cube_dim * cube_dim + center * cube_dim;
+						break;
+					default: 
+						break;
+				};
+				break;
+			// BL = B(c,n)L(c,1)
+			case 7:
+				switch (face) {
+					case 'B':
+						index = Faces::B * cube_dim * cube_dim + center * cube_dim + (cube_dim - 1);
+						break;
+					case 'L':
+						index = Faces::L * cube_dim * cube_dim + center * cube_dim;
+						break;
+					default: 
+						break;
+				};
+				break;
+			// FD = F(n,c)D(1,c)
+			case 8:
+				switch (face) {
+					case 'F':
+						index = Faces::F * cube_dim * cube_dim + (cube_dim - 1) * cube_dim + center;
+						break;
+					case 'D':
+						index = Faces::D * cube_dim * cube_dim + center;
+						break;
+					default: 
+						break;
+				};
+				break;
+
+			// RD = R(n,c)D(c,n)
+			case 9:
+				switch (face) {
+					case 'R':
+						index = Faces::R * cube_dim * cube_dim + (cube_dim - 1) * cube_dim + center;
+						break;
+					case 'D':
+						index = Faces::D * cube_dim * cube_dim + center * cube_dim + (cube_dim - 1);
+						break;
+					default: 
+						break;
+				};
+				break;
+
+			// BD = B(n,c)D(n,c)
+			case 10:
+				switch (face) {
+					case 'B':
+						index = Faces::B * cube_dim * cube_dim + (cube_dim - 1) * cube_dim + center;
+						break;
+					case 'D':
+						index = Faces::D * cube_dim * cube_dim + (cube_dim - 1) * cube_dim + center;
+						break;
+					default: 
+						break;
+				};
+				break;
+			// LD = L(n,c)D(c,1)
+			case 11:
+				switch (face) {
+					case 'L':
+						index = Faces::L * cube_dim * cube_dim + (cube_dim - 1) * cube_dim + center;
+						break;
+					case 'D':
+						index = Faces::D * cube_dim * cube_dim + center * cube_dim;
+						break;
+					default: 
+						break;
+				};
+				break;
+			default:
+				break;
+		};
+
+		return index;
+	}
 
 }

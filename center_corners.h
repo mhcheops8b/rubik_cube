@@ -1,6 +1,7 @@
 #pragma once
 #include "faces.h"
 #include <utility>
+#include "cubeNNN.h"
 
 
 namespace rubik_cube {
@@ -34,6 +35,9 @@ public:
 	void disp_perm(std::ostream &os = std::cout);
 	void disp_cube(std::ostream &os = std::cout);
 	void apply_Face(const enum Faces::faces &face);
+
+	void toPermutationN();
+	Permutation<N> toPermutationN(Permutation<N> &in);
 
 	// L move
 	void apply_L();
@@ -207,6 +211,16 @@ void _Center_corners<N, isOdd>::apply_MD() {
 template <int N, bool isOdd>
 int _Center_corners<N, isOdd>::signum() {
 	return _Center_corners_Impl<N, isOdd>::signum(*this);
+}
+
+template <int N, bool isOdd>
+void _Center_corners<N, isOdd>::toPermutationN() {
+	_Center_corners_Impl<N,isOdd>::toPermutationN(*this);
+}
+
+template <int N, bool isOdd>
+Permutation<N> _Center_corners<N, isOdd>::toPermutationN(Permutation<N> &in) {
+	return _Center_corners_Impl<N,isOdd>::toPermutationN(*this, in);
 }
 
 
@@ -514,6 +528,112 @@ struct _Center_corners_Impl<N, true> {
 		for (int i = 0; i < N; i++)
 			os << '.';
 		os << '\n';
+	}
+
+	static int adjustments(int direction, int layer) {
+		int adj = 0;
+	
+		switch (direction) {
+			// NW
+			case 0:
+				adj = - layer * N - layer;
+				break;
+			// NE
+			case 1:
+				adj = - layer * N + layer;
+				break;
+			// SE
+			case 2:
+				adj = + layer * N + layer;
+				break;
+
+			// SE
+			case 3:
+				adj = + layer * N - layer;
+				break;
+			default:
+				break;
+		};
+		return adj;
+	}
+	static void toPermutationN(_Center_corners<N, true> &cc) {
+		// k = 0
+		for (int i = 0; i < 6; i++) {
+			int idx = 4 * i;
+
+			int face = cc.m_perm[0][idx] / 4;
+			int direction = cc.m_perm[0][idx] % 4;
+
+			std::cout << Faces::labels[face] << "(" << 0 << ", " << direction <<") -> " 
+				<< Faces::labels[i] << "(" << 0 << ", " << 0 << ")\n";
+	
+			int idx1 = face * N * N + (N - 1) /2 * N + (N - 1) /2;
+			int idx2 = i * N * N + (N - 1) /2 * N + (N - 1) /2;
+			if (idx1 != idx2)
+				std::cout << idx1 << "->" << idx2 << '\n';
+
+		}
+		for (int k = 1 ; k <=_Center_corners_Impl<N, true>::number_of_layers; k++) {
+			for (int i = 0; i < 6; i++) {
+				for (int j = 0; j < 4; j++) {
+					int idx = 4 * i + j;
+
+					int face = cc.m_perm[k][idx] / 4;
+					int direction = cc.m_perm[k][idx] % 4;
+
+					std::cout << Faces::labels[face] << "(" << k << ", " << direction <<") -> " 
+						<< Faces::labels[i] << "(" << k << ", " << j << ")\n";
+					
+					int idx1 = face * N * N + (N - 1) /2 * N + (N - 1) /2;
+					int idx2 = i * N * N + (N - 1) /2 * N + (N - 1) /2;
+					idx1 += _Center_corners_Impl<N,true>::adjustments(direction, k);
+					idx2 += _Center_corners_Impl<N,true>::adjustments(j, k);
+
+					if (idx1 != idx2)
+						std::cout << idx1 << "->" << idx2 << '\n';
+
+				}
+
+			}
+		}	
+	}
+
+	static Permutation<N> toPermutationN(_Center_corners<N, true> &cc, Permutation<N> &in) {
+		Permutation<N> output(in);
+
+		// k = 0
+		for (int i = 0; i < 6; i++) {
+			int idx = 4 * i;
+
+			int face = cc.m_perm[0][idx] / 4;
+	
+			int idx1 = face * N * N + (N - 1) /2 * N + (N - 1) /2;
+			int idx2 = i * N * N + (N - 1) /2 * N + (N - 1) /2;
+			if (idx1 != idx2)
+				output._components[idx1] = in._components[idx2];
+
+		}
+		for (int k = 1 ; k <=_Center_corners_Impl<N, true>::number_of_layers; k++) {
+			for (int i = 0; i < 6; i++) {
+				for (int j = 0; j < 4; j++) {
+					int idx = 4 * i + j;
+
+					int face = cc.m_perm[k][idx] / 4;
+					int direction = cc.m_perm[k][idx] % 4;
+
+					
+					int idx1 = face * N * N + (N - 1) /2 * N + (N - 1) /2;
+					int idx2 = i * N * N + (N - 1) /2 * N + (N - 1) /2;
+					idx1 += _Center_corners_Impl<N,true>::adjustments(direction, k);
+					idx2 += _Center_corners_Impl<N,true>::adjustments(j, k);
+
+					if (idx1 != idx2)
+						output._components[idx1] = in._components[idx2];
+				}
+
+			}
+		}	
+		return output;
 	}
 };
 

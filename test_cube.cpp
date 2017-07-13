@@ -28,12 +28,25 @@ struct cube333 {
 };
 
 void cube333::disp_cube(std::ostream &os) {
+	Permutation<3> out;
+	out = c.toPermutationN<3>(out);
+	out = fe.toPermutationN<3>(out);
+	out = cc.toPermutationN(out);
+	out.disp_cube();
+
+//	cc.toPermutationN();
+
+#if 0
 	os << "Corners:\n";
 	c.disp_cube();
 	os << "Edges:\n";
 	fe.disp_cube();
+	os << "-----------------\n";
+	fe.toPermutationN(3);
+	os << "-----------------\n";
 	os << "Centers:\n";
 	cc.disp_cube();
+#endif
 }
 
 void cube333::apply_L() {

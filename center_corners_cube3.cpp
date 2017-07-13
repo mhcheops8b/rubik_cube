@@ -10,12 +10,15 @@ int main() {
 
 //	cube.disp();
 	cube.disp_cube();
+	cube.toPermutationN();
 
 	cube.apply_ML<0>();
 	cube.disp_cube();
+	cube.toPermutationN();
 
 	cube.apply_ML<1>();
 	cube.disp_cube();
+	cube.toPermutationN();
 
 	cube.apply_MR<0>();
 	cube.disp_cube();
