@@ -1135,7 +1135,7 @@ Coupled_edges& operator*(Coupled_edges &ce, const moves &f) {
 			case 8:
 				switch (face) {
 					case 'F':
-						index = Faces::F * cube_dim * cube_dim + (cube_dim - 1) * cube_dim  + plus;
+						index = Faces::F * cube_dim * cube_dim + (cube_dim - 1) * cube_dim + minus;// plus;
 						break;
 					case 'D':
 						index = Faces::D * cube_dim * cube_dim + minus;
@@ -1157,14 +1157,14 @@ Coupled_edges& operator*(Coupled_edges &ce, const moves &f) {
 						break;
 				};
 				break;
-			// DB = D(n,+)B(1,-)
+			// DB = D(n,+)B(n,-)
 			case 10:
 				switch (face) {
 					case 'D':
 						index = Faces::D * cube_dim * cube_dim + (cube_dim - 1) * cube_dim + plus;
 						break;
 					case 'B':
-						index = Faces::B * cube_dim * cube_dim + minus;
+						index = Faces::B * cube_dim * cube_dim + (cube_dim - 1) * cube_dim + minus;
 						break;
 					default:
 						break;

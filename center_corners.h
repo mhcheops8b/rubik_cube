@@ -924,6 +924,87 @@ struct _Center_corners_Impl<N, false> {
 
 
 	}
+
+	static int adjustments(int direction, int layer) {
+		int adj = 0;
+		
+		switch (direction) {
+			// NW
+			case 0:
+				adj = -(layer - 1) * N - (layer - 1);
+				break;
+			// NE
+			case 1:
+				adj = - (layer - 1) * N + layer;
+				break;
+			// SE
+			case 2:
+				adj = layer * N + layer;
+				break;
+			// SW
+			case 3:
+				adj = layer * N - (layer - 1);
+				break;
+			default:
+				break;
+		};
+		return adj;
+	}
+
+	static void toPermutationN(_Center_corners<N, false> &cc) {
+		for (int k = 0; k < _Center_corners_Impl<N, false>::number_of_layers; k++) {
+			for (int i = 0; i < 6; i++) {
+				for (int j = 0; j < 4; j++) {
+					int idx = 4 * i + j;
+
+					int face = cc.m_perm[k][idx] / 4;
+					int direction = cc.m_perm[k][idx] % 4;
+
+					std::cout << Faces::labels[face] << "(" << k << ", " << direction << ") -> "
+						<< Faces::labels[i] << "(" << k << ", " << j << ")\n";
+
+					int idx1 = face * N * N + (N / 2 - 1) * N + (N / 2 - 1);
+					int idx2 = i * N * N + (N / 2 - 1) * N + (N / 2 - 1);
+					idx1 += _Center_corners_Impl<N, false>::adjustments(direction, k + 1);
+					idx2 += _Center_corners_Impl<N, false>::adjustments(j, k + 1);
+
+					if (idx1 != idx2)
+						std::cout << idx1 << "->" << idx2 << '\n';
+
+				}
+
+			}
+		}
+	}
+
+	static Permutation<N> toPermutationN(_Center_corners<N, false> &cc, Permutation<N> &in) {
+		Permutation<N> output(in);
+		for (int k = 0; k < _Center_corners_Impl<N, false>::number_of_layers; k++) {
+			for (int i = 0; i < 6; i++) {
+				for (int j = 0; j < 4; j++) {
+					int idx = 4 * i + j;
+
+					int face = cc.m_perm[k][idx] / 4;
+					int direction = cc.m_perm[k][idx] % 4;
+
+					//std::cout << Faces::labels[face] << "(" << k << ", " << direction << ") -> "
+						//<< Faces::labels[i] << "(" << k << ", " << j << ")\n";
+
+					int idx1 = face * N * N + (N / 2 - 1) * N + (N / 2 - 1);
+					int idx2 = i * N * N + (N / 2 - 1) * N + (N / 2 - 1);
+					idx1 += _Center_corners_Impl<N, false>::adjustments(direction, k + 1);
+					idx2 += _Center_corners_Impl<N, false>::adjustments(j, k + 1);
+
+					if (idx1 != idx2)
+						output._components[idx1] = in._components[idx2];
+						//std::cout << idx1 << "->" << idx2 << '\n';
+
+				}
+
+			}
+		}
+		return output;
+	}
 };
 
 template<int N>
