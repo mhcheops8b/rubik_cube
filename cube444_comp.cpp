@@ -31,7 +31,9 @@ void cube444::disp_cube(std::ostream &os) {
 	Permutation<4> out;
 	out = c.toPermutationN<4>(out);
 	out = e.toPermutationN<4>(out);
+	out = cc.toPermutationN(out);
 	out.disp_cube_fancy();
+	//cc.toPermutationN();
 }
 
 void cube444::apply_L() {
@@ -98,8 +100,8 @@ int main() {
 	std4cube.disp_cube();
 	std::cout << "------------\n";
 
-	std4cube.apply_L();
-	std4cube.c.disp();
+	std4cube.apply_ML();
+	//std4cube.c.disp();
 	std::cout << "------------\n";
 	std4cube.disp_cube();
 }
