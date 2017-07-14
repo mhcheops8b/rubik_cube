@@ -67,6 +67,8 @@ ML k:
 #include <iostream>
 #include <ostream>
 #include "faces.h"
+#include "cubeNNN.h"
+#include <math.h>
 
 namespace rubik_cube {
 
@@ -160,6 +162,12 @@ public:
 	void apply_cycle(int(&cycle)[4]);
 	//
 	void apply_cycle(int idx1, int idx2, int idx3, int idx4);
+
+
+	//
+	void toPermutationN();
+	//
+	Permutation<N> toPermutationN(Permutation<N> &in);
 private:
 	int m_perm[_Center_edges_Impl<N,isEven>::number_of_indices];
 };
@@ -236,6 +244,16 @@ inline int _Center_edges<N, isEven>::face_WF(const enum Faces::faces &f, int lay
 		 + _Center_edges<N, isEven>::WF(layer, index);
 }
 
+template <int N, bool isEven>
+void _Center_edges<N, isEven>::toPermutationN() {
+	_Center_edges_Impl<N, isEven>::toPermutationN(*this);
+}
+
+template <int N, bool isEven>
+Permutation<N> _Center_edges<N, isEven>::toPermutationN(Permutation<N> &in) {
+	return _Center_edges_Impl<N, isEven>::toPermutationN(*this, in);
+
+}
 
 template<int N>
 struct _Center_edges_Impl<N, false> {
@@ -675,6 +693,107 @@ struct _Center_edges_Impl<N, false> {
 		os << '\n';
 
 
+	}
+
+	static void compute_values(int orig_idx, 
+		int &face, int &layer, int &direction, int &dir_idx) {
+		
+			face = orig_idx / _Center_edges_Impl<N, false>::number_of_indices_per_face;
+
+			int p_face_idx = orig_idx % _Center_edges_Impl<N, false>::number_of_indices_per_face;
+
+			int s = floor(sqrt(p_face_idx)) / 2;
+			layer = s + 1;
+
+			int layer_idx = p_face_idx - 4*s*s;
+
+			direction = layer_idx / (2 * s + 1);
+			dir_idx = layer_idx % (2 * s + 1);
+	}
+
+	static int adjustment(int layer, int direction, int dir_idx) {
+		int adj = 0;
+		switch (direction) {
+			// North
+			case 0:
+				adj = -(layer + 1) * N + dir_idx - layer;
+				break;
+
+			// East
+			case 1:
+				adj = (dir_idx - layer) * N + layer + 1;
+				break;
+			// South
+			case 2:
+				adj = (layer + 1) * N + layer - dir_idx;
+				break;
+			// West
+			case 3:
+				adj = (layer - dir_idx) * N - layer - 1;
+				break;
+			default:
+				break;
+		};
+
+		return adj;
+	}
+
+
+	static void toPermutationN(_Center_edges<N, false> &ce) {
+		static const char dir_labels[] = {'N', 'E', 'S', 'W'};
+		for (int i = 0; i < 6; i++) { // faces
+			for (int j = 0; j < _Center_edges_Impl<N, false>::number_of_indices_per_face; j++) { // per face indices
+				int idx = _Center_edges_Impl<N, false>::number_of_indices_per_face * i + j;
+				int p_value1 = ce.m_perm[idx];
+				int p_value2 = idx;
+				int face1, face2, layer1,layer2,direction1,direction2,dir_idx1,dir_idx2;
+
+				_Center_edges_Impl<N, false>::compute_values(p_value1, face1, layer1, direction1, dir_idx1);
+				_Center_edges_Impl<N, false>::compute_values(p_value2, face2, layer2, direction2, dir_idx2);
+
+				int idx1, idx2;
+				idx1 = idx2 = N * (N - 1) / 2 + (N - 1) / 2;
+				idx1 += face1 * N * N;
+				idx2 += face2 * N * N;
+
+				idx1 += _Center_edges_Impl<N, false>::adjustment(layer1 - 1, direction1, dir_idx1);
+				idx2 += _Center_edges_Impl<N, false>::adjustment(layer2 - 1, direction2, dir_idx2);
+				if (idx1 != idx2) {
+					std::cout << Faces::labels[face1] << "(" << layer1 << ", " << dir_labels[ direction1 ] << ", " << dir_idx1 << ") -> " 	
+						  << Faces::labels[face2] << "(" << layer2 << ", " << dir_labels[ direction2 ] << ", " << dir_idx2 << ")\n";
+
+					std::cout << idx1 << " -> " << idx2 << '\n';
+				}
+			}
+		}
+	}
+
+	static Permutation<N> toPermutationN(_Center_edges<N, false> &ce, Permutation<N> &in) {
+		Permutation<N> output(in);
+
+		for (int i = 0; i < 6; i++) { // faces
+			for (int j = 0; j < _Center_edges_Impl<N, false>::number_of_indices_per_face; j++) { // per face indices
+				int idx = _Center_edges_Impl<N, false>::number_of_indices_per_face * i + j;
+				int p_value1 = ce.m_perm[idx];
+				int p_value2 = idx;
+				int face1, face2, layer1,layer2,direction1,direction2,dir_idx1,dir_idx2;
+
+				_Center_edges_Impl<N, false>::compute_values(p_value1, face1, layer1, direction1, dir_idx1);
+				_Center_edges_Impl<N, false>::compute_values(p_value2, face2, layer2, direction2, dir_idx2);
+
+				int idx1, idx2;
+				idx1 = idx2 = N * (N - 1) / 2 + (N - 1) / 2;
+				idx1 += face1 * N * N;
+				idx2 += face2 * N * N;
+
+				idx1 += _Center_edges_Impl<N, false>::adjustment(layer1 - 1, direction1, dir_idx1);
+				idx2 += _Center_edges_Impl<N, false>::adjustment(layer2 - 1, direction2, dir_idx2);
+				if (idx1 != idx2) 
+					output._components[idx1] = in._components[idx2];
+
+			}
+		}
+		return output;
 	}
 
 };
@@ -1170,6 +1289,106 @@ struct _Center_edges_Impl<N, true> {
 		for (int i = 0; i < N; i++)
 			os << '.';
 		os << '\n';
+	}
+
+	static void compute_values(int orig_idx, 
+		int &face, int &layer, int &direction, int &dir_idx) {
+		
+			face = orig_idx / _Center_edges_Impl<N, true>::number_of_indices_per_face;
+
+			int p_face_idx = orig_idx % _Center_edges_Impl<N, true>::number_of_indices_per_face;
+
+			layer = (floor(sqrt(p_face_idx + 1)) + 1) / 2;
+
+			int layer_idx = p_face_idx - 4 * layer * (layer - 1);
+
+			direction = layer_idx / (2 * layer);
+			dir_idx = layer_idx % (2 * layer);
+	}
+
+	static int adjustment(int layer, int direction, int dir_idx) {
+		int adj = 0;
+		switch (direction) {
+			// North
+			case 0:
+				adj = -layer * N + dir_idx - layer + 1;
+				break;
+
+			// East
+			case 1:
+				adj = (dir_idx - layer + 1) * N + layer + 1;
+				break;
+			// South
+			case 2:
+				adj = (layer + 1) * N + layer - dir_idx;
+				break;
+			// West
+			case 3:
+				adj = (layer - dir_idx) * N - layer;
+				break;
+			default:
+				break;
+		};
+
+		return adj;
+	}
+
+
+	static void toPermutationN(_Center_edges<N, true> &ce) {
+		static const char dir_labels[] = {'N', 'E', 'S', 'W'};
+		for (int i = 0; i < 6; i++) { // faces
+			for (int j = 0; j < _Center_edges_Impl<N, true>::number_of_indices_per_face; j++) { // per face indices
+				int idx = _Center_edges_Impl<N, true>::number_of_indices_per_face * i + j;
+				int p_value1 = ce.m_perm[idx];
+				int p_value2 = idx;
+				int face1, face2, layer1,layer2,direction1,direction2,dir_idx1,dir_idx2;
+
+				_Center_edges_Impl<N, true>::compute_values(p_value1, face1, layer1, direction1, dir_idx1);
+				_Center_edges_Impl<N, true>::compute_values(p_value2, face2, layer2, direction2, dir_idx2);
+
+				int idx1, idx2;
+				idx1 = idx2 = (N / 2 - 1) * N + (N / 2 - 1);
+				idx1 += face1 * N * N;
+				idx2 += face2 * N * N;
+
+				idx1 += _Center_edges_Impl<N, true>::adjustment(layer1, direction1, dir_idx1);
+				idx2 += _Center_edges_Impl<N, true>::adjustment(layer2, direction2, dir_idx2);
+				if (idx1 != idx2) {
+					std::cout << Faces::labels[face1] << "(" << layer1 << ", " << dir_labels[ direction1 ] << ", " << dir_idx1 << ") -> " 	
+						  << Faces::labels[face2] << "(" << layer2 << ", " << dir_labels[ direction2 ] << ", " << dir_idx2 << ")\n";
+
+					std::cout << idx1 << " -> " << idx2 << '\n';
+				}
+			}
+		}
+	}
+
+	static Permutation<N> toPermutationN(_Center_edges<N, true> &ce, Permutation<N> &in) {
+		Permutation<N> output(in);
+
+		for (int i = 0; i < 6; i++) { // faces
+			for (int j = 0; j < _Center_edges_Impl<N, true>::number_of_indices_per_face; j++) { // per face indices
+				int idx = _Center_edges_Impl<N, true>::number_of_indices_per_face * i + j;
+				int p_value1 = ce.m_perm[idx];
+				int p_value2 = idx;
+				int face1, face2, layer1,layer2,direction1,direction2,dir_idx1,dir_idx2;
+
+				_Center_edges_Impl<N, true>::compute_values(p_value1, face1, layer1, direction1, dir_idx1);
+				_Center_edges_Impl<N, true>::compute_values(p_value2, face2, layer2, direction2, dir_idx2);
+
+				int idx1, idx2;
+				idx1 = idx2 = (N / 2 - 1) * N + (N / 2 - 1);
+				idx1 += face1 * N * N;
+				idx2 += face2 * N * N;
+
+				idx1 += _Center_edges_Impl<N, true>::adjustment(layer1, direction1, dir_idx1);
+				idx2 += _Center_edges_Impl<N, true>::adjustment(layer2, direction2, dir_idx2);
+				if (idx1 != idx2) 
+					output._components[idx1] = in._components[idx2];
+			}
+		}
+
+		return output;
 	}
 };
 
@@ -1712,6 +1931,7 @@ struct _Center_edges_Impl_K<N, K, true> {
 
 		}
 	}
+
 
 };
 

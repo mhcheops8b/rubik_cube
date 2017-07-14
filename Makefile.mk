@@ -15,7 +15,8 @@ APPS = \
 	test_cube666_solve test_cube666_shuffle \
 	test_cube666_moves \
 	test_center_edges_even \
-	cube444_comp
+	cube444_comp \
+	test_center_edges_toPermutationN
 
 OBJECTS = \
 	faces.o \
@@ -111,5 +112,8 @@ test_cube: test_cube.cpp center_corners.h center_edges_old.h corners.o fixed_edg
 
 cube444_comp: cube444_comp.cpp corners.o coupled_edges.o edge_positions.o center_corners.h faces.o
 	$(CXX) -O3 -Wall --pedantic -std=c++14 -o $@ $< corners.o edge_positions.o coupled_edges.o faces.o
+
+test_center_edges_toPermutationN: test_center_edges_toPermutationN.cpp center_edges.h faces.o
+	$(CXX) -O3 -Wall --pedantic -std=c++14 -o $@ $< faces.o
 clean: 
 	@rm -fv $(APPS) $(OBJECTS)
