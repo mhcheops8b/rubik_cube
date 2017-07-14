@@ -111,9 +111,9 @@ test_cube: test_cube.cpp center_corners.h center_edges_old.h corners.o fixed_edg
 	$(CXX) -O3 -Wall --pedantic -std=c++14 -o $@ $< corners.o fixed_edges.o edge_positions.o faces.o
 
 cube444_comp: cube444_comp.cpp corners.o coupled_edges.o edge_positions.o center_corners.h faces.o
-	$(CXX) -O3 -Wall --pedantic -std=c++14 -o $@ $< corners.o edge_positions.o coupled_edges.o faces.o
+	$(CXX) -O3 -Wall --pedantic -std=c++11 -o $@ $< corners.o edge_positions.o coupled_edges.o faces.o
 
 test_center_edges_toPermutationN: test_center_edges_toPermutationN.cpp center_edges.h faces.o
-	$(CXX) -O3 -Wall --pedantic -std=c++14 -o $@ $< faces.o
+	$(CXX) -O3 -Wall --pedantic -std=c++11 -o $@ $< faces.o
 clean: 
 	@rm -fv $(APPS) $(OBJECTS)
