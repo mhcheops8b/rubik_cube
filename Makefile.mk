@@ -12,7 +12,9 @@ APPS = \
 	center_corners_cube3 \
 	center_edges_cube \
 	test_cube \
-	test_cube666_solve test_cube666_shuffle \
+	test_cube666_solve \
+	test_cube666_solve_Ze \
+	test_cube666_shuffle \
 	test_cube666_moves \
 	test_center_edges_even \
 	cube444_comp \
@@ -65,6 +67,9 @@ cube666: cube666.cpp cubeNNN.h _cube666.o
 	$(CXX) -O3 -Wall --pedantic --ansi -o $@ $< _cube666.o
 
 test_cube666_solve: test_cube666_solve.cpp cubeNNN.h _cube666.o
+	$(CXX) -O3 -Wall --pedantic --ansi -o $@ $< _cube666.o
+
+test_cube666_solve_Ze: test_cube666_solve_Ze.cpp cubeNNN.h _cube666.o
 	$(CXX) -O3 -Wall --pedantic --ansi -o $@ $< _cube666.o
 
 test_cube666_shuffle: test_cube666_shuffle.cpp cubeNNN.h _cube666.o
