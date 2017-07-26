@@ -2,6 +2,11 @@
 #include <iomanip>
 #include "_cube666.h"
 
+// declaration
+int C_signum2(Permutation<6> &perm); 
+
+
+
 // it assumes that indices of subgroup are sorted,
 // i.e. i < j <=> subgroup_indices[i] < subgroup_indices[j].
 template <int subgroup_size>
@@ -128,6 +133,7 @@ int E2_signum_cubes(Permutation<6> &perm) {
 	return sig;
 }
 
+/*
 int C_signum_indices[] = {
             0,           5,          30,          35, 
 
@@ -142,6 +148,7 @@ int C_signum_indices[] = {
   5 * 36 +  0, 5 * 36 +  5, 5 * 36 + 30, 5 * 36 + 35, 
 
 };
+*/
 
 int Zc_signum_indices[] = {
             7,          10,          25,          28, 
@@ -168,9 +175,11 @@ int Z1_signum(Permutation<6> &perm) {
 	return perm_signum(perm, Z1_signum_indices);
 }
 
+/*
 int C_signum(Permutation<6> &perm) {
 	return perm_signum(perm, C_signum_indices);
 }
+*/
 
 int Zc_signum(Permutation<6> &perm) {
 	return perm_signum(perm, Zc_signum_indices);
@@ -178,12 +187,109 @@ int Zc_signum(Permutation<6> &perm) {
 
 void signums(Permutation<6> &perm) {
 
-	std::cout << " C signum: " << std::setw(2) <<  C_signum(perm) << '\n';
+//	std::cout << " C signum: " << std::setw(2) <<  C_signum(perm) << '\n';
+	std::cout << " C signum: " << std::setw(2) <<  C_signum2(perm) << '\n';
 	std::cout << "E1 signum: " << std::setw(2) << E1_signum_cubes(perm) << '\n';
 	std::cout << "E2 signum: " << std::setw(2) << E2_signum_cubes(perm) << '\n';
 	std::cout << "Ze signum: " << std::setw(2) << Ze_signum(perm) << '\n';
 	std::cout << "Z1 signum: " << std::setw(2) << Z1_signum(perm) << '\n';
 	std::cout << "Zc signum: " << std::setw(2) << Zc_signum(perm) << '\n';
+}
+
+// corner cubes
+/*
+
+  ---        ---
+  |U|        |0|
+---------  ---------
+|L|F|R|B|  |1|2|3|4|
+---------  ---------
+  |D|        |5|
+  --         ---
+-------------------------------
+|  0 |  1 |  2 |  3 |  4 |  5 |
+-------------------------------
+|  6 |  7 |  8 |  9 | 10 | 11 |
+-------------------------------
+| 12 | 13 | 14 | 15 | 16 | 17 |
+-------------------------------
+| 18 | 19 | 20 | 21 | 22 | 23 |
+-------------------------------
+| 24 | 25 | 26 | 27 | 28 | 29 |
+-------------------------------
+| 30 | 31 | 32 | 33 | 34 | 35 |
+-------------------------------
+
+*/
+struct t_triple {
+	int x, y, z;
+};
+
+const t_triple C_signum_indices2[] = {
+  { 0 + 0 * 36,  5 + 4 * 36,  0 + 1 * 36},
+  { 5 + 0 * 36,  5 + 3 * 36,  0 + 4 * 36},
+  {30 + 0 * 36,  5 + 1 * 36,  0 + 2 * 36},
+  {35 + 0 * 36,  5 + 2 * 36,  0 + 3 * 36},
+  {30 + 1 * 36, 35 + 4 * 36, 30 + 5 * 36},
+  {35 + 1 * 36, 30 + 2 * 36,  0 + 5 * 36},
+  {35 + 2 * 36, 30 + 3 * 36,  5 + 5 * 36},
+  {35 + 3 * 36, 30 + 4 * 36, 35 + 5 * 36}
+};
+
+// compare equality of two 3-element sets (order is disregarded)
+// (little bit overkill, this should check correctness of moves,
+//  i.e., wether corner cubes moves together)
+bool are_equal(const t_triple &t1, const t_triple &t2) {
+	if (
+             (t1.x == t2.x && t1.y == t2.y && t1.z == t2.z) ||
+	     (t1.x == t2.x && t1.y == t2.z && t1.z == t2.y) ||
+	     (t1.x == t2.y && t1.y == t2.x && t1.z == t2.z) ||
+	     (t1.x == t2.y && t1.y == t2.z && t1.z == t2.x) ||
+	     (t1.x == t2.z && t1.y == t2.x && t1.z == t2.y) ||
+	     (t1.x == t2.z && t1.y == t2.y && t1.z == t2.x) 
+	   )
+		return true;
+
+	return false;
+}
+
+int get_corner_cube_index(const t_triple &t) {
+	for (int i = 0; i < 8; i++)
+		if (are_equal(t, C_signum_indices2[i]))
+			return i;
+
+	//
+	std::cerr << "Something wrong: triple (" 
+	          << t.x << ", " << t.y << ", " << t.z << ") not found!" << '\n';
+	return -1;
+}
+
+template <int permsize>
+int signumtempl(const int (&perm)[permsize]) {
+	int sig = 1;
+
+	for (int i = 0; i < permsize; i++)
+	for (int j = i + 1; j < permsize; j++)
+		if (perm[i] > perm[j])
+			sig = -sig;
+
+	return sig;
+}
+
+int C_signum2(Permutation<6> &perm) {
+	int perm8[8];
+
+	for (int i = 0; i < 8; i++) {
+		t_triple transf = {
+			perm._components[C_signum_indices2[i].x],
+			perm._components[C_signum_indices2[i].y],
+			perm._components[C_signum_indices2[i].z]
+				  };
+
+		perm8[i] = get_corner_cube_index(transf);
+	}
+
+	return signumtempl(perm8);
 }
 
 
