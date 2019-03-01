@@ -32,7 +32,7 @@ void cube444::disp_cube(std::ostream &os) {
 	out = c.toPermutationN<4>(out);
 	out = e.toPermutationN<4>(out);
 	out = cc.toPermutationN(out);
-	out.disp_cube_fancy();
+	out.disp_cube_fancy(os);
 	//cc.toPermutationN();
 }
 

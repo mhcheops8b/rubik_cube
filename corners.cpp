@@ -429,7 +429,7 @@ int Corners::get_index(int position, char face, int cube_dim) {
 	return index;
 }
 
-void Corners::toPermutationN(int cube_dim) {
+void Corners::toPermutationN() {
 
 	for (int i = 0; i < 8; i++) {
 		std::cout << "perm: " << perm[i] << ", orient: " << orient[i] << '\n';

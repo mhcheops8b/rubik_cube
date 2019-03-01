@@ -984,7 +984,7 @@ Coupled_edges& operator*(Coupled_edges &ce, const moves &f) {
 	}
 	return ce;
 }
-	void Coupled_edges::toPermutationN(int cube_dim, int layer) {
+	void Coupled_edges::toPermutationN() {
 		// a positions
 		for (int i = 0; i < 12; i++) {
 			std::cout << edge_positions[orient_a[i]][perm_a[i]] << (orient_a[i]==0? 'a':'b') << "->" << edge_positions[0][i] << "a\n";

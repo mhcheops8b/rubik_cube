@@ -36,7 +36,7 @@ public:
 	static const std::string positions[3][8];
 	
 	// debug function
-	void toPermutationN(int cube_dim);
+	void toPermutationN();
 
 	// apply corner permutations into existing one
 	template<int N>

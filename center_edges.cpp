@@ -21,11 +21,11 @@ center_edges_555::center_edges_555() {
 void center_edges_555::disp(std::ostream &os) {
 	char labels[] = {'U', 'L', 'F', 'B', 'R', 'D'};
 	for (int i = 0; i < 6;i++) {
-		std::cout << labels[i] << ": ";
+		os << labels[i] << ": ";
 		for (int j = 0; j < 4; j++) {
-			std::cout << std::setw(3) << perm[4*i+j];	
+			os << std::setw(3) << perm[4*i+j];	
 		}
-		std::cout << '\n';
+		os << '\n';
 	}
 }
 

@@ -23,7 +23,7 @@ public:
 	// signum of the perm24
 	int perm24_signum();
 	void to_perm24(int (&perm)[24]);
-	void toPermutationN(int cube_dim, int layer);
+	void toPermutationN();
 
 	template <int N>
 	Permutation<N> toPermutationN(Permutation<N> &in);
